@@ -1,0 +1,31 @@
+:root {
+  /* Primary (보라 #8158F6) */
+  --color-primary-100: #8158f6;
+  --color-primary-80: rgba(129, 88, 246, 0.8);
+  --color-primary-65: rgba(129, 88, 246, 0.65);
+  --color-primary-50: rgba(129, 88, 246, 0.5);
+  --color-primary-35: rgba(129, 88, 246, 0.35);
+  --color-primary-15: rgba(129, 88, 246, 0.15);
+
+  /* Accent (민트 #B0E7D5) */
+  --color-accent-100: #b0e7d5;
+  --color-accent-75: rgba(176, 231, 213, 0.75);
+  --color-accent-55: rgba(176, 231, 213, 0.55);
+  --color-accent-35: rgba(176, 231, 213, 0.35);
+  --color-accent-15: rgba(176, 231, 213, 0.15);
+
+  /* Gray scale (g1 어두움 -> g10 밝음) */
+  --color-gray-1: #36383d;
+  --color-gray-2: #3f4145;
+  --color-gray-3: #515256;
+  --color-gray-4: #6c6e72;
+  --color-gray-5: #808386;
+  --color-gray-6: #adafb2;
+  --color-gray-7: #b8b9bd;
+  --color-gray-8: #ccced0;
+  --color-gray-9: #d0d6dd;
+  --color-gray-10: #ebebeb;
+
+  /* TODO: black/bg/warm/cool 라벨 확인 후 추가
+     #121212, #212121, #fafafa, #f5f5f5, #ffffff */
+}

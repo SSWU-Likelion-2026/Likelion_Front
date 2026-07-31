@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "figma:colors": "node --env-file-if-exists=.env scripts/fetch-figma-colors.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

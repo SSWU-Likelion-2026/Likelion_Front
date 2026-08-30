@@ -74,6 +74,11 @@ function Session() {
           </div>
         </div>
         
+        {sessions.length === 0 && (
+          <div className="flex flex-col items-center justify-center pt-25">
+            <h1 className='text-[34px] font-semibold'>조회된 세션이 없습니다.</h1>
+          </div>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12">
           {sessions.map((item) => (
             <SessionFolder key={item.week} variant={item.variant} week={item.week} title={item.title} />

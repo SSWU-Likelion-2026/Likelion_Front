@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom'
-import './Header.css'
 
 const navItems = [
   { to: '/session', label: 'Session' },
@@ -11,14 +10,16 @@ const navItems = [
 
 function Header() {
   return (
-    <header className="header">
-      <nav className="nav">
-        <ul>
+    <header className="flex items-center px-6 py-4 border-b border-gray-9">
+      <nav>
+        <ul className="flex gap-6 list-none m-0 p-0">
           {navItems.map((item) => (
             <li key={item.to}>
               <NavLink
                 to={item.to}
-                className={({ isActive }) => (isActive ? 'active' : undefined)}
+                className={({ isActive }) =>
+                  `no-underline font-medium ${isActive ? 'text-primary-100' : 'text-gray-1'}`
+                }
               >
                 {item.label}
               </NavLink>

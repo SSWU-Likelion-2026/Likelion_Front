@@ -118,9 +118,7 @@ export default function SessionDetail() {
         <div className="flex justify-end mt-5.25">
           <Button
             onClick={handleSubmit}
-            color="white"
-            className="w-26 h-15.5 text-[20px] text-[#697584] rounded-[9px]"
-          >
+            color="white">
             후기 등록
           </Button>
         </div>
@@ -143,18 +141,12 @@ export default function SessionDetail() {
                         autoFocus
                       />
                       <div className="flex justify-end gap-[15px] mt-[23px]">
-                        <button
-                          onClick={() => setEditingId(null)}
-                          className="px-5 py-3 border border-gray-9 text-[20px] text-[#697584] rounded-[10px] cursor-pointer"
-                        >
+                        <Button onClick={() => setEditingId(null)} color="white">
                           취소
-                        </button>
-                        <button
-                          onClick={() => handleEditSave(review.id)}
-                          className="px-5 py-3 bg-primary-100 text-white text-[20px] rounded-[10px] cursor-pointer"
-                        >
+                        </Button>
+                        <Button onClick={() => handleEditSave(review.id)} color="Main100">
                           저장
-                        </button>
+                        </Button>
                       </div>
                     </>
                   ) : (
@@ -205,7 +197,7 @@ export default function SessionDetail() {
         onClose={() => setLockedModalOpen(false)}
         onConfirm={() => setLockedModalOpen(false)}
         confirmOnly
-        confirmClassName="px-8 py-3 bg-gray-1 text-white text-[18px] rounded-[10px] cursor-pointer hover:bg-gray-2"
+        confirmClassName="bg-gray-1 text-white hover:bg-gray-2"
       />
     </div>
   )

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import Button from '../../components/Button'
 import Modal from '../../components/Modal'
 import ProfileImg from '../../img/session/profile.jpg'
 
@@ -115,12 +116,13 @@ export default function SessionDetail() {
           />
         </div>
         <div className="flex justify-end mt-5.25">
-          <button
+          <Button
             onClick={handleSubmit}
-            className="w-26 h-15.5 border border-gray-9 text-[20px] text-[#697584] rounded-[9px] cursor-pointer"
+            color="white"
+            className="w-26 h-15.5 text-[20px] text-[#697584] rounded-[9px]"
           >
             후기 등록
-          </button>
+          </Button>
         </div>
 
         <div className="mt-[31px] flex flex-col gap-[25px] pb-[176px]">

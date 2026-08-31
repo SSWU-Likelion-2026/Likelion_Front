@@ -66,7 +66,7 @@ export default function SessionDetail() {
   }
 
   return (
-    <div className="mt-[43px] px-12 flex justify-center gap-[78px] min-h-screen">
+    <div className="mt-[43px] px-30 flex justify-center gap-[78px] min-h-screen">
       
       <aside className="w-[102px] y-[64px] shrink-0 flex flex-col">
         {weeks.map(w => (
@@ -81,7 +81,7 @@ export default function SessionDetail() {
         ))}
       </aside>
       
-      <main className="w-[1020px] flex flex-col justify-center">
+      <main className="flex-1 flex flex-col justify-center">
         
         <header className='flex flex-col gap-[35px]'>
             <p className="text-[18px] text-gray-4">{part} &gt; {week}</p>

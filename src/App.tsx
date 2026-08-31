@@ -6,7 +6,7 @@ import Project from './pages/Project'
 import Recruiting from './pages/Recruiting'
 import Session from './pages/session/Session'
 import SessionDetail from './pages/session/SessionDetail'
-import MyPage from './pages/MyPage'
+import MyPage from './pages/mypage/MyPage'
 import Stamp from './pages/Stamp'
 
 function App() {

@@ -19,6 +19,12 @@ const applicationData = [
   { title: "지원상태", content: null },
 ]
 
+const draftData = [
+  { title: "이름", content: "000" },
+  { title: "지원파트", content: "프론트엔드" },
+  { title: "지원서", content: "작성중" },
+]
+
 
 type Tab = '내 프로필' | '지원 현황'
 
@@ -152,16 +158,12 @@ export default function MyPage() {
             {applicationTab === '임시저장' && (
               <>
                 <main className='bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 flex flex-col gap-[45px] px-[49px] py-[47px]'>
-                  {applicationData
-                    .filter(item => item.title !== '지원상태')
-                    .map(item => ({ ...item, content: item.title === '지원서' ? '작성중' : item.content }))
-                    .map((item) => (
-                      <div key={item.title} className='flex items-center h-[47px]'>
-                        <p className='text-[24px] text-black font-semibold w-[117px]'>{item.title}</p>
-                        <p className='text-[22px] text-gray-5'>{item.content}</p>
-                      </div>
-                    ))
-                  }
+                  {draftData.map((item) => (
+                    <div key={item.title} className='flex items-center h-[47px]'>
+                      <p className='text-[24px] text-black font-semibold w-[117px]'>{item.title}</p>
+                      <p className='text-[22px] text-gray-5'>{item.content}</p>
+                    </div>
+                  ))}
                 </main>
                 <div className='flex justify-end gap-[15px] mt-[20px] mb-[79px]'>
                   <Button color='white'>삭제</Button>

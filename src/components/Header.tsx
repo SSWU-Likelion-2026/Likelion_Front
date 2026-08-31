@@ -6,6 +6,7 @@ const navItems = [
   { to: '/people', label: 'People' },
   { to: '/recruiting', label: 'Recruiting' },
   { to: '/stamp', label: 'Stamp' },
+  { to: '/mypage', label: 'MyPage' },
 ]
 
 function Header() {

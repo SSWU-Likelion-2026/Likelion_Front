@@ -43,7 +43,7 @@ function Session() {
   return (
     <div className="flex flex-col">
       <Banner page="Session" />
-      <div className="flex flex-col items-center px-12 gap-10 rounded-t-[25px] bg-white -mt-6 relative">
+      <div className="flex flex-col items-center px-30 gap-10 rounded-t-[25px] bg-white -mt-6 relative">
 
         <div className='flex w-full justify-between mt-12'>
           <ToggleGroup options={parts} value={track} onChange={setTrack} />

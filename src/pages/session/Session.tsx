@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import Banner from '../components/Banner'
-import ToggleGroup from '../components/ToggleGroup'
-import SessionFolder from '../components/session/SessionFolder'
-import Toggle from '../img/session/toggle.svg'
+import { useNavigate } from 'react-router-dom'
+import Banner from '../../components/Banner'
+import ToggleGroup from '../../components/ToggleGroup'
+import SessionFolder from '../../components/session/SessionFolder'
+import Toggle from '../../img/session/toggle.svg'
 
 const parts = ['기획/디자인', '프론트엔드', '백엔드']
 const generations = ['14기', '13기', '12기']
@@ -23,6 +24,7 @@ const sessions: { variant?: 'default' | 'none'; week: string; title: string }[] 
 ]
 
 function Session() {
+  const navigate = useNavigate()
   const [track, setTrack] = useState('기획/디자인')
   const [open, setOpen] = useState(false)
   const [generation, setGeneration] = useState('14기')
@@ -81,7 +83,13 @@ function Session() {
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12">
           {sessions.map((item) => (
-            <SessionFolder key={item.week} variant={item.variant} week={item.week} title={item.title} />
+            <SessionFolder
+              key={item.week}
+              variant={item.variant}
+              week={item.week}
+              title={item.title}
+              onClick={item.variant !== 'none' ? () => navigate(`/session/${item.week}`, { state: { part: track, title: item.title, noneWeeks: sessions.filter(s => s.variant === 'none').map(s => s.week) } }) : undefined}
+            />
           ))}
         </div>
       </div>

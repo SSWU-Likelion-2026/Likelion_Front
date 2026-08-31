@@ -4,7 +4,8 @@ import Home from './pages/Home'
 import People from './pages/People'
 import Project from './pages/Project'
 import Recruiting from './pages/Recruiting'
-import Session from './pages/Session'
+import Session from './pages/session/Session'
+import SessionDetail from './pages/session/SessionDetail'
 import Stamp from './pages/Stamp'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/session" element={<Session />} />
+        <Route path="/session/:week" element={<SessionDetail />} />
         <Route path="/project" element={<Project />} />
         <Route path="/people" element={<People />} />
         <Route path="/recruiting" element={<Recruiting />} />

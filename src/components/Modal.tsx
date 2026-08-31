@@ -1,3 +1,6 @@
+import Button from './Button'
+import DelIcon from '../img/del.svg'
+
 interface Props {
   open: boolean
   title: string
@@ -22,26 +25,29 @@ export default function Modal({ open, title, message, onClose, onConfirm, confir
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-[32px] font-semibold">{title}</h2>
-          <button onClick={onClose} className="text-2xl cursor-pointer">✕</button>
+          <Button onClick={onClose} className="w-6 h-6">
+            <img src={DelIcon} alt="닫기" className="w-full h-full" />
+          </Button>
         </div>
 
         <p className="text-[28px] text-[#697584] mb-6.25">{message}</p>
 
         <div className="pt-22 flex justify-end gap-4.25">
           {!confirmOnly && (
-            <button
+            <Button
               onClick={onClose}
-              className="px-8 py-3 border border-gray-9 text-[18px] text-gray-3 rounded-[10px] cursor-pointer hover:bg-gray-10"
+              color="white"
+              className="px-8 py-3 text-[18px] text-gray-3 rounded-[10px] hover:bg-gray-10"
             >
               취소
-            </button>
+            </Button>
           )}
-          <button
+          <Button
             onClick={onConfirm}
-            className={confirmClassName ?? 'px-8 py-3 bg-red-500 text-white text-[18px] rounded-[10px] cursor-pointer hover:bg-red-600'}
+            className={confirmClassName ?? 'px-8 py-3 bg-red-500 text-white text-[18px] rounded-[10px] hover:bg-red-600'}
           >
             확인
-          </button>
+          </Button>
         </div>
       </div>
     </div>

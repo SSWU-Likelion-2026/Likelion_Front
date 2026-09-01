@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import Button from '../../components/Button'
 import Modal from '../../components/Modal'
 import ProfileImg from '../../img/session/profile.jpg'
 
@@ -115,12 +116,11 @@ export default function SessionDetail() {
           />
         </div>
         <div className="flex justify-end mt-5.25">
-          <button
+          <Button
             onClick={handleSubmit}
-            className="w-26 h-15.5 border border-gray-9 text-[20px] text-[#697584] rounded-[9px] cursor-pointer"
-          >
+            color="white">
             후기 등록
-          </button>
+          </Button>
         </div>
 
         <div className="mt-[31px] flex flex-col gap-[25px] pb-[176px]">
@@ -141,18 +141,12 @@ export default function SessionDetail() {
                         autoFocus
                       />
                       <div className="flex justify-end gap-[15px] mt-[23px]">
-                        <button
-                          onClick={() => setEditingId(null)}
-                          className="px-5 py-3 border border-gray-9 text-[20px] text-[#697584] rounded-[10px] cursor-pointer"
-                        >
+                        <Button onClick={() => setEditingId(null)} color="white">
                           취소
-                        </button>
-                        <button
-                          onClick={() => handleEditSave(review.id)}
-                          className="px-5 py-3 bg-primary-100 text-white text-[20px] rounded-[10px] cursor-pointer"
-                        >
+                        </Button>
+                        <Button onClick={() => handleEditSave(review.id)} color="Main100">
                           저장
-                        </button>
+                        </Button>
                       </div>
                     </>
                   ) : (
@@ -203,7 +197,7 @@ export default function SessionDetail() {
         onClose={() => setLockedModalOpen(false)}
         onConfirm={() => setLockedModalOpen(false)}
         confirmOnly
-        confirmClassName="px-8 py-3 bg-gray-1 text-white text-[18px] rounded-[10px] cursor-pointer hover:bg-gray-2"
+        confirmClassName="bg-gray-1 text-white hover:bg-gray-2"
       />
     </div>
   )

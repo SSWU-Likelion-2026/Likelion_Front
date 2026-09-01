@@ -7,6 +7,7 @@ import ProjectMaking from './pages/project/ProjectMaking'
 import Recruiting from './pages/Recruiting'
 import Session from './pages/session/Session'
 import SessionDetail from './pages/session/SessionDetail'
+import MyPage from './pages/mypage/MyPage'
 import Stamp from './pages/Stamp'
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/people" element={<People />} />
         <Route path="/recruiting" element={<Recruiting />} />
         <Route path="/stamp" element={<Stamp />} />
+        <Route path="/mypage" element={<MyPage />} />
       </Routes>
     </>
   )

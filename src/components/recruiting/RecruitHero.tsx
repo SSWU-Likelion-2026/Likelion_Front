@@ -57,7 +57,6 @@ export default function RecruitHero({ open, term }: Props) {
               모집 알림을 놓치고 싶지 않다면?
             </p>
             <div className="mt-4 flex w-full max-w-[840px] items-center gap-3">
-              {/* 흰 배경 + 1px 그라데이션 테두리(#7D4BF8→#B0E7D5) + 카드 그림자 */}
               <input
                 type="email"
                 value={email}

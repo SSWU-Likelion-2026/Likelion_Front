@@ -10,13 +10,11 @@ type Props = {
 }
 
 export default function FaqSection({ parts, faqs }: Props) {
-  // 카테고리 = 파트명 (기획/디자인, 프론트엔드, 백엔드)
   const [partName, setPartName] = useState(parts[0]?.name ?? '')
   const [openId, setOpenId] = useState<number | null>(null)
 
   const selectedPartId = parts.find((p) => p.name === partName)?.partId ?? null
 
-  // 선택 파트 FAQ + 공통(partId=null) FAQ
   const items = faqs.filter(
     (f) => f.partId === selectedPartId || f.partId == null,
   )

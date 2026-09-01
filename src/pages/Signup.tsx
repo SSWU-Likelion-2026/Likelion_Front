@@ -4,8 +4,6 @@ import logoName from '../img/signup/logo-name.png'
 import { sendEmailVerificationCode, signup, verifyEmail } from '../api/auth'
 import { ApiError } from '../api/instance'
 
-// Name / Email / 인증번호 / Password 입력창 (여러 번 써서 상수로만 빼둠)
-// 배경 #FAFAFA · 테두리 보라 15% · 라운드 15px · 높이 59px
 const fieldClass =
   'h-[59px] w-full rounded-[15px] border border-primary-15 bg-[#FAFAFA] px-4 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'
 
@@ -49,7 +47,7 @@ function Signup() {
     try {
       await verifyEmail({ email, code })
       // 디자인에 비밀번호 확인 입력칸이 없어서 passwordCheck = password 로 보냄
-      // (API 는 passwordCheck 필수) — 확인칸 추가하려면 여기 바꾸면 됨
+      // (API 는 passwordCheck 필수) > 추후 디자인 나오면 password 확인 입력칸 추가 필요
       await signup({ name, email, password, passwordCheck: password })
       navigate('/')
     } catch (err) {

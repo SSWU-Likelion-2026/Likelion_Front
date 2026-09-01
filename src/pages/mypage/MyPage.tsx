@@ -1,16 +1,17 @@
-import { useState } from 'react'
+// react
+import { useState, useEffect } from 'react'
+
+// api
+import { getProfile } from '../../api/mypage/mypageApi'
+import type { ProfileGetResponse } from '../../types/mypage/mypage'
+
+// component
 import Banner from '../../components/Banner'
-import Profile from '../../img/mypage/profile.jpg'
-import BackIcon from '../../img/mypage/back.svg'
 import Button from '../../components/Button'
 
-const initialProfile = [
-  { title: "이메일", content: "20270908@sungshin.ac.kr" },
-  { title: "학과", content: "컴퓨터공학과" },
-  { title: "학번", content: "20270908" },
-  { title: "전화번호", content: "010-1234-5678" },
-  { title: "가입일", content: "2027.02.28" },
-]
+// assests
+import Profile from '../../img/mypage/profile.jpg'
+import BackIcon from '../../img/mypage/back.svg'
 
 const applicationData = [
   { title: "이름", content: "000" },
@@ -30,30 +31,42 @@ type Tab = '내 프로필' | '지원 현황'
 
 export default function MyPage() {
   const [tab, setTab] = useState<Tab>('내 프로필')
+  const [profileData, setProfileData] = useState<ProfileGetResponse | null>(null)
   const [applicationTab, setApplicationTab] = useState<'지원완료' | '임시저장'>('지원완료')
   const [isEditing, setIsEditing] = useState(false)
-  const [profile, setProfile] = useState(initialProfile)
-  const [editValues, setEditValues] = useState(initialProfile.map(item => item.content))
+  const [editValues, setEditValues] = useState<string[]>([])
 
+  const profileItems = [
+    { title: "이메일", content: profileData?.email },
+    { title: "학과", content: profileData?.major },
+    { title: "학번", content: profileData?.studentId },
+    { title: "전화번호", content: profileData?.phoneNumber },
+    { title: "가입일", content: profileData?.joinedAt },
+  ]
+
+  useEffect(() => {
+    getProfile().then(res => setProfileData(res.result))
+  }, [])
+
+  useEffect(() => {
+    if (!profileData) return
+    setEditValues([
+      profileData.email,
+      profileData.major,
+      profileData.studentId,
+      profileData.phoneNumber,
+      profileData.joinedAt,
+    ])
+  }, [profileData])
 
   const handleTabChange = (t: Tab) => {
-      setTab(t)
-      setIsEditing(false)
-  }
-
-  const handleEditStart = () => {
-    setEditValues(profile.map(item => item.content))
-    setIsEditing(true)
-  }
-
-  const handleEditCancel = () => {
+    setTab(t)
     setIsEditing(false)
   }
 
-  const handleEditSave = () => {
-    setProfile(profile.map((item, i) => ({ ...item, content: editValues[i] })))
-    setIsEditing(false)
-  }
+  const handleEditStart = () => setIsEditing(true)
+  const handleEditCancel = () => setIsEditing(false)
+  const handleEditSave = () => setIsEditing(false)
 
   return (
     <div className="flex flex-col">
@@ -83,8 +96,8 @@ export default function MyPage() {
               <div className='flex items-center gap-6'>
                 <img src={Profile} alt="내 프로필" className='w-[180px]' />
                 <div className='flex flex-col gap-[15px]'>
-                  <h1 className='text-[34px] font-semibold'>성이름님</h1>
-                  <p className='text-[24px] font-medium text-gray-1'>성신 멋사 사이트 방문을 환영해요!</p>
+                  <h1 className='text-[34px] font-semibold'>{profileData?.name}</h1>
+                  <p className='text-[24px] font-medium text-gray-1'>{profileData?.greeting}</p>
                 </div>
               </div>
               {isEditing ? (
@@ -97,7 +110,7 @@ export default function MyPage() {
               )}
             </section>
             <main className='mt-[30px] bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[30px] px-[49px] py-[47px]'>
-              {profile.map((item, i) => (
+              {profileItems.map((item, i) => (
                 <div key={item.title} className='flex items-center h-[47px]'>
                   <p className='text-[24px] text-black font-semibold w-[117px]'>{item.title}</p>
                   {isEditing ? (

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 
 // api
+
 import { getProfile, editProfile, editProfileImage } from '../../api/mypage/mypageApi'
 import type { ProfileGetResponse } from '../../types/mypage/mypage'
 
@@ -35,6 +36,8 @@ export default function MyPage() {
   const [applicationTab, setApplicationTab] = useState<'지원완료' | '임시저장'>('지원완료')
   const [isEditing, setIsEditing] = useState(false)
   const [editValues, setEditValues] = useState<string[]>([])
+  const [selectedImage, setSelectedImage] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const profileItems = [
     { title: "이메일", content: profileData?.email },
@@ -47,6 +50,12 @@ export default function MyPage() {
   useEffect(() => {
     getProfile().then(res => setProfileData(res.result))
   }, [])
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+    }
+  }, [previewUrl])
 
   useEffect(() => {
     if (!profileData) return
@@ -65,29 +74,44 @@ export default function MyPage() {
   }
 
   const handleEditStart = () => setIsEditing(true)
-  const handleEditCancel = () => setIsEditing(false)
   const handleEditSave = () => {
-    editProfile({
-      name: profileData?.name ?? '',
-      major: editValues[1],
-      studentId: editValues[2],
-      phoneNumber: editValues[3],
-    }).then(() => {
+    const requests: Promise<unknown>[] = [
+      editProfile({
+        name: profileData?.name ?? '',
+        major: editValues[1],
+        studentId: editValues[2],
+        phoneNumber: editValues[3],
+      }),
+    ]
+
+    if (selectedImage) {
+      const formData = new FormData()
+      formData.append('image', selectedImage)
+      requests.push(editProfileImage(formData))
+    }
+
+    Promise.all(requests).then(() => {
       getProfile().then(res => setProfileData(res.result))
+      setSelectedImage(null)
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+      setPreviewUrl(null)
       setIsEditing(false)
     })
+  }
+
+  const handleEditCancel = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+    setPreviewUrl(null)
+    setSelectedImage(null)
+    setIsEditing(false)
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-
-    const formData = new FormData()
-    formData.append('image',file)
-
-    editProfileImage(formData).then(() => {
-      getProfile().then(res => setProfileData(res.result))
-    })
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+    setSelectedImage(file)
+    setPreviewUrl(URL.createObjectURL(file))
   }
   
   return (
@@ -116,8 +140,11 @@ export default function MyPage() {
           <>
             <section className='mt-[57px] flex justify-between items-center'>
               <div className='flex items-center gap-6'>
-                <div className={`relative ${isEditing ? 'cursor-pointer' : ''}`} onClick={() => isEditing && document.getElementById('profileImageInput')?.click()}>
-                  <img src={profileData?.profileImageUrl ?? Profile} alt="내 프로필" className='w-[180px] rounded-full' />
+                <div
+                  className={`w-[180px] h-[180px] rounded-full overflow-hidden shrink-0 ${isEditing ? 'cursor-pointer' : ''}`}
+                  onClick={() => isEditing && document.getElementById('profileImageInput')?.click()}
+                >
+                  <img src={previewUrl ?? profileData?.profileImageUrl ?? Profile} alt="내 프로필" className='w-full h-full object-cover' />
                 </div>
                 <input
                   id='profileImageInput'

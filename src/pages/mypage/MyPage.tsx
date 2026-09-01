@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 
 // api
-import { getProfile, editProfile } from '../../api/mypage/mypageApi'
+import { getProfile, editProfile, editProfileImage } from '../../api/mypage/mypageApi'
 import type { ProfileGetResponse } from '../../types/mypage/mypage'
 
 // component
@@ -78,6 +78,18 @@ export default function MyPage() {
     })
   }
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const formData = new FormData()
+    formData.append('image',file)
+
+    editProfileImage(formData).then(() => {
+      getProfile().then(res => setProfileData(res.result))
+    })
+  }
+  
   return (
     <div className="flex flex-col">
       <Banner page="MyPage" />
@@ -104,7 +116,16 @@ export default function MyPage() {
           <>
             <section className='mt-[57px] flex justify-between items-center'>
               <div className='flex items-center gap-6'>
-                <img src={Profile} alt="내 프로필" className='w-[180px]' />
+                <div className={`relative ${isEditing ? 'cursor-pointer' : ''}`} onClick={() => isEditing && document.getElementById('profileImageInput')?.click()}>
+                  <img src={profileData?.profileImageUrl ?? Profile} alt="내 프로필" className='w-[180px] rounded-full' />
+                </div>
+                <input
+                  id='profileImageInput'
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
+                  onChange={handleImageChange}
+                />
                 <div className='flex flex-col gap-[15px]'>
                   <h1 className='text-[34px] font-semibold'>{profileData?.name}</h1>
                   <p className='text-[24px] font-medium text-gray-1'>{profileData?.greeting}</p>

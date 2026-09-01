@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import Modal from '../../components/Modal'
 import { getAccessToken } from '../../lib/auth-storage'
-import { ApiError } from '../../api/http'
+import { ApiError } from '../../api/instance'
 import {
   getCurrentQuestions,
   getMyApplication,

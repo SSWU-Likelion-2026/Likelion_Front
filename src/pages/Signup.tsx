@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import logoName from '../img/signup/logo-name.png'
 import { sendEmailVerificationCode, signup, verifyEmail } from '../api/auth'
-import { ApiError } from '../api/http'
+import { ApiError } from '../api/instance'
 
 // Name / Email / 인증번호 / Password 입력창 (여러 번 써서 상수로만 빼둠)
 // 배경 #FAFAFA · 테두리 보라 15% · 라운드 15px · 높이 59px

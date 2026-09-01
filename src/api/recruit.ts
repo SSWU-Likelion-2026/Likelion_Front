@@ -1,10 +1,21 @@
 /**
  * 리크루팅(모집 랜딩 + 지원서) API.
  * 스웨거 tag: Recruitment API / User Application API / Home API
- * 응답은 ApiResponse 로 감싸여 오고 http() 가 result 만 꺼내준다.
+ * 응답은 ApiResponse<T> 로 감싸여 온다.
  */
 
-import { http } from './http'
+import instance from './instance'
+import type { ApiResponse } from '../types/type'
+
+async function get<T>(url: string): Promise<T> {
+  const res = await instance.get<ApiResponse<T>>(url)
+  return res.data.result
+}
+
+async function post<T>(url: string, body?: unknown): Promise<T> {
+  const res = await instance.post<ApiResponse<T>>(url, body)
+  return res.data.result
+}
 
 /* ------------------------------------------------------------------ *
  * GET /api/v1/recruitments/current  — 랜딩페이지 모집 정보
@@ -46,7 +57,7 @@ export type LandingPageResponse = {
 }
 
 export function getLandingInfo(): Promise<LandingPageResponse> {
-  return http<LandingPageResponse>('/api/v1/recruitments/current')
+  return get<LandingPageResponse>('/api/v1/recruitments/current')
 }
 
 /* ------------------------------------------------------------------ *
@@ -64,7 +75,7 @@ export type CurrentRecruitment = {
 }
 
 export function getCurrentRecruitment(): Promise<CurrentRecruitment> {
-  return http<CurrentRecruitment>('/api/v1/home/recruitments/current')
+  return get<CurrentRecruitment>('/api/v1/home/recruitments/current')
 }
 
 /* ------------------------------------------------------------------ *
@@ -96,7 +107,7 @@ export type CurrentQuestionsResponse = {
 }
 
 export function getCurrentQuestions(): Promise<CurrentQuestionsResponse> {
-  return http<CurrentQuestionsResponse>('/api/v1/recruitments/current/questions')
+  return get<CurrentQuestionsResponse>('/api/v1/recruitments/current/questions')
 }
 
 /* ------------------------------------------------------------------ *
@@ -115,31 +126,24 @@ export type ApplicationSaveRequest = {
 
 /** POST /api/v1/applications/draft → applicationId */
 export function saveDraft(body: ApplicationSaveRequest): Promise<number> {
-  return http<number>('/api/v1/applications/draft', {
-    method: 'POST',
-    body,
-    auth: true,
-  })
+  return post<number>('/api/v1/applications/draft', body)
 }
 
 /** POST /api/v1/applications/submit → applicationId */
 export function submitApplication(body: ApplicationSaveRequest): Promise<number> {
-  return http<number>('/api/v1/applications/submit', {
-    method: 'POST',
-    body,
-    auth: true,
-  })
+  return post<number>('/api/v1/applications/submit', body)
 }
 
 /** POST /api/v1/applications/files → 업로드된 S3 URL (FILE 문항 답변에 넣어 저장) */
-export function uploadApplicationFile(file: File): Promise<string> {
+export async function uploadApplicationFile(file: File): Promise<string> {
   const form = new FormData()
   form.append('file', file)
-  return http<string>('/api/v1/applications/files', {
-    method: 'POST',
-    body: form,
-    auth: true,
-  })
+  const res = await instance.post<ApiResponse<string>>(
+    '/api/v1/applications/files',
+    form,
+    { headers: { 'Content-Type': 'multipart/form-data' } },
+  )
+  return res.data.result
 }
 
 /* ------------------------------------------------------------------ *
@@ -175,5 +179,5 @@ export type MyApplicationResponse = {
 }
 
 export function getMyApplication(): Promise<MyApplicationResponse> {
-  return http<MyApplicationResponse>('/api/v1/applications/me', { auth: true })
+  return get<MyApplicationResponse>('/api/v1/applications/me')
 }

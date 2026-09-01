@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { login, loginWithGoogle } from '../api/auth'
-import { ApiError } from '../api/http'
+import { ApiError } from '../api/instance'
 import { renderGoogleButton } from '../lib/google-auth'
 import logoName from '../img/signup/logo-name.png'
 

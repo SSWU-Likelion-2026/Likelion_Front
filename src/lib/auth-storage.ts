@@ -4,8 +4,9 @@
  * refreshToken 관련 부분만 지우면 된다.
  */
 
-const ACCESS_KEY = 'sswu.accessToken'
-const REFRESH_KEY = 'sswu.refreshToken'
+// axios 인스턴스(src/api/instance.ts) 인터셉터와 동일한 키를 써야 함
+const ACCESS_KEY = 'accessToken'
+const REFRESH_KEY = 'refreshToken'
 
 let accessTokenCache: string | null = null
 

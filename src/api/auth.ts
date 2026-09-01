@@ -1,16 +1,16 @@
 /**
  * 인증 API. (담당: 손정민)
- * 스웨거 기준: http://52.79.239.27:8080/swagger-ui  (tag: User API)
- * 모든 응답은 ApiResponse 로 감싸여 오고, http() 가 result 만 꺼내준다.
+ * 스웨거 tag: User API. 모든 응답은 ApiResponse<T> 로 감싸여 온다.
  */
 
-import { configureHttp, http } from './http'
-import {
-  clearTokens,
-  getAccessToken,
-  getRefreshToken,
-  setTokens,
-} from '../lib/auth-storage'
+import instance from './instance'
+import type { ApiResponse } from '../types/type'
+import { clearTokens, setTokens } from '../lib/auth-storage'
+
+async function post<T>(url: string, body?: unknown): Promise<T> {
+  const res = await instance.post<ApiResponse<T>>(url, body)
+  return res.data.result
+}
 
 /* ------------------------------------------------------------------ *
  * 공통 응답 타입
@@ -38,10 +38,7 @@ export type LoginRequest = {
 }
 
 export async function login(payload: LoginRequest): Promise<UserResponse> {
-  const res = await http<UserResponse>('/api/auth/login', {
-    method: 'POST',
-    body: payload,
-  })
+  const res = await post<UserResponse>('/api/auth/login', payload)
   setTokens(res)
   return res
 }
@@ -61,10 +58,7 @@ export type SignupRequest = {
 }
 
 export async function signup(payload: SignupRequest): Promise<UserResponse> {
-  const res = await http<UserResponse>('/api/auth/signup', {
-    method: 'POST',
-    body: payload,
-  })
+  const res = await post<UserResponse>('/api/auth/signup', payload)
   setTokens(res)
   return res
 }
@@ -79,13 +73,13 @@ export type EmailCodeSendResponse = {
   expiresIn: number
 }
 
-export async function sendEmailVerificationCode(payload: {
+export function sendEmailVerificationCode(payload: {
   email: string
 }): Promise<EmailCodeSendResponse> {
-  return http<EmailCodeSendResponse>('/api/auth/email/verification-code', {
-    method: 'POST',
-    body: payload,
-  })
+  return post<EmailCodeSendResponse>(
+    '/api/auth/email/verification-code',
+    payload,
+  )
 }
 
 /* ------------------------------------------------------------------ *
@@ -97,15 +91,12 @@ export type VerifyEmailResponse = {
   verified: boolean
 }
 
-export async function verifyEmail(payload: {
+export function verifyEmail(payload: {
   email: string
   /** 6자리 코드 (A-H, J-N, P-Z, 2-9) */
   code: string
 }): Promise<VerifyEmailResponse> {
-  return http<VerifyEmailResponse>('/api/auth/email/verify', {
-    method: 'POST',
-    body: payload,
-  })
+  return post<VerifyEmailResponse>('/api/auth/email/verify', payload)
 }
 
 /* ------------------------------------------------------------------ *
@@ -125,16 +116,14 @@ export type GoogleLoginResponse = {
 export async function loginWithGoogle(payload: {
   idToken: string
 }): Promise<GoogleLoginResponse> {
-  const res = await http<GoogleLoginResponse>('/api/auth/login/google', {
-    method: 'POST',
-    body: payload,
-  })
+  const res = await post<GoogleLoginResponse>('/api/auth/login/google', payload)
   setTokens(res)
   return res
 }
 
 /* ------------------------------------------------------------------ *
  * 6. accessToken 재발급  POST /api/auth/reissue
+ *    (401 자동 재발급은 instance 인터셉터가 처리. 이건 수동 호출용)
  * ------------------------------------------------------------------ */
 
 export type TokenRefreshResponse = {
@@ -143,14 +132,9 @@ export type TokenRefreshResponse = {
   accessTokenExpiresIn: number
 }
 
-export async function reissue(): Promise<TokenRefreshResponse> {
-  const refreshToken = getRefreshToken()
-  if (!refreshToken) throw new Error('refreshToken 없음')
-
-  const res = await http<TokenRefreshResponse>('/api/auth/reissue', {
-    method: 'POST',
-    body: { refreshToken },
-    retryOnUnauthorized: false,
+export async function reissue(refreshToken: string): Promise<TokenRefreshResponse> {
+  const res = await post<TokenRefreshResponse>('/api/auth/reissue', {
+    refreshToken,
   })
   setTokens(res)
   return res
@@ -162,11 +146,7 @@ export async function reissue(): Promise<TokenRefreshResponse> {
 
 export async function logout(): Promise<void> {
   try {
-    await http<void>('/api/auth/logout', {
-      method: 'POST',
-      auth: true,
-      retryOnUnauthorized: false,
-    })
+    await instance.post('/api/auth/logout')
   } finally {
     clearTokens()
   }
@@ -188,26 +168,9 @@ export async function changeUserRole(
   userId: number,
   role: UserRole,
 ): Promise<RoleChangeResponse> {
-  return http<RoleChangeResponse>(`/api/auth/${userId}/role`, {
-    method: 'PATCH',
-    body: { role },
-    auth: true,
-  })
+  const res = await instance.patch<ApiResponse<RoleChangeResponse>>(
+    `/api/auth/${userId}/role`,
+    { role },
+  )
+  return res.data.result
 }
-
-/* ------------------------------------------------------------------ *
- * http 래퍼에 토큰 접근자 주입 (401 → reissue → 재시도)
- * ------------------------------------------------------------------ */
-
-configureHttp({
-  getAccessToken,
-  onUnauthorized: async () => {
-    try {
-      await reissue()
-      return true
-    } catch {
-      clearTokens()
-      return false
-    }
-  },
-})

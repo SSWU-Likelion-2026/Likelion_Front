@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 
 // api
-import { getProfile } from '../../api/mypage/mypageApi'
+import { getProfile, editProfile } from '../../api/mypage/mypageApi'
 import type { ProfileGetResponse } from '../../types/mypage/mypage'
 
 // component
@@ -66,7 +66,17 @@ export default function MyPage() {
 
   const handleEditStart = () => setIsEditing(true)
   const handleEditCancel = () => setIsEditing(false)
-  const handleEditSave = () => setIsEditing(false)
+  const handleEditSave = () => {
+    editProfile({
+      name: profileData?.name ?? '',
+      major: editValues[1],
+      studentId: editValues[2],
+      phoneNumber: editValues[3],
+    }).then(() => {
+      getProfile().then(res => setProfileData(res.result))
+      setIsEditing(false)
+    })
+  }
 
   return (
     <div className="flex flex-col">

@@ -26,6 +26,34 @@ export type ProfileEditResponse = {
     phoneNumber: string
 }
 
+// 지원 현황 조회 API - 쿼리 파라미터 SUBMITTED
+
+export type ApplicationGetResponse = {
+    status: "SUBMITTED"
+    totalCount: number
+    applications: SubmittedApplication[]
+}
+
+export type SubmittedApplication = {
+    applicationId: number
+    name: string
+    part: string
+    applicationStatus: string
+    submittedAt: string
+}
+
+// 지원 현황 조회 API - 쿼리 파라미터 DRAFT
+export type DraftApplication = {
+    hasApplication: boolean
+    status: "DRAFT"
+    applicationId: number
+    name: string
+    part: string
+    applicationStatus: string
+    updatedAt: string
+}
+
+// 임시저장 지원서 불러오기 API 타입
 export type DraftApplicationResponse = {
     applicationId: number
     recruitmentId: number
@@ -41,3 +69,4 @@ export type Answers = {
     question: string
     content: string
 }
+

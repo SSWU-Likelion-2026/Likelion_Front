@@ -28,6 +28,16 @@ function Header() {
           ))}
         </ul>
       </nav>
+      <NavLink
+        to="/login"
+        className={({ isActive }) =>
+          `ml-auto no-underline font-semibold ${
+            isActive ? 'text-primary-100' : 'text-gray-1'
+          }`
+        }
+      >
+        로그인
+      </NavLink>
     </header>
   )
 }

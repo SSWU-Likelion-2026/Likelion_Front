@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import backbtn from '../../img/project/backbtn.svg'
 import leftbtn from '../../img/project/left.svg'

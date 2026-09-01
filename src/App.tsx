@@ -3,6 +3,8 @@ import Header from './components/Header'
 import Home from './pages/Home'
 import People from './pages/People'
 import Project from './pages/Project'
+import ProjectMaking from './pages/project/ProjectMaking'
+import ProjectDetail from './pages/project/ProjectDetail'
 import Recruiting from './pages/Recruiting'
 import Session from './pages/session/Session'
 import SessionDetail from './pages/session/SessionDetail'
@@ -18,6 +20,8 @@ function App() {
         <Route path="/session" element={<Session />} />
         <Route path="/session/:week" element={<SessionDetail />} />
         <Route path="/project" element={<Project />} />
+         <Route path="/projectmaking" element={<ProjectMaking />} />
+         <Route path="/projectdetail" element={<ProjectDetail />} />
         <Route path="/people" element={<People />} />
         <Route path="/recruiting" element={<Recruiting />} />
         <Route path="/stamp" element={<Stamp />} />

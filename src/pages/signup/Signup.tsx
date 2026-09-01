@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import logoName from '../img/signup/logo-name.png'
-import { sendEmailVerificationCode, signup, verifyEmail } from '../api/auth'
-import { ApiError } from '../api/instance'
+import logoName from '../../img/signup/logo-name.png'
+import { sendEmailVerificationCode, signup, verifyEmail } from '../../api/signup/auth'
+import { ApiError } from '../../api/instance'
 
 const fieldClass =
   'h-[59px] w-full rounded-[15px] border border-primary-15 bg-[#FAFAFA] px-4 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'

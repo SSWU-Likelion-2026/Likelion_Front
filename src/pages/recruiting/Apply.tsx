@@ -11,7 +11,7 @@ import {
   uploadApplicationFile,
   type CurrentQuestionsResponse,
   type Question,
-} from '../../api/recruit'
+} from '../../api/recruiting/recruit'
 import { FALLBACK_QUESTIONS } from '../../lib/recruit-fallback'
 
 function Apply() {

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 
 // api
 
-import { getProfile, editProfile, editProfileImage, getSubmittedApplications, getDraftApplications } from '../../api/mypage/mypageApi'
+import { getProfile, editProfile, editProfileImage, getSubmittedApplications, getDraftApplications } from '../../api/mypage/mypage'
 import type { ProfileGetResponse, ApplicationGetResponse, DraftApplication } from '../../types/mypage/mypage'
 
 // component

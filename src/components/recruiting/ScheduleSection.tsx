@@ -1,4 +1,4 @@
-import type { RecruitmentInfo } from '../../api/recruit'
+import type { RecruitmentInfo } from '../../api/recruiting/recruit'
 import { buildSchedule } from '../../lib/recruit-format'
 
 type Props = {

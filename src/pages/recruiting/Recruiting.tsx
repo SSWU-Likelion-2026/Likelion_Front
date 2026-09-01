@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import RecruitHero from '../components/recruiting/RecruitHero'
-import ScheduleSection from '../components/recruiting/ScheduleSection'
-import PartSection from '../components/recruiting/PartSection'
-import FaqSection from '../components/recruiting/FaqSection'
+import RecruitHero from '../../components/recruiting/RecruitHero'
+import ScheduleSection from '../../components/recruiting/ScheduleSection'
+import PartSection from '../../components/recruiting/PartSection'
+import FaqSection from '../../components/recruiting/FaqSection'
 import {
   getCurrentRecruitment,
   getLandingInfo,
   type CurrentRecruitment,
   type LandingPageResponse,
-} from '../api/recruit'
-import { FALLBACK_LANDING } from '../lib/recruit-fallback'
+} from '../../api/recruiting/recruit'
+import { FALLBACK_LANDING } from '../../lib/recruit-fallback'
 
 function Recruiting() {
   // ?preview=open / ?preview=closed → 히어로 상태 강제 (디자인 확인용)

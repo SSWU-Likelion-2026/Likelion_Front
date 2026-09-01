@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { login, loginWithGoogle } from '../api/auth'
-import { ApiError } from '../api/instance'
-import { renderGoogleButton } from '../lib/google-auth'
-import logoName from '../img/signup/logo-name.png'
+import { login, loginWithGoogle } from '../../api/signup/auth'
+import { ApiError } from '../../api/instance'
+import { renderGoogleButton } from '../../lib/google-auth'
+import logoName from '../../img/signup/logo-name.png'
 
 // Email / Password 입력창 (여러 번 써서 상수로만 빼둠)
 // 배경 #FAFAFA · 테두리 보라 15% · 라운드 15px · 높이 59px

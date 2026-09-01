@@ -3,9 +3,9 @@
  * 스웨거 tag: User API. 모든 응답은 ApiResponse<T> 로 감싸여 온다.
  */
 
-import instance from './instance'
-import type { ApiResponse } from '../types/type'
-import { clearTokens, setTokens } from '../lib/auth-storage'
+import instance from '../instance'
+import type { ApiResponse } from '../../types/type'
+import { clearTokens, setTokens } from '../../lib/auth-storage'
 
 async function post<T>(url: string, body?: unknown): Promise<T> {
   const res = await instance.post<ApiResponse<T>>(url, body)

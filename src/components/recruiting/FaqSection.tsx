@@ -2,7 +2,7 @@ import { useState } from 'react'
 import ToggleGroup from '../ToggleGroup'
 import chevronUp from '../../img/recruiting/up.png'
 import chevronDown from '../../img/recruiting/down.png'
-import type { FaqInfo, PartInfo } from '../../api/recruit'
+import type { FaqInfo, PartInfo } from '../../api/recruiting/recruit'
 
 type Props = {
   parts: PartInfo[]

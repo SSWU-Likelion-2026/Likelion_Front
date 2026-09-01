@@ -1,7 +1,7 @@
 import recruitFolderPm from '../img/recruiting/recruit_folder-pm.svg'
 import recruitFolderFe from '../img/recruiting/recruit_folder-fe.svg'
 import recruitFolderBe from '../img/recruiting/recruit_folder-be.svg'
-import type { RecruitmentInfo } from '../api/recruit'
+import type { RecruitmentInfo } from '../api/recruiting/recruit'
 
 /** ISO 문자열 → "2026.03.02" */
 export function formatYmd(iso: string | null | undefined): string {

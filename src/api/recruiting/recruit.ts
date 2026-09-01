@@ -4,8 +4,8 @@
  * 응답은 ApiResponse<T> 로 감싸여 온다.
  */
 
-import instance from './instance'
-import type { ApiResponse } from '../types/type'
+import instance from '../instance'
+import type { ApiResponse } from '../../types/type'
 
 async function get<T>(url: string): Promise<T> {
   const res = await instance.get<ApiResponse<T>>(url)

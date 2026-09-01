@@ -1,7 +1,7 @@
 import type {
   CurrentQuestionsResponse,
   LandingPageResponse,
-} from '../api/recruit'
+} from '../api/recruiting/recruit'
 
 /**
  * 백엔드에 활성 모집 공고가 없을 때(/recruitments/current 404) 쓰는 임시 데이터.

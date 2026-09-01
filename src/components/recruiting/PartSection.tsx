@@ -1,4 +1,4 @@
-import type { PartInfo } from '../../api/recruit'
+import type { PartInfo } from '../../api/recruiting/recruit'
 import { partImageByName } from '../../lib/recruit-format'
 
 type Props = {

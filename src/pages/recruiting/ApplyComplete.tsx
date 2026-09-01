@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getMyApplication } from '../../api/recruit'
+import { getMyApplication } from '../../api/recruiting/recruit'
 
 function ApplyComplete() {
   // 실제 값은 백엔드(getMyApplication)에서. 로딩 전/실패 시 placeholder.

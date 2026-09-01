@@ -27,7 +27,6 @@ export type ProfileEditResponse = {
 }
 
 // 지원 현황 조회 API - 쿼리 파라미터 SUBMITTED
-
 export type ApplicationGetResponse = {
     status: "SUBMITTED"
     totalCount: number

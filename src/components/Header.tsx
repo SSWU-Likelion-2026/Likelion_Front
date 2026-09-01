@@ -26,6 +26,14 @@ function Header() {
           ))}
         </ul>
       </nav>
+      <NavLink
+        to="/login"
+        className={({ isActive }) =>
+          isActive ? 'header-login active' : 'header-login'
+        }
+      >
+        로그인
+      </NavLink>
     </header>
   )
 }

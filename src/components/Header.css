@@ -22,3 +22,14 @@
 .nav a.active {
   color: var(--color-primary-100);
 }
+
+.header-login {
+  margin-left: auto;
+  text-decoration: none;
+  color: var(--color-gray-1);
+  font-weight: 600;
+}
+
+.header-login.active {
+  color: var(--color-primary-100);
+}

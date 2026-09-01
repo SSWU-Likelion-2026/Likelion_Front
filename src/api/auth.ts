@@ -1,11 +1,7 @@
 /**
  * 인증 API. (담당: 손정민)
- *
- * ⚠️ 스웨거가 아직 없어서 요청/응답 필드는 전부 "추정"이다.
- *    스웨거 나오면 아래 타입만 확정하면 된다. 특히:
- *    - login / signup / reissue 는 "🛠️ 200 response 수정존재" 표시가 있었음
- *    - 응답이 { data: ... } 로 감싸여 오면 각 함수의 반환 타입에 래퍼를 씌우고
- *      http() 호출부에서 .data 를 꺼내면 된다.
+ * 스웨거 기준: http://52.79.239.27:8080/swagger-ui  (tag: User API)
+ * 모든 응답은 ApiResponse 로 감싸여 오고, http() 가 result 만 꺼내준다.
  */
 
 import { configureHttp, http } from './http'
@@ -17,26 +13,23 @@ import {
 } from '../lib/auth-storage'
 
 /* ------------------------------------------------------------------ *
- * 공통 타입 (추정)
+ * 공통 응답 타입
  * ------------------------------------------------------------------ */
 
-export type UserRole = 'USER' | 'ADMIN' // TODO: 실제 enum 확인
-
-export type TokenPair = {
-  accessToken: string
-  // refreshToken 을 httpOnly 쿠키로 주면 이 필드는 사라진다.
-  refreshToken?: string
-}
-
-export type AuthUser = {
-  id: number
-  email: string
+/** 로그인 / 회원가입 성공 시 내려오는 유저 + 토큰 정보 */
+export type UserResponse = {
+  userId: number
   name: string
-  role: UserRole
+  email: string
+  role: string
+  accessToken: string
+  refreshToken: string
+  /** accessToken 유효기간 (ms) */
+  accessTokenExpiresIn: number
 }
 
 /* ------------------------------------------------------------------ *
- * 1. 로컬 로그인  POST /api/auth/login   (🛠️ 200 수정존재)
+ * 1. 로컬 로그인  POST /api/auth/login
  * ------------------------------------------------------------------ */
 
 export type LoginRequest = {
@@ -44,13 +37,8 @@ export type LoginRequest = {
   password: string
 }
 
-// TODO: 수정된 200 응답 형태로 확정
-export type LoginResponse = TokenPair & {
-  user?: AuthUser
-}
-
-export async function login(payload: LoginRequest): Promise<LoginResponse> {
-  const res = await http<LoginResponse>('/api/auth/login', {
+export async function login(payload: LoginRequest): Promise<UserResponse> {
+  const res = await http<UserResponse>('/api/auth/login', {
     method: 'POST',
     body: payload,
   })
@@ -59,66 +47,61 @@ export async function login(payload: LoginRequest): Promise<LoginResponse> {
 }
 
 /* ------------------------------------------------------------------ *
- * 2. 로컬 회원가입  POST /api/auth/signup   (🛠️ 200 수정존재)
+ * 2. 로컬 회원가입  POST /api/auth/signup
+ *    성공 시 바로 로그인 처리 (accessToken/refreshToken 포함)
  * ------------------------------------------------------------------ */
 
 export type SignupRequest = {
-  name: string
+  name: string // 최대 30자
   email: string
+  /** 8~20자, 영문+숫자+특수문자(!@#$%^&*) 각 1개 이상 */
   password: string
-  // 이메일 인증을 먼저 통과한 뒤 그 결과 토큰/플래그를 같이 보내는 구조일 수 있음
-  emailVerified?: boolean
+  /** 비밀번호 확인 (password 와 동일해야 함) */
+  passwordCheck: string
 }
 
-// TODO: 수정된 200 응답 형태로 확정 (가입 직후 바로 로그인 처리되는지 여부 포함)
-export type SignupResponse = {
-  user?: AuthUser
-} & Partial<TokenPair>
-
-export async function signup(payload: SignupRequest): Promise<SignupResponse> {
-  const res = await http<SignupResponse>('/api/auth/signup', {
+export async function signup(payload: SignupRequest): Promise<UserResponse> {
+  const res = await http<UserResponse>('/api/auth/signup', {
     method: 'POST',
     body: payload,
   })
-  if (res.accessToken) setTokens({ accessToken: res.accessToken, refreshToken: res.refreshToken })
+  setTokens(res)
   return res
 }
 
 /* ------------------------------------------------------------------ *
- * 3. 이메일 인증번호 발송  POST /api/auth/email/verification-code
+ * 3. 이메일 인증코드 전송  POST /api/auth/email/verification-code
  * ------------------------------------------------------------------ */
 
-export type SendEmailCodeRequest = {
+export type EmailCodeSendResponse = {
   email: string
+  /** 코드 유효시간 (초) */
+  expiresIn: number
 }
 
-export async function sendEmailVerificationCode(
-  payload: SendEmailCodeRequest,
-): Promise<void> {
-  await http<void>('/api/auth/email/verification-code', {
+export async function sendEmailVerificationCode(payload: {
+  email: string
+}): Promise<EmailCodeSendResponse> {
+  return http<EmailCodeSendResponse>('/api/auth/email/verification-code', {
     method: 'POST',
     body: payload,
   })
 }
 
 /* ------------------------------------------------------------------ *
- * 4. 이메일 인증번호 확인  POST /api/auth/email/verify
+ * 4. 이메일 인증코드 확인  POST /api/auth/email/verify
  * ------------------------------------------------------------------ */
 
-export type VerifyEmailRequest = {
-  email: string
-  code: string
-}
-
-// 인증 성공 시 회원가입에 넘길 티켓/토큰을 주는 경우가 많음
 export type VerifyEmailResponse = {
+  email: string
   verified: boolean
-  verificationToken?: string
 }
 
-export async function verifyEmail(
-  payload: VerifyEmailRequest,
-): Promise<VerifyEmailResponse> {
+export async function verifyEmail(payload: {
+  email: string
+  /** 6자리 코드 (A-H, J-N, P-Z, 2-9) */
+  code: string
+}): Promise<VerifyEmailResponse> {
   return http<VerifyEmailResponse>('/api/auth/email/verify', {
     method: 'POST',
     body: payload,
@@ -129,18 +112,19 @@ export async function verifyEmail(
  * 5. 구글 로그인  POST /api/auth/login/google
  * ------------------------------------------------------------------ */
 
-// 프론트에서 구글로 받은 값을 그대로 넘긴다. idToken / authCode 중 무엇인지 확인 필요.
-export type GoogleLoginRequest = {
-  idToken?: string
-  code?: string
-  redirectUri?: string
+export type GoogleLoginResponse = {
+  userId: number
+  name: string
+  role: string
+  accessToken: string
+  refreshToken: string
+  /** 이번에 처음 가입된 유저인지 */
+  isNewUser: boolean
 }
 
-export type GoogleLoginResponse = LoginResponse
-
-export async function loginWithGoogle(
-  payload: GoogleLoginRequest,
-): Promise<GoogleLoginResponse> {
+export async function loginWithGoogle(payload: {
+  idToken: string
+}): Promise<GoogleLoginResponse> {
   const res = await http<GoogleLoginResponse>('/api/auth/login/google', {
     method: 'POST',
     body: payload,
@@ -150,21 +134,22 @@ export async function loginWithGoogle(
 }
 
 /* ------------------------------------------------------------------ *
- * 6. 토큰 재발급  POST /api/auth/reissue   (🛠️ 200 수정존재)
+ * 6. accessToken 재발급  POST /api/auth/reissue
  * ------------------------------------------------------------------ */
 
-// refreshToken 을 body 로 보내는지 쿠키로 보내는지 확인 필요.
-export type ReissueRequest = {
-  refreshToken?: string
+export type TokenRefreshResponse = {
+  accessToken: string
+  refreshToken: string
+  accessTokenExpiresIn: number
 }
 
-export type ReissueResponse = TokenPair
+export async function reissue(): Promise<TokenRefreshResponse> {
+  const refreshToken = getRefreshToken()
+  if (!refreshToken) throw new Error('refreshToken 없음')
 
-export async function reissue(): Promise<ReissueResponse> {
-  const refreshToken = getRefreshToken() ?? undefined
-  const res = await http<ReissueResponse>('/api/auth/reissue', {
+  const res = await http<TokenRefreshResponse>('/api/auth/reissue', {
     method: 'POST',
-    body: refreshToken ? { refreshToken } : undefined,
+    body: { refreshToken },
     retryOnUnauthorized: false,
   })
   setTokens(res)
@@ -188,20 +173,24 @@ export async function logout(): Promise<void> {
 }
 
 /* ------------------------------------------------------------------ *
- * 8. [어드민] 역할 변경  PATCH /api/admin/users/{userId}/role
+ * 8. [리더] 역할 변경  PATCH /api/auth/{userId}/role
  * ------------------------------------------------------------------ */
 
-export type ChangeUserRoleRequest = {
-  role: UserRole
+export type UserRole = 'ROLE_ADMIN' | 'ROLE_MEMBER'
+
+export type RoleChangeResponse = {
+  userId: number
+  name: string
+  role: string
 }
 
 export async function changeUserRole(
   userId: number,
-  payload: ChangeUserRoleRequest,
-): Promise<AuthUser> {
-  return http<AuthUser>(`/api/admin/users/${userId}/role`, {
+  role: UserRole,
+): Promise<RoleChangeResponse> {
+  return http<RoleChangeResponse>(`/api/auth/${userId}/role`, {
     method: 'PATCH',
-    body: payload,
+    body: { role },
     auth: true,
   })
 }

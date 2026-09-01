@@ -1,21 +1,32 @@
 /**
  * 공통 fetch 래퍼.
- * 스웨거가 아직 없어서 응답 스키마는 각 api 모듈에서 가정한 타입을 사용한다.
- * 백엔드가 { data, message } 형태로 감싸서 준다면 이 파일이 아니라
- * 각 api 모듈의 반환 타입 + 아래 parseBody 를 한 곳만 고치면 된다.
+ * 백엔드는 모든 응답을 ApiResponse 로 감싸서 준다:
+ *   { isSuccess, code, message, result, timestamp }
+ * http() 는 성공 시 result 만 꺼내서 반환하고, 실패(isSuccess=false 또는 HTTP 에러) 시 ApiError 를 던진다.
  */
 
 // 빈 문자열이면 same-origin + vite 프록시(/api → 백엔드)를 탄다.
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
 
+export type ApiEnvelope<T> = {
+  isSuccess: boolean
+  code: string
+  message: string
+  result: T
+  timestamp: string
+}
+
 export class ApiError extends Error {
   status: number
+  /** 백엔드 에러 코드 (ApiResponse.code) */
+  code?: string
   body: unknown
 
-  constructor(status: number, message: string, body: unknown) {
+  constructor(status: number, message: string, body: unknown, code?: string) {
     super(message)
     this.name = 'ApiError'
     this.status = status
+    this.code = code
     this.body = body
   }
 }
@@ -63,8 +74,10 @@ export async function http<T>(path: string, options: HttpOptions = {}): Promise<
     signal,
   } = options
 
+  const isForm = body instanceof FormData
   const headers: Record<string, string> = {}
-  if (body !== undefined) headers['Content-Type'] = 'application/json'
+  // FormData 면 브라우저가 multipart 경계를 알아서 붙이므로 Content-Type 을 건드리지 않는다.
+  if (body !== undefined && !isForm) headers['Content-Type'] = 'application/json'
   if (auth) {
     const token = getAccessToken()
     if (token) headers.Authorization = `Bearer ${token}`
@@ -73,8 +86,9 @@ export async function http<T>(path: string, options: HttpOptions = {}): Promise<
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-    credentials: 'include', // refreshToken 을 httpOnly 쿠키로 줄 경우 대비
+    body:
+      body === undefined ? undefined : isForm ? body : JSON.stringify(body),
+    credentials: 'include',
     signal,
   })
 
@@ -86,18 +100,19 @@ export async function http<T>(path: string, options: HttpOptions = {}): Promise<
   }
 
   const parsed = await parseBody(res)
+  const envelope =
+    parsed && typeof parsed === 'object'
+      ? (parsed as Partial<ApiEnvelope<T>>)
+      : undefined
 
-  if (!res.ok) {
-    throw new ApiError(res.status, extractMessage(parsed, res.status), parsed)
+  if (!res.ok || envelope?.isSuccess === false) {
+    throw new ApiError(
+      res.status,
+      envelope?.message || `요청 실패 (${res.status})`,
+      parsed,
+      envelope?.code,
+    )
   }
 
-  return parsed as T
-}
-
-function extractMessage(body: unknown, status: number): string {
-  if (body && typeof body === 'object' && 'message' in body) {
-    const msg = (body as { message: unknown }).message
-    if (typeof msg === 'string' && msg) return msg
-  }
-  return `요청 실패 (${status})`
+  return envelope?.result as T
 }

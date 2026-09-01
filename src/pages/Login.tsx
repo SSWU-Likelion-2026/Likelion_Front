@@ -1,11 +1,14 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import Logo from '../components/Logo'
-import { login } from '../api/auth'
+import { login, loginWithGoogle } from '../api/auth'
 import { ApiError } from '../api/http'
+import { renderGoogleButton } from '../lib/google-auth'
+import logoName from '../img/signup/logo-name.png'
 
+// Email / Password 입력창 (여러 번 써서 상수로만 빼둠)
+// 배경 #FAFAFA · 테두리 보라 15% · 라운드 15px · 높이 59px
 const fieldClass =
-  'w-full rounded-xl bg-gray-10 px-4 py-3 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'
+  'h-[59px] w-full rounded-[15px] border border-primary-15 bg-[#FAFAFA] px-4 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'
 
 function Login() {
   const navigate = useNavigate()
@@ -13,6 +16,27 @@ function Login() {
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const googleBoxRef = useRef<HTMLDivElement>(null)
+  const [googleReady, setGoogleReady] = useState(false)
+
+  useEffect(() => {
+    const box = googleBoxRef.current
+    if (!box) return
+    renderGoogleButton(box, async (idToken) => {
+      setError(null)
+      try {
+        await loginWithGoogle({ idToken })
+        navigate('/')
+      } catch (err) {
+        setError(
+          err instanceof ApiError ? err.message : '구글 로그인에 실패했어요.',
+        )
+      }
+    })
+      .then(setGoogleReady)
+      .catch(() => setGoogleReady(false))
+  }, [navigate])
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -33,17 +57,15 @@ function Login() {
     }
   }
 
-  const handleGoogle = () => {
-    // TODO: Google OAuth 플로우 연동 → loginWithGoogle({ idToken }) 호출
-    console.log('sign in with google')
-  }
-
   return (
-    <main className="flex min-h-[calc(100svh-57px)] items-center justify-center bg-gray-10 px-4 py-12">
-      <div className="w-full max-w-[380px] rounded-3xl border border-gray-9 bg-white px-8 py-10 shadow-sm">
-        <Logo size={22} className="mx-auto mb-9 justify-center" />
+    <main className="flex min-h-[calc(100svh-57px)] items-center justify-center bg-white px-4 py-12">
+      <div className="w-full max-w-[500px] rounded-3xl border border-gray-9 bg-white px-[30px] pt-[63px] pb-10 shadow-card">
+        <div className="mb-[59px] flex items-center justify-center gap-2">
+          <img src="/logo_1.png" alt="" className="h-8 w-8" />
+          <img src={logoName} alt="LIKELION UNIV SSWU" className="h-[14.48px] w-[224.5px]" />
+        </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2.5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
             type="email"
             required
@@ -71,19 +93,29 @@ function Login() {
 
           <div className="my-1 text-center text-xs text-gray-6">or</div>
 
-          <button
-            type="button"
-            onClick={handleGoogle}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-10 px-4 py-3 text-sm font-medium text-gray-4 transition-colors hover:bg-gray-9"
-          >
-            <GoogleMark />
-            Sign in with Google
-          </button>
+          {/* 구글 버튼: GIS 가 여기에 렌더. 미설정이면 아래 비활성 버튼이 보임 */}
+          <div className="relative min-h-[44px]">
+            <div
+              ref={googleBoxRef}
+              className={
+                googleReady ? 'flex justify-center' : 'invisible absolute'
+              }
+            />
+            {!googleReady && (
+              <button
+                type="button"
+                disabled
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-9 bg-white px-4 py-3 text-sm font-medium text-gray-4 opacity-60"
+              >
+                Sign in with Google
+              </button>
+            )}
+          </div>
 
           <button
             type="submit"
             disabled={submitting}
-            className="mt-4 w-full rounded-xl bg-gray-1 px-4 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="mt-4 h-[62px] w-full rounded-[15px] bg-[#212121] px-[35px] text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {submitting ? '로그인 중…' : 'Sign in'}
           </button>
@@ -99,29 +131,6 @@ function Login() {
         </div>
       </div>
     </main>
-  )
-}
-
-function GoogleMark() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
-      <path
-        fill="#EA4335"
-        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-      />
-      <path
-        fill="#4285F4"
-        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 3-2.26 5.54-4.78 7.24l7.73 6c4.51-4.18 7.09-10.36 7.09-17.71z"
-      />
-      <path
-        fill="#FBBC05"
-        d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-      />
-      <path
-        fill="#34A853"
-        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-      />
-    </svg>
   )
 }
 

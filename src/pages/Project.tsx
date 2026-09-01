@@ -23,7 +23,7 @@ function Project() {
       </div>
 
       {/* 프로젝트 보드 */}
-      <div className="relative -mt-[20px] w-full rounded-t-[20px] bg-white px-12 py-8">
+      <div className="relative -mt-[20px] w-full rounded-t-[25px] bg-white px-[120px] py-8">
         {/* 상단 메뉴 */}
         <div className="mb-[70px] flex items-center justify-between">
           {/* 기수 선택 버튼 */}
@@ -34,8 +34,8 @@ function Project() {
                 type="button"
                 onClick={() => setSelectedGeneration(generation)}
                 className={`h-[53px] min-w-[91px] rounded-full px-5 text-[18px] font-medium transition-colors ${selectedGeneration === generation
-                    ? "bg-[#171F29] text-white"
-                    : "bg-transparent text-[#6C6E72]"
+                  ? "bg-[#171F29] text-white"
+                  : "bg-transparent text-[#6C6E72]"
                   }`}
               >
                 {generation}기
@@ -59,7 +59,8 @@ function Project() {
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="w-full overflow-hidden rounded-[20px] border border-[#E5E5E5] bg-white"
+                onClick={() => navigate("/ProjectDetail")}
+                className="w-full cursor-pointer overflow-hidden rounded-[20px] border border-[#E5E5E5] bg-white"
               >
                 <div className="aspect-[384/233] w-full bg-[#D9D9D9]" />
 

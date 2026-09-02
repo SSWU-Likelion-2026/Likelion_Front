@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 // api 
-import { getSessionDetail } from '../../api/session/session'
+import { getSessionDetail, getSessionReviews } from '../../api/session/session'
 
 //types
-import type { SessionDetailResponse } from '../../types/session/session'
+import type { SessionDetailResponse, SessionReviewResponse } from '../../types/session/session'
 import type { Session } from '../../types/session/session'
 
 // components
@@ -21,18 +21,6 @@ interface LocationState {
   sessions?: Session[]
 }
 
-interface Review {
-  id: number
-  name: string
-  content: string
-}
-
-
-const initialReviews: Review[] = [
-  { id: 1, name: '성이름', content: '확보한 뒤 명확한 전략과 솔루션으로 연결해야 합니다. 이번 교육에서는 아이디어를 논리적으로 구조화하고, 핵심 메시지가 잘 전달되는 발표 자료로 완성하는 과정을 학습합니다.' },
-  { id: 2, name: '성이름', content: '확보한 뒤 명확한 전략과 솔루션으로 연결해야 합니다. 이번 교육에서는 아이디어를 논리적으로 구조화하고, 핵심 메시지가 잘 전달되는 발표 자료로 완성하는 과정을 학습합니다.' },
-  { id: 3, name: '성이름', content: '확보한 뒤 명확한 전략과 솔루션으로 연결해야 합니다. 이번 교육에서는 아이디어를 논리적으로 구조화하고, 핵심 메시지가 잘 전달되는 발표 자료로 완성하는 과정을 학습합니다.' },
-]
 
 export default function SessionDetail() {
   const { week } = useParams<{ week: string }>()
@@ -45,7 +33,7 @@ export default function SessionDetail() {
   const [lockedModalOpen, setLockedModalOpen] = useState(false)
 
   // 세션 후기
-  const [reviews, setReviews] = useState<Review[]>(initialReviews)
+  const [reviews, setReviews] = useState<SessionReviewResponse[]>([])
   const [reviewText, setReviewText] = useState('')
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editText, setEditText] = useState('')
@@ -53,33 +41,32 @@ export default function SessionDetail() {
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null)
 
   useEffect(() => {
-    console.log(sessionId)
     if(!sessionId) return
     getSessionDetail(sessionId).then(res => setDetailData(res.result))
+    getSessionReviews(sessionId).then(res => setReviews(res.result))
   }, [sessionId])
 
   
   const handleSubmit = () => {
     if (!reviewText.trim()) return
-    setReviews(prev => [...prev, { id: Date.now(), name: '성이름', content: reviewText }])
     setReviewText('')
   }
 
-  const handleDelete = (id: number) => {
-    setReviews(prev => prev.filter(r => r.id !== id))
+  const handleDelete = (commentId: number) => {
+    setReviews(prev => prev.filter(r => r.commentId !== commentId))
     setDeleteTargetId(null)
     setOpenMenuId(null)
   }
 
-  const handleEditStart = (review: Review) => {
-    setEditingId(review.id)
+  const handleEditStart = (review: SessionReviewResponse) => {
+    setEditingId(review.commentId)
     setEditText(review.content)
     setOpenMenuId(null)
   }
 
-  const handleEditSave = (id: number) => {
+  const handleEditSave = (commentId: number) => {
     if (!editText.trim()) return
-    setReviews(prev => prev.map(r => r.id === id ? { ...r, content: editText } : r))
+    setReviews(prev => prev.map(r => r.commentId === commentId ? { ...r, content: editText } : r))
     setEditingId(null)
   }
 
@@ -143,12 +130,12 @@ export default function SessionDetail() {
 
         <div className="mt-[31px] flex flex-col gap-[25px] pb-[176px]">
           {reviews.map(review => {
-            const isEditing = editingId === review.id
+            const isEditing = editingId === review.commentId
             return (
-              <div key={review.id} className="flex gap-[13px] relative p-2">
-                <img src={ProfileImg} alt="profile" className="w-[50px] h-[50px] object-cover shrink-0" />
+              <div key={review.commentId} className="flex gap-[13px] relative p-2">
+                <img src={review.profileImageUrl ?? ProfileImg} alt="profile" className="w-[50px] h-[50px] object-cover shrink-0 rounded-full" />
                 <div className="flex-1">
-                  <p className="text-[22px] font-semibold mb-[6px]">{review.name}</p>
+                  <p className="text-[22px] font-semibold mb-[6px]">{review.userName}</p>
                   {isEditing ? (
                     <>
                       <textarea
@@ -162,7 +149,7 @@ export default function SessionDetail() {
                         <Button onClick={() => setEditingId(null)} color="white">
                           취소
                         </Button>
-                        <Button onClick={() => handleEditSave(review.id)} color="Main100">
+                        <Button onClick={() => handleEditSave(review.commentId)} color="Main100">
                           저장
                         </Button>
                       </div>
@@ -171,30 +158,32 @@ export default function SessionDetail() {
                     <p className="text-[18px] font-normal">{review.content}</p>
                   )}
                 </div>
-                <div className="relative shrink-0">
-                  <button
-                    onClick={() => setOpenMenuId(openMenuId === review.id ? null : review.id)}
-                    className="text-gray-5 text-xl cursor-pointer px-1 hover:text-gray-2"
-                  >
-                    ⋮
-                  </button>
-                  {openMenuId === review.id && (
-                    <div className="absolute right-0 top-7 w-24 bg-white border border-gray-9 rounded-lg shadow-sm overflow-hidden z-10">
-                      <button
-                        onClick={() => handleEditStart(review)}
-                        className="w-full px-4 py-2.5 text-left text-[14px] text-gray-2 hover:bg-gray-10 cursor-pointer"
-                      >
-                        수정하기
-                      </button>
-                      <button
-                        onClick={() => { setDeleteTargetId(review.id); setOpenMenuId(null) }}
-                        className="w-full px-4 py-2.5 text-left text-[14px] text-gray-2 hover:bg-gray-10 cursor-pointer"
-                      >
-                        삭제하기
-                      </button>
-                    </div>
-                  )}
-                </div>
+                {review.isOwner && (
+                  <div className="relative shrink-0">
+                    <button
+                      onClick={() => setOpenMenuId(openMenuId === review.commentId ? null : review.commentId)}
+                      className="text-gray-5 text-xl cursor-pointer px-1 hover:text-gray-2"
+                    >
+                      ⋮
+                    </button>
+                    {openMenuId === review.commentId && (
+                      <div className="absolute right-0 top-7 w-24 bg-white border border-gray-9 rounded-lg shadow-sm overflow-hidden z-10">
+                        <button
+                          onClick={() => handleEditStart(review)}
+                          className="w-full px-4 py-2.5 text-left text-[14px] text-gray-2 hover:bg-gray-10 cursor-pointer"
+                        >
+                          수정하기
+                        </button>
+                        <button
+                          onClick={() => { setDeleteTargetId(review.commentId); setOpenMenuId(null) }}
+                          className="w-full px-4 py-2.5 text-left text-[14px] text-gray-2 hover:bg-gray-10 cursor-pointer"
+                        >
+                          삭제하기
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )
           })}

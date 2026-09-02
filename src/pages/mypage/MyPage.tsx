@@ -1,60 +1,118 @@
-import { useState } from 'react'
+// react
+import { useState, useEffect } from 'react'
+
+// api
+
+import { getProfile, editProfile, editProfileImage, getSubmittedApplications, getDraftApplications } from '../../api/mypage/mypage'
+import type { ProfileGetResponse, ApplicationGetResponse, DraftApplication } from '../../types/mypage/mypage'
+
+// component
 import Banner from '../../components/Banner'
-import Profile from '../../img/mypage/profile.jpg'
-import BackIcon from '../../img/mypage/back.svg'
 import Button from '../../components/Button'
 
-const initialProfile = [
-  { title: "이메일", content: "20270908@sungshin.ac.kr" },
-  { title: "학과", content: "컴퓨터공학과" },
-  { title: "학번", content: "20270908" },
-  { title: "전화번호", content: "010-1234-5678" },
-  { title: "가입일", content: "2027.02.28" },
-]
-
-const applicationData = [
-  { title: "이름", content: "000" },
-  { title: "지원파트", content: "프론트엔드" },
-  { title: "지원서", content: "제출완료" },
-  { title: "지원상태", content: null },
-]
-
-const draftData = [
-  { title: "이름", content: "000" },
-  { title: "지원파트", content: "프론트엔드" },
-  { title: "지원서", content: "작성중" },
-]
-
+// assests
+import Profile from '../../img/mypage/profile.jpg'
+import BackIcon from '../../img/mypage/back.svg'
 
 type Tab = '내 프로필' | '지원 현황'
 
 export default function MyPage() {
   const [tab, setTab] = useState<Tab>('내 프로필')
   const [applicationTab, setApplicationTab] = useState<'지원완료' | '임시저장'>('지원완료')
-  const [isEditing, setIsEditing] = useState(false)
-  const [profile, setProfile] = useState(initialProfile)
-  const [editValues, setEditValues] = useState(initialProfile.map(item => item.content))
 
+  const [profileData, setProfileData] = useState<ProfileGetResponse | null>(null)
+  const [submittedData, setSubmittedData] = useState<ApplicationGetResponse | null>(null)
+  const [draftData, setDraftData] = useState<DraftApplication | null>(null)
+
+  const [isEditing, setIsEditing] = useState(false)
+  const [editValues, setEditValues] = useState<string[]>([])
+  const [selectedImage, setSelectedImage] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+  const profileItems = [
+    { title: "이메일", content: profileData?.email },
+    { title: "학과", content: profileData?.major },
+    { title: "학번", content: profileData?.studentId },
+    { title: "전화번호", content: profileData?.phoneNumber },
+    { title: "가입일", content: profileData?.joinedAt },
+  ]
+
+  useEffect(() => {
+    getProfile().then(res => setProfileData(res.result))
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+    }
+  }, [previewUrl])
+
+  useEffect(() => {
+    if (!profileData) return
+    setEditValues([
+      profileData.email,
+      profileData.major,
+      profileData.studentId,
+      profileData.phoneNumber,
+      profileData.joinedAt,
+    ])
+  }, [profileData])
+
+  useEffect(() => {
+    if (tab !== '지원 현황') return
+    if (applicationTab === '지원완료') {
+      getSubmittedApplications().then(res => setSubmittedData(res.result))
+    } else {
+      getDraftApplications().then(res => setDraftData(res.result))
+    }
+  }, [tab, applicationTab])
 
   const handleTabChange = (t: Tab) => {
-      setTab(t)
-      setIsEditing(false)
+    setTab(t)
+    setIsEditing(false)
   }
 
-  const handleEditStart = () => {
-    setEditValues(profile.map(item => item.content))
-    setIsEditing(true)
+  const handleEditStart = () => setIsEditing(true)
+  const handleEditSave = () => {
+    const requests: Promise<unknown>[] = [
+      editProfile({
+        name: profileData?.name ?? '',
+        major: editValues[1],
+        studentId: editValues[2],
+        phoneNumber: editValues[3],
+      }),
+    ]
+
+    if (selectedImage) {
+      const formData = new FormData()
+      formData.append('image', selectedImage)
+      requests.push(editProfileImage(formData))
+    }
+
+    Promise.all(requests).then(() => {
+      getProfile().then(res => setProfileData(res.result))
+      setSelectedImage(null)
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+      setPreviewUrl(null)
+      setIsEditing(false)
+    })
   }
 
   const handleEditCancel = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+    setPreviewUrl(null)
+    setSelectedImage(null)
     setIsEditing(false)
   }
 
-  const handleEditSave = () => {
-    setProfile(profile.map((item, i) => ({ ...item, content: editValues[i] })))
-    setIsEditing(false)
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+    setSelectedImage(file)
+    setPreviewUrl(URL.createObjectURL(file))
   }
-
+  
   return (
     <div className="flex flex-col">
       <Banner page="MyPage" />
@@ -81,10 +139,22 @@ export default function MyPage() {
           <>
             <section className='mt-[57px] flex justify-between items-center'>
               <div className='flex items-center gap-6'>
-                <img src={Profile} alt="내 프로필" className='w-[180px]' />
+                <div
+                  className={`w-[180px] h-[180px] rounded-full overflow-hidden shrink-0 ${isEditing ? 'cursor-pointer' : ''}`}
+                  onClick={() => isEditing && document.getElementById('profileImageInput')?.click()}
+                >
+                  <img src={previewUrl ?? profileData?.profileImageUrl ?? Profile} alt="내 프로필" className='w-full h-full object-cover' />
+                </div>
+                <input
+                  id='profileImageInput'
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
+                  onChange={handleImageChange}
+                />
                 <div className='flex flex-col gap-[15px]'>
-                  <h1 className='text-[34px] font-semibold'>성이름님</h1>
-                  <p className='text-[24px] font-medium text-gray-1'>성신 멋사 사이트 방문을 환영해요!</p>
+                  <h1 className='text-[34px] font-semibold'>{profileData?.name}</h1>
+                  <p className='text-[24px] font-medium text-gray-1'>{profileData?.greeting}</p>
                 </div>
               </div>
               {isEditing ? (
@@ -97,7 +167,7 @@ export default function MyPage() {
               )}
             </section>
             <main className='mt-[30px] bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[30px] px-[49px] py-[47px]'>
-              {profile.map((item, i) => (
+              {profileItems.map((item, i) => (
                 <div key={item.title} className='flex items-center h-[47px]'>
                   <p className='text-[24px] text-black font-semibold w-[117px]'>{item.title}</p>
                   {isEditing ? (
@@ -131,7 +201,7 @@ export default function MyPage() {
               ))}
             </header>
             {applicationTab === '지원완료' && (
-              applicationData.length === 0 ? (
+              submittedData?.totalCount === 0 ? (
                 <main className='relative bg-[#FAFAFA] rounded-[20px] h-[439px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[45px] px-[49px] py-[47px]'>
                   <div className='flex flex-col items-center justify-center h-full'>
                     <h1 className='text-[34px] font-semibold'>제출한 지원 내역이 없어요.</h1>
@@ -140,8 +210,13 @@ export default function MyPage() {
                   </div>
                 </main>
               ) : (
-                <main className='relative bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[45px] px-[49px] py-[47px]'>
-                  {applicationData.map((item) => (
+                <main className='relative bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[30px] px-[49px] py-[47px]'>
+                  {[
+                    { title: '이름', content: submittedData?.applications[0]?.name },
+                    { title: '지원파트', content: submittedData?.applications[0]?.part },
+                    { title: '지원상태', content: submittedData?.applications[0]?.applicationStatus },
+                    { title: '결과확인', content: null },
+                  ].map((item) => (
                     <div key={item.title} className='flex items-center h-[47px]'>
                       <p className='text-[24px] text-black font-semibold w-[117px]'>{item.title}</p>
                       {item.content === null
@@ -150,15 +225,19 @@ export default function MyPage() {
                       }
                     </div>
                   ))}
-                  <p className='absolute right-[35px] bottom-[25px] text-[#979797] text-[18px]'>최종 제출일 2000.00.00</p>
+                  <p className='absolute right-[35px] bottom-[25px] text-[#979797] text-[18px]'>최종 제출일 {submittedData?.applications[0]?.submittedAt}</p>
                 </main>
               )
             )}
 
             {applicationTab === '임시저장' && (
               <>
-                <main className='bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 flex flex-col gap-[45px] px-[49px] py-[47px]'>
-                  {draftData.map((item) => (
+                <main className='bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 flex flex-col gap-[30px] px-[49px] py-[47px]'>
+                  {[
+                    { title: '이름', content: draftData?.name },
+                    { title: '지원파트', content: draftData?.part },
+                    { title: '지원서', content: draftData?.applicationStatus },
+                  ].map((item) => (
                     <div key={item.title} className='flex items-center h-[47px]'>
                       <p className='text-[24px] text-black font-semibold w-[117px]'>{item.title}</p>
                       <p className='text-[22px] text-gray-5'>{item.content}</p>

@@ -1,13 +1,24 @@
-import { useState } from 'react'
+// react
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+
+// api 
+import { getSessionDetail } from '../../api/session/session'
+
+//types
+import type { SessionDetailResponse } from '../../types/session/session'
+import type { Session } from '../../types/session/session'
+
+// components
 import Button from '../../components/Button'
 import Modal from '../../components/Modal'
+
+// assests
 import ProfileImg from '../../img/session/profile.jpg'
 
 interface LocationState {
-  part: string
-  title: string
-  noneWeeks?: string[]
+  sessionId: number
+  sessions?: Session[]
 }
 
 interface Review {
@@ -16,11 +27,6 @@ interface Review {
   content: string
 }
 
-const weeks = ['W01', 'W02', 'W03', 'W04', 'W05', 'W06', 'W07', 'W08', 'W09', 'W10']
-
-const mockTags = ['문제와 맥락정리', '데스크 리서치 및 경쟁사분석', '핵심 솔루션 설계', '설득력있는 PPT 스토리 만들기']
-
-const mockDescription = `좋은 아이디어를 실제 서비스 기획으로 발전시키기 위해서는 문제의 배경과 사용자를 이해하고, 리서치를 통해 근거를 확보한 뒤 명확한 전략과 솔루션으로 연결해야 합니다. 이번 교육에서는 아이디어를 논리적으로 구조화하고, 핵심 메시지가 잘 전달되는 발표 자료로 완성하는 과정을 학습합니다. 좋은 아이디어를 실제 서비스 기획으로 발전시키기 위해서는 문제의 배경과 사용자를 이해하고, 리서치를 통해 근거를 확보한 뒤 명확한 전략과 솔루션으로 연결해야 합니다. 이번 교육에서는 아이디어를 논리적으로 구조화하고, 핵심 메시지가 잘 전달되는 발표 자료로 완성하는 과정을 학습합니다.`
 
 const initialReviews: Review[] = [
   { id: 1, name: '성이름', content: '확보한 뒤 명확한 전략과 솔루션으로 연결해야 합니다. 이번 교육에서는 아이디어를 논리적으로 구조화하고, 핵심 메시지가 잘 전달되는 발표 자료로 완성하는 과정을 학습합니다.' },
@@ -32,16 +38,27 @@ export default function SessionDetail() {
   const { week } = useParams<{ week: string }>()
   const location = useLocation()
   const navigate = useNavigate()
-  const { part, title, noneWeeks = [] } = (location.state as LocationState) ?? { part: '', title: '', noneWeeks: [] }
+  const { sessionId, sessions = [] } = (location.state as LocationState) ?? { sessionId: 0, sessions: [] }
+
+  // 세션 상세
+  const [detailData, setDetailData] = useState<SessionDetailResponse | null>(null)
   const [lockedModalOpen, setLockedModalOpen] = useState(false)
 
-  const [reviewText, setReviewText] = useState('')
+  // 세션 후기
   const [reviews, setReviews] = useState<Review[]>(initialReviews)
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null)
+  const [reviewText, setReviewText] = useState('')
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editText, setEditText] = useState('')
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null)
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null)
 
+  useEffect(() => {
+    console.log(sessionId)
+    if(!sessionId) return
+    getSessionDetail(sessionId).then(res => setDetailData(res.result))
+  }, [sessionId])
+
+  
   const handleSubmit = () => {
     if (!reviewText.trim()) return
     setReviews(prev => [...prev, { id: Date.now(), name: '성이름', content: reviewText }])
@@ -70,14 +87,14 @@ export default function SessionDetail() {
     <div className="mt-[43px] px-30 flex justify-center gap-[78px] min-h-screen">
       
       <aside className="w-[102px] y-[64px] shrink-0 flex flex-col">
-        {weeks.map(w => (
+        {sessions.map(s => (
           <button
-            key={w}
-            onClick={() => noneWeeks.includes(w) ? setLockedModalOpen(true) : navigate(`/session/${w}`, { state: { part, title, noneWeeks } })}
+            key={s.sessionId}
+            onClick={() => navigate(`/session/${s.weekNumber}`, { state: { sessionId: s.sessionId, sessions } })}
             className={`mb-[21px] px-[28.9px] py-[19px] rounded-[5px] text-[22px] font-medium text-center cursor-pointer
-              ${w === week ? 'bg-black text-white' : 'text-gray-8'}`}
+              ${s.weekNumber === Number(week) ? 'bg-black text-white' : 'text-gray-8'}`}
           >
-            {w}
+            {`W${String(s.weekNumber).padStart(2, '0')}`}
           </button>
         ))}
       </aside>
@@ -85,23 +102,24 @@ export default function SessionDetail() {
       <main className="flex-1 flex flex-col justify-center">
         
         <header className='flex flex-col gap-[35px]'>
-            <p className="text-[18px] text-gray-4">{part} &gt; {week}</p>
-            <h1 className="text-[32px] text-black">[{week}] {title}</h1>
+            <p className="text-[18px] text-gray-4">{detailData?.part} &gt; {detailData?.weekNumber}</p>
+            <h1 className="text-[32px] text-black">{detailData?.subTitle}</h1>
         </header>
         
         {/* 이미지 */}
-        <div className="w-full h-[693px] bg-gray-10 rounded-[20px] mt-[45px] mb-[45px]">
+        <div className="w-full h-[693px] bg-gray-10 rounded-[20px] mt-[45px] mb-[45px] overflow-hidden">
+          <img src={detailData?.thumbnailUrl} alt="" className="w-full h-full object-cover" />
         </div>
 
         <div>
-            <h2 className="text-[24px] font-semibold">기획의 과정과 스토리텔링 설계</h2>
-            <p className="text-[18px] mt-[15px]">{mockDescription}</p>
+            <h2 className="text-[24px] font-semibold">{detailData?.title}</h2>
+            <p className="text-[18px] mt-[15px]">{detailData?.content}</p>
 
             <h3 className="text-[24px] font-semibold mt-[45px]">주요학습 내용</h3>
             <div className="flex flex-wrap gap-2 mt-[15px]">
-            {mockTags.map(tag => (
-                <span key={tag} className="px-3 py-3 rounded-[5px] bg-[#F3F4F6] text-[16px]">
-                {tag}
+            {detailData?.learningTopics.map(tag => (
+                <span key={tag.sequenceNum} className="px-3 py-3 rounded-[5px] bg-[#F3F4F6] text-[16px]">
+                {tag.content}
                 </span>
             ))}
             </div>

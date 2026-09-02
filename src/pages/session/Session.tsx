@@ -96,7 +96,7 @@ function Session() {
               key={item.sessionId}
               week={item.weekNumber}
               title={item.title}
-              onClick={() => navigate(`/session/${item.weekNumber}`, { state: { part: track, title: item.title } })}
+              onClick={() => navigate(`/session/${item.weekNumber}`, { state: { sessionId: item.sessionId, sessions: sessionData } })}
             />
           ))}
         </div>

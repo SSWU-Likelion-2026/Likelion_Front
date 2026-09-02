@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 // api 
-import { getSessionDetail, getSessionReviews, postSessionReview } from '../../api/session/session'
+import { getSessionDetail, getSessionReviews, postSessionReview, editSessionReviews } from '../../api/session/session'
 
 //types
 import type { SessionDetailResponse, SessionReviewResponse } from '../../types/session/session'
@@ -36,7 +36,7 @@ export default function SessionDetail() {
   const [reviews, setReviews] = useState<SessionReviewResponse[]>([])
   const [content, setContent] = useState('')
   const [editingId, setEditingId] = useState<number | null>(null)
-  const [editText, setEditText] = useState('')
+  const [editComment, setEditComment] = useState('')
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null)
 
@@ -63,14 +63,16 @@ export default function SessionDetail() {
 
   const handleEditStart = (review: SessionReviewResponse) => {
     setEditingId(review.commentId)
-    setEditText(review.content)
+    setEditComment(review.content)
     setOpenMenuId(null)
   }
 
   const handleEditSave = (commentId: number) => {
-    if (!editText.trim()) return
-    setReviews(prev => prev.map(r => r.commentId === commentId ? { ...r, content: editText } : r))
-    setEditingId(null)
+    if (!editComment.trim() || !sessionId) return
+    editSessionReviews(commentId, editComment).then(() => {
+      getSessionReviews(sessionId).then(res => setReviews(res.result))
+      setEditingId(null)
+    })
   }
 
   return (
@@ -142,8 +144,8 @@ export default function SessionDetail() {
                   {isEditing ? (
                     <>
                       <textarea
-                        value={editText}
-                        onChange={e => setEditText(e.target.value)}
+                        value={editComment}
+                        onChange={e => setEditComment(e.target.value)}
                         className="w-full text-[18px] resize-none outline-none border-b border-gray-8 pb-8px]"
                         rows={3}
                         autoFocus

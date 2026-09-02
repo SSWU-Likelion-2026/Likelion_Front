@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 // api 
-import { getSessionDetail, getSessionReviews, postSessionReview, editSessionReviews } from '../../api/session/session'
+import { getSessionDetail, getSessionReviews, postSessionReview, editSessionReviews, deleteSessionReview } from '../../api/session/session'
 
 //types
 import type { SessionDetailResponse, SessionReviewResponse } from '../../types/session/session'
@@ -20,7 +20,6 @@ interface LocationState {
   sessionId: number
   sessions?: Session[]
 }
-
 
 export default function SessionDetail() {
   const { week } = useParams<{ week: string }>()
@@ -56,9 +55,11 @@ export default function SessionDetail() {
   }
 
   const handleDelete = (commentId: number) => {
-    setReviews(prev => prev.filter(r => r.commentId !== commentId))
-    setDeleteTargetId(null)
-    setOpenMenuId(null)
+    deleteSessionReview(commentId).then(() => {
+      if (sessionId) getSessionReviews(sessionId).then(res => setReviews(res.result))
+      setDeleteTargetId(null)
+      setOpenMenuId(null)
+    })
   }
 
   const handleEditStart = (review: SessionReviewResponse) => {

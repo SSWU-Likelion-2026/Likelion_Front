@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 // api 
-import { getSessionDetail, getSessionReviews } from '../../api/session/session'
+import { getSessionDetail, getSessionReviews, postSessionReview } from '../../api/session/session'
 
 //types
 import type { SessionDetailResponse, SessionReviewResponse } from '../../types/session/session'
@@ -34,7 +34,7 @@ export default function SessionDetail() {
 
   // 세션 후기
   const [reviews, setReviews] = useState<SessionReviewResponse[]>([])
-  const [reviewText, setReviewText] = useState('')
+  const [content, setContent] = useState('')
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editText, setEditText] = useState('')
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
@@ -48,8 +48,11 @@ export default function SessionDetail() {
 
   
   const handleSubmit = () => {
-    if (!reviewText.trim()) return
-    setReviewText('')
+    if (!content.trim() || !sessionId) return
+    postSessionReview(sessionId, content).then(() => {
+      setContent('')
+      getSessionReviews(sessionId).then(res => setReviews(res.result))
+    })
   }
 
   const handleDelete = (commentId: number) => {
@@ -114,8 +117,8 @@ export default function SessionDetail() {
 
         <div className="mt-[87px] border border-gray-9 rounded-[15px] p-[35px]">
           <textarea
-            value={reviewText}
-            onChange={e => setReviewText(e.target.value)}
+            value={content}
+            onChange={e => setContent(e.target.value)}
             placeholder="세션 후기 입력하기"
             className="w-full h-[245px] text-[20px] text-black placeholder:text-gray-4 resize-none outline-none"
           />

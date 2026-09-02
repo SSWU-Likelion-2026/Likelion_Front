@@ -29,7 +29,9 @@ export const getSessions = async (term: number, part: string): Promise<ApiRespon
     return response.data;
 }
 
-export const getSessionDetail = async (sessionId: number): Promise<ApiResponse<SessionDetailResponse>> => {
-    const response = await instance.get<ApiResponse<SessionDetailResponse>>(`/api/v1/sessions/${sessionId}`);
+export const getSessionDetail = async (term: number, part: string, weekNumber: number): Promise<ApiResponse<SessionDetailResponse>> => {
+    const response = await instance.get<ApiResponse<SessionDetailResponse>>(`/api/v1/sessions/detail`, {
+        params: { term, part, weekNumber }
+    });
     return response.data;
 }   

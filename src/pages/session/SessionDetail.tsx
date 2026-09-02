@@ -1,9 +1,9 @@
 // react
 import { useState, useEffect } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
-// api 
-import { getSessionDetail, getSessionReviews, postSessionReview, editSessionReviews, deleteSessionReview } from '../../api/session/session'
+// api
+import { getSessionDetail, getSessionReviews, postSessionReview, editSessionReviews, deleteSessionReview, getSessions } from '../../api/session/session'
 
 //types
 import type { SessionDetailResponse, SessionReviewResponse } from '../../types/session/session'
@@ -16,19 +16,18 @@ import Modal from '../../components/Modal'
 // assests
 import ProfileImg from '../../img/session/profile.jpg'
 
-interface LocationState {
-  sessionId: number
-  sessions?: Session[]
-}
-
 export default function SessionDetail() {
   const { week } = useParams<{ week: string }>()
-  const location = useLocation()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const { sessionId, sessions = [] } = (location.state as LocationState) ?? { sessionId: 0, sessions: [] }
+
+  const weekNumber = Number(week)
+  const term = Number(searchParams.get('term'))
+  const part = searchParams.get('part') ?? ''
 
   // 세션 상세
   const [detailData, setDetailData] = useState<SessionDetailResponse | null>(null)
+  const [sessions, setSessions] = useState<Session[]>([])
   const [lockedModalOpen, setLockedModalOpen] = useState(false)
 
   // 세션 후기
@@ -40,12 +39,16 @@ export default function SessionDetail() {
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null)
 
   useEffect(() => {
-    if(!sessionId) return
-    getSessionDetail(sessionId).then(res => setDetailData(res.result))
-    getSessionReviews(sessionId).then(res => setReviews(res.result))
-  }, [sessionId])
+    if (!term || !part || !weekNumber) return
+    getSessionDetail(term, part, weekNumber).then(res => {
+      setDetailData(res.result)
+      getSessionReviews(res.result.sessionId).then(r => setReviews(r.result))
+    })
+    getSessions(term, part).then(res => setSessions(res.result.sessions))
+  }, [term, part, weekNumber])
 
-  
+  const sessionId = detailData?.sessionId
+
   const handleSubmit = () => {
     if (!content.trim() || !sessionId) return
     postSessionReview(sessionId, content).then(() => {
@@ -78,27 +81,27 @@ export default function SessionDetail() {
 
   return (
     <div className="mt-[43px] px-30 flex justify-center gap-[78px] min-h-screen">
-      
+
       <aside className="w-[102px] y-[64px] shrink-0 flex flex-col">
         {sessions.map(s => (
           <button
             key={s.sessionId}
-            onClick={() => navigate(`/session/${s.weekNumber}`, { state: { sessionId: s.sessionId, sessions } })}
+            onClick={() => navigate(`/session/${s.weekNumber}?term=${term}&part=${part}`)}
             className={`mb-[21px] px-[28.9px] py-[19px] rounded-[5px] text-[22px] font-medium text-center cursor-pointer
-              ${s.weekNumber === Number(week) ? 'bg-black text-white' : 'text-gray-8'}`}
+              ${s.weekNumber === weekNumber ? 'bg-black text-white' : 'text-gray-8'}`}
           >
             {`W${String(s.weekNumber).padStart(2, '0')}`}
           </button>
         ))}
       </aside>
-      
+
       <main className="flex-1 flex flex-col justify-center">
-        
+
         <header className='flex flex-col gap-[35px]'>
             <p className="text-[18px] text-gray-4">{detailData?.part} &gt; {detailData?.weekNumber}</p>
             <h1 className="text-[32px] text-black">{detailData?.subTitle}</h1>
         </header>
-        
+
         {/* 이미지 */}
         <div className="w-full h-[693px] bg-gray-10 rounded-[20px] mt-[45px] mb-[45px] overflow-hidden">
           <img src={detailData?.thumbnailUrl} alt="" className="w-full h-full object-cover" />

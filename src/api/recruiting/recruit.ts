@@ -1,9 +1,3 @@
-/**
- * 리크루팅(모집 랜딩 + 지원서) API.
- * 스웨거 tag: Recruitment API / User Application API / Home API
- * 응답은 ApiResponse<T> 로 감싸여 온다.
- */
-
 import instance from '../instance'
 import type { ApiResponse } from '../../types/type'
 

@@ -11,6 +11,7 @@ import {
   type LandingPageResponse,
 } from '../../api/recruiting/recruit'
 import { FALLBACK_LANDING } from '../../lib/recruit-fallback'
+import { formatYmd } from '../../lib/recruit-format'
 
 function Recruiting() {
   // ?preview=open / ?preview=closed → 히어로 상태 강제 (디자인 확인용)
@@ -53,7 +54,13 @@ function Recruiting() {
     <div className="flex flex-col">
       <RecruitHero
         open={previewOpen ?? home.recruiting}
-        term={home.term ?? landing?.recruitment.term ?? null}
+        period={
+          landing
+            ? `${formatYmd(landing.recruitment.docStartAt)} - ${formatYmd(
+                landing.recruitment.docEndAt,
+              )}`
+            : undefined
+        }
       />
 
       {landing && (

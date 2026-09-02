@@ -5,7 +5,7 @@ import SessionFolderNoneImg from '../../img/session/session_folder_none.jpg'
 
 interface Props {
   variant?: 'default' | 'none'
-  week?: string
+  week?: number
   title?: string
   onClick?: () => void
 }

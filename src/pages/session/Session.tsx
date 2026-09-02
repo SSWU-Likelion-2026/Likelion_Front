@@ -1,35 +1,37 @@
+// react
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+// api
+import { getSessions } from '../../api/session/session'
+
+// types 
+import type { Session } from '../../types/session/session'
+
+// components
 import Banner from '../../components/Banner'
 import ToggleGroup from '../../components/ToggleGroup'
 import SessionFolder from '../../components/session/SessionFolder'
+
+// assets
 import Toggle from '../../img/session/toggle.svg'
 
 const parts = ['기획/디자인', '프론트엔드', '백엔드']
 const generations = ['14기', '13기', '12기']
-
-const sessions: { variant?: 'default' | 'none'; week: string; title: string }[] = [
-  { week: 'W01', title: '기획자의 사고방식 시작하기' },
-  { week: 'W02', title: '기획자의 사고방식 시작하기' },
-  { week: 'W03', title: '기획자의 사고방식 시작하기' },
-  { week: 'W04', title: '기획자의 사고방식 시작하기' },
-  { week: 'W05', title: '기획자의 사고방식 시작하기' },
-  { week: 'W06', title: '기획자의 사고방식 시작하기' },
-  { week: 'W07', title: '기획자의 사고방식 시작하기' },
-  { week: 'W08', title: '기획자의 사고방식 시작하기' },
-  { week: 'W09', title: '기획자의 사고방식 시작하기' },
-  { variant: 'none', week: 'W10', title: '기획자의 사고방식 시작하기' },
-  { variant: 'none', week: 'W11', title: '기획자의 사고방식 시작하기' },
-  { variant: 'none', week: 'W12', title: '기획자의 사고방식 시작하기' },
-]
+const partMap: Record<string, string> = {
+  '기획/디자인': 'PM',
+  '프론트엔드': 'FRONTEND',
+  '백엔드': 'BACKEND',
+}
 
 function Session() {
   const navigate = useNavigate()
   const [track, setTrack] = useState('기획/디자인')
-  const [open, setOpen] = useState(false)
   const [generation, setGeneration] = useState('14기')
+  const [sessionData, setSessionData] = useState<Session[]>([])
+  const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-
+  
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -39,6 +41,13 @@ function Session() {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  useEffect(() => {
+    const term = parseInt(generation)
+    getSessions(term, partMap[track]).then(res =>
+      setSessionData(res.result.sessions)
+    )
+  }, [track, generation])
 
   return (
     <div className="flex flex-col">
@@ -76,19 +85,18 @@ function Session() {
           </div>
         </div>
         
-        {sessions.length === 0 && (
+        {sessionData.length === 0 && (
           <div className="flex flex-col items-center justify-center pt-25">
             <h1 className='text-[34px] font-semibold'>조회된 세션이 없습니다.</h1>
           </div>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12">
-          {sessions.map((item) => (
+          {sessionData.map((item) => (
             <SessionFolder
-              key={item.week}
-              variant={item.variant}
-              week={item.week}
+              key={item.sessionId}
+              week={item.weekNumber}
               title={item.title}
-              onClick={item.variant !== 'none' ? () => navigate(`/session/${item.week}`, { state: { part: track, title: item.title, noneWeeks: sessions.filter(s => s.variant === 'none').map(s => s.week) } }) : undefined}
+              onClick={() => navigate(`/session/${item.weekNumber}`, { state: { part: track, title: item.title } })}
             />
           ))}
         </div>

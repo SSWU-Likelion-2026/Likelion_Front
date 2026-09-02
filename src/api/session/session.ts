@@ -2,8 +2,8 @@ import instance from "../instance";
 import type { ApiResponse } from "../../types/type";
 import type { SessionReviewResponse, SessionResponse, SessionDetailResponse  } from "../../types/session/session";
 
-export const editSessionReviews = async (commentId: number): Promise<ApiResponse<SessionReviewResponse[]>> => {
-    const response = await instance.put<ApiResponse<SessionReviewResponse[]>>(`/api/v1/sessions/comments/${commentId}`);
+export const editSessionReviews = async (commentId: number, content: string): Promise<ApiResponse<SessionReviewResponse>> => {
+    const response = await instance.put<ApiResponse<SessionReviewResponse>>(`/api/v1/sessions/comments/${commentId}`, { content });
     return response.data;
 }
 

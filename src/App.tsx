@@ -17,7 +17,6 @@ import Stamp from './pages/Stamp'
 
 function App() {
   return (
-    // 사이트 전체 넓이 1440px 고정 (그 이상 화면에선 가운데 정렬)
     <div>
       <Header />
       <Routes>

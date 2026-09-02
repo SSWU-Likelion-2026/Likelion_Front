@@ -142,7 +142,7 @@ function ApplyForm({ authed }: { authed: boolean }) {
 
   const handleTempSave = async () => {
     setFormError(null)
-    // preview(비로그인) 모드: API 없이 완료 모달만
+    // preview(비로그인) 모드: API 없이 완료 모달만 
     if (!authed) {
       setSavedOpen(true)
       return
@@ -252,7 +252,6 @@ function ApplyForm({ authed }: { authed: boolean }) {
         </button>
       </div>
 
-      {/* 공용 Modal 컴포넌트는 수정 안 하고, 이 화면에서만 글자 크기를 줄임 */}
       <div className="[&_h2]:text-[24px] [&_p]:text-[18px]">
         <Modal
           open={confirmOpen}
@@ -276,17 +275,12 @@ function ApplyForm({ authed }: { authed: boolean }) {
   )
 }
 
-/* ------------------------------------------------------------------ *
- * 트랙 선택 토글 (기획/디자인 · 프론트엔드 · 백엔드)
- * ------------------------------------------------------------------ */
-
 type TrackSelectProps = {
   options: string[]
   value: string
   onChange: (v: string) => void
 }
 
-// 트랙별 버튼 너비 (Figma 스펙). 없는 트랙은 내용에 맞춰 자동.
 const TRACK_WIDTH: Record<string, string> = {
   '기획/디자인': 'w-[154px]',
   프론트엔드: 'w-[147px]',
@@ -318,10 +312,6 @@ function TrackSelect({ options, value, onChange }: TrackSelectProps) {
     </div>
   )
 }
-
-/* ------------------------------------------------------------------ *
- * 문항 타입별 입력 필드
- * ------------------------------------------------------------------ */
 
 type FieldProps = {
   q: Question

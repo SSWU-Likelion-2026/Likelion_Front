@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Banner from "../components/Banner";
+import Banner from "../../components/Banner";
 
 const projects = Array.from({ length: 9 }, (_, index) => ({
   id: index + 1,

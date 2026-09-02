@@ -13,7 +13,8 @@ import ApplyComplete from './pages/recruiting/ApplyComplete'
 import Session from './pages/session/Session'
 import SessionDetail from './pages/session/SessionDetail'
 import MyPage from './pages/mypage/MyPage'
-import Stamp from './pages/Stamp'
+import Stamp from './pages/stamp/Stamp'
+import StampDetail from './pages/stamp/StampDetail'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/recruiting/apply" element={<Apply />} />
         <Route path="/recruiting/complete" element={<ApplyComplete />} />
         <Route path="/stamp" element={<Stamp />} />
+        <Route path="/stamp/:id" element={<StampDetail />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

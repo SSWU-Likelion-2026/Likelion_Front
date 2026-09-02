@@ -13,6 +13,7 @@ function Signup() {
   const [email, setEmail] = useState('')
   const [code, setCode] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordCheck, setPasswordCheck] = useState('')
 
   const [codeSent, setCodeSent] = useState(false)
   const [sendingCode, setSendingCode] = useState(false)
@@ -44,11 +45,14 @@ function Signup() {
     setError(null)
     setNotice(null)
     setSubmitting(true)
+    if (password !== passwordCheck) {
+      setError('비밀번호가 일치하지 않습니다.')
+      setSubmitting(false)
+      return
+    }
     try {
       await verifyEmail({ email, code })
-      // 디자인에 비밀번호 확인 입력칸이 없어서 passwordCheck = password 로 보냄
-      // (API 는 passwordCheck 필수) > 추후 디자인 나오면 password 확인 입력칸 추가 필요
-      await signup({ name, email, password, passwordCheck: password })
+      await signup({ name, email, password, passwordCheck })
       navigate('/')
     } catch (err) {
       setError(
@@ -85,7 +89,7 @@ function Signup() {
               type="email"
               required
               autoComplete="email"
-              placeholder="Email"
+              placeholder="학교 이메일"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={`${fieldClass} pr-16`}
@@ -117,6 +121,16 @@ function Signup() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className={fieldClass}
+          />
+
+          <input
+            type="password"
+            required
+            autoComplete="new-password"
+            placeholder="비밀번호 확인"
+            value={passwordCheck}
+            onChange={(e) => setPasswordCheck(e.target.value)}
             className={fieldClass}
           />
 

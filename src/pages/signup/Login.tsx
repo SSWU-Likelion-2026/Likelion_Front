@@ -5,8 +5,6 @@ import { ApiError } from '../../api/instance'
 import { renderGoogleButton } from '../../lib/google-auth'
 import logoName from '../../img/signup/logo-name.png'
 
-// Email / Password 입력창 (여러 번 써서 상수로만 빼둠)
-// 배경 #FAFAFA · 테두리 보라 15% · 라운드 15px · 높이 59px
 const fieldClass =
   'h-[59px] w-full rounded-[15px] border border-primary-15 bg-[#FAFAFA] px-4 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'
 
@@ -91,9 +89,7 @@ function Login() {
             </p>
           )}
 
-          <div className="my-1 text-center text-xs text-gray-6">or</div>
-
-          {/* 구글 버튼: GIS 가 여기에 렌더. 미설정이면 아래 비활성 버튼이 보임 */}
+          <div className="my-1 text-center text-[18px] text-[#ADAFB2]">or</div>
           <div className="relative min-h-[44px]">
             <div
               ref={googleBoxRef}
@@ -105,7 +101,7 @@ function Login() {
               <button
                 type="button"
                 disabled
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-9 bg-white px-4 py-3 text-sm font-medium text-gray-4 opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#8158F626] bg-[#F3F4F6] px-4 py-3 text-[20px] font-medium text-black opacity-60"
               >
                 Sign in with Google
               </button>
@@ -124,7 +120,7 @@ function Login() {
         <div className="mt-5 text-center">
           <Link
             to="/signup"
-            className="text-xs text-gray-6 underline-offset-2 hover:text-gray-4 hover:underline"
+            className="text-[18px] text-[#808386] underline-offset-2 hover:text-gray-4 hover:underline"
           >
             회원가입
           </Link>

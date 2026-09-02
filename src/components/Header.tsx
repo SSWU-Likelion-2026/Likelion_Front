@@ -1,4 +1,7 @@
-import { NavLink } from 'react-router-dom'
+import { useSyncExternalStore } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { getUser, subscribe } from '../lib/auth-storage'
+import { logout } from '../api/signup/auth'
 
 const navItems = [
   { to: '/session', label: 'Session' },
@@ -10,6 +13,13 @@ const navItems = [
 ]
 
 function Header() {
+  const navigate = useNavigate()
+  const user = useSyncExternalStore(subscribe, getUser, () => null)
+
+  const handleLogout = () => {
+    void logout().finally(() => navigate('/'))
+  }
+
   return (
     <header className="flex items-center px-6 py-4 border-b border-gray-9">
       <nav>
@@ -28,16 +38,30 @@ function Header() {
           ))}
         </ul>
       </nav>
-      <NavLink
-        to="/login"
-        className={({ isActive }) =>
-          `ml-auto no-underline font-semibold ${
-            isActive ? 'text-primary-100' : 'text-gray-1'
-          }`
-        }
-      >
-        로그인
-      </NavLink>
+
+      {user ? (
+        <div className="ml-auto flex items-center gap-3 text-gray-1">
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="font-semibold cursor-pointer hover:text-primary-100"
+          >
+            로그아웃
+          </button>
+          <span className="font-semibold">{user.name}님</span>
+        </div>
+      ) : (
+        <NavLink
+          to="/login"
+          className={({ isActive }) =>
+            `ml-auto no-underline font-semibold ${
+              isActive ? 'text-primary-100' : 'text-gray-1'
+            }`
+          }
+        >
+          로그인
+        </NavLink>
+      )}
     </header>
   )
 }

@@ -1,11 +1,6 @@
-/**
- * 인증 API. (담당: 손정민)
- * 스웨거 tag: User API. 모든 응답은 ApiResponse<T> 로 감싸여 온다.
- */
-
 import instance from '../instance'
 import type { ApiResponse } from '../../types/type'
-import { clearTokens, setTokens } from '../../lib/auth-storage'
+import { clearSession, setSession, setTokens } from '../../lib/auth-storage'
 
 async function post<T>(url: string, body?: unknown): Promise<T> {
   const res = await instance.post<ApiResponse<T>>(url, body)
@@ -39,7 +34,7 @@ export type LoginRequest = {
 
 export async function login(payload: LoginRequest): Promise<UserResponse> {
   const res = await post<UserResponse>('/api/auth/login', payload)
-  setTokens(res)
+  setSession({ ...res, user: { name: res.name } })
   return res
 }
 
@@ -59,7 +54,7 @@ export type SignupRequest = {
 
 export async function signup(payload: SignupRequest): Promise<UserResponse> {
   const res = await post<UserResponse>('/api/auth/signup', payload)
-  setTokens(res)
+  setSession({ ...res, user: { name: res.name } })
   return res
 }
 
@@ -93,7 +88,6 @@ export type VerifyEmailResponse = {
 
 export function verifyEmail(payload: {
   email: string
-  /** 6자리 코드 (A-H, J-N, P-Z, 2-9) */
   code: string
 }): Promise<VerifyEmailResponse> {
   return post<VerifyEmailResponse>('/api/auth/email/verify', payload)
@@ -109,7 +103,6 @@ export type GoogleLoginResponse = {
   role: string
   accessToken: string
   refreshToken: string
-  /** 이번에 처음 가입된 유저인지 */
   isNewUser: boolean
 }
 
@@ -117,7 +110,7 @@ export async function loginWithGoogle(payload: {
   idToken: string
 }): Promise<GoogleLoginResponse> {
   const res = await post<GoogleLoginResponse>('/api/auth/login/google', payload)
-  setTokens(res)
+  setSession({ ...res, user: { name: res.name } })
   return res
 }
 
@@ -148,12 +141,12 @@ export async function logout(): Promise<void> {
   try {
     await instance.post('/api/auth/logout')
   } finally {
-    clearTokens()
+    clearSession()
   }
 }
 
 /* ------------------------------------------------------------------ *
- * 8. [리더] 역할 변경  PATCH /api/auth/{userId}/role
+ * 8. 역할 변경  PATCH /api/auth/{userId}/role
  * ------------------------------------------------------------------ */
 
 export type UserRole = 'ROLE_ADMIN' | 'ROLE_MEMBER'

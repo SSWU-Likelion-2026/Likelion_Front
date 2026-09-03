@@ -1,9 +1,10 @@
 // react
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 // api
 
-import { getProfile, editProfile, editProfileImage, getSubmittedApplications, getDraftApplications } from '../../api/mypage/mypage'
+import { getProfile, editProfile, editProfileImage, getSubmittedApplications, getDraftApplications, getDraftApplication, deleteApplication } from '../../api/mypage/mypage'
 import type { ProfileGetResponse, ApplicationGetResponse, DraftApplication } from '../../types/mypage/mypage'
 
 // component
@@ -17,6 +18,7 @@ import BackIcon from '../../img/mypage/back.svg'
 type Tab = '내 프로필' | '지원 현황'
 
 export default function MyPage() {
+  const navigate = useNavigate()
   const [tab, setTab] = useState<Tab>('내 프로필')
   const [applicationTab, setApplicationTab] = useState<'지원완료' | '임시저장'>('지원완료')
 
@@ -246,7 +248,7 @@ export default function MyPage() {
                 </main>
                 <div className='flex justify-end gap-[15px] mt-[20px] mb-[79px]'>
                   <Button color='white'>삭제</Button>
-                  <Button color='black'>계속 작성</Button>
+                  <Button color='black' onClick={() => navigate(`/recruiting/apply?applicationId=${draftData?.applicationId}`)}>계속 작성</Button>
                 </div>
               </>
             )}

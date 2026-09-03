@@ -12,14 +12,16 @@ import {
   type CurrentQuestionsResponse,
   type Question,
 } from '../../api/recruiting/recruit'
+import { getDraftApplication } from '../../api/mypage/mypage'
 import { FALLBACK_QUESTIONS } from '../../lib/recruit-fallback'
 
 function Apply() {
   // ?preview - 로그인 게이트 건너뛰고 폼 바로 보여줌(퍼블리싱용)
   const [params] = useSearchParams()
   const authed = Boolean(getAccessToken())
+  const applicationId = params.get('applicationId') ?? undefined
   if (!authed && !params.has('preview')) return <LoginGate />
-  return <ApplyForm authed={authed} />
+  return <ApplyForm authed={authed} applicationId={applicationId} />
 }
 
 /* ------------------------------------------------------------------ *
@@ -55,7 +57,7 @@ function LoginGate() {
  * 지원서 폼 (로그인 시)
  * ------------------------------------------------------------------ */
 
-function ApplyForm({ authed }: { authed: boolean }) {
+function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?: string }) {
   const navigate = useNavigate()
 
   const [data, setData] = useState<CurrentQuestionsResponse | null>(null)
@@ -82,6 +84,19 @@ function ApplyForm({ authed }: { authed: boolean }) {
 
     // 로그인 상태에서만 내 지원서(임시저장) 불러오기
     if (!authed) return
+    if (applicationId) {
+      getDraftApplication(applicationId)
+        .then((res) => {
+          setPartName(res.result.partName ?? '')
+          setAnswers(
+            Object.fromEntries(
+              res.result.answers.map((a) => [a.questionId, a.content ?? ''])
+            )
+          )
+        })
+        .catch(() => {})
+      return
+    }
     getMyApplication()
       .then((mine) => {
         if (mine.submitStatus === 'SUBMITTED') {
@@ -98,7 +113,7 @@ function ApplyForm({ authed }: { authed: boolean }) {
       .catch(() => {
         /* 작성한 지원서 없음 — 무시 */
       })
-  }, [navigate, authed])
+  }, [navigate, authed, applicationId])
 
   const selectedGroup = data?.partQuestions.find((g) => g.partName === partName)
   const partId = selectedGroup?.partId ?? 0

@@ -1,14 +1,16 @@
 // react
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 // api
 
-import { getProfile, editProfile, editProfileImage, getSubmittedApplications, getDraftApplications } from '../../api/mypage/mypage'
+import { getProfile, editProfile, editProfileImage, getSubmittedApplications, getDraftApplications, deleteApplication } from '../../api/mypage/mypage'
 import type { ProfileGetResponse, ApplicationGetResponse, DraftApplication } from '../../types/mypage/mypage'
 
 // component
 import Banner from '../../components/Banner'
 import Button from '../../components/Button'
+import Modal from '../../components/Modal'
 
 // assests
 import Profile from '../../img/mypage/profile.jpg'
@@ -17,6 +19,7 @@ import BackIcon from '../../img/mypage/back.svg'
 type Tab = '내 프로필' | '지원 현황'
 
 export default function MyPage() {
+  const navigate = useNavigate()
   const [tab, setTab] = useState<Tab>('내 프로필')
   const [applicationTab, setApplicationTab] = useState<'지원완료' | '임시저장'>('지원완료')
 
@@ -24,6 +27,7 @@ export default function MyPage() {
   const [submittedData, setSubmittedData] = useState<ApplicationGetResponse | null>(null)
   const [draftData, setDraftData] = useState<DraftApplication | null>(null)
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editValues, setEditValues] = useState<string[]>([])
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
@@ -114,6 +118,7 @@ export default function MyPage() {
   }
   
   return (
+    <>
     <div className="flex flex-col">
       <Banner page="MyPage" />
       <div className="rounded-t-[25px] bg-white -mt-6 relative px-30">
@@ -245,8 +250,8 @@ export default function MyPage() {
                   ))}
                 </main>
                 <div className='flex justify-end gap-[15px] mt-[20px] mb-[79px]'>
-                  <Button color='white'>삭제</Button>
-                  <Button color='black'>계속 작성</Button>
+                  <Button color='white' onClick={() => setDeleteModalOpen(true)}>삭제</Button>
+                  <Button color='black' onClick={() => navigate(`/recruiting/apply?applicationId=${draftData?.applicationId}`)}>계속 작성</Button>
                 </div>
               </>
             )}
@@ -254,5 +259,19 @@ export default function MyPage() {
         )}
       </div>
     </div>
+    <Modal
+      open={deleteModalOpen}
+      title="임시저장 삭제"
+      message="임시저장된 지원서를 삭제하시겠습니까?"
+      onClose={() => setDeleteModalOpen(false)}
+      onConfirm={() => {
+        if (!draftData?.applicationId) return
+        deleteApplication(String(draftData.applicationId)).then(() => {
+          setDraftData(null)
+          setDeleteModalOpen(false)
+        })
+      }}
+    />
+    </>
   )
 }

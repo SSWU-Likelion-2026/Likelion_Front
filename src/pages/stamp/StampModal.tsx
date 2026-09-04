@@ -4,7 +4,9 @@ interface StampModalProps {
   onClose: () => void;
 }
 
-export default function StampModal({ onClose }: StampModalProps) {
+export default function StampModal({
+  onClose,
+}: StampModalProps) {
   return (
     <div
       className="
@@ -33,14 +35,12 @@ export default function StampModal({ onClose }: StampModalProps) {
           pb-[60px]
         "
       >
-        {/* 체크 아이콘 */}
         <img
           src={checkIcon}
           alt="인증 완료"
           className="stampModalCheck h-[130px] w-[130px]"
         />
 
-        {/* 안내 문구 */}
         <div className="stampModalText mt-[80px] text-center">
           <h2 className="text-[34px] font-semibold text-[#121212]">
             인증이 완료되었습니다
@@ -49,11 +49,10 @@ export default function StampModal({ onClose }: StampModalProps) {
           <p className="mt-[25px] text-[28px] leading-[1.6] text-[#808386]">
             스탬프가 지급되었어요.
             <br />
-            마이 스탬프 계속 도전해보세요!
+            마이 스탬프에서 계속 도전해보세요!
           </p>
         </div>
 
-        {/* 확인 버튼 */}
         <button
           type="button"
           onClick={onClose}

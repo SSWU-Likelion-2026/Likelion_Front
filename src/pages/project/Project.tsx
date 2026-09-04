@@ -1,29 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import Banner from "../../components/Banner";
 
-const projects = Array.from({ length: 9 }, (_, index) => ({
-  id: index + 1,
-  name: "프로젝트 이름",
-  description: "프로젝트 한줄설명",
-}));
+import { getProjects } from "../../api/project/project";
+import type { ProjectListItem } from "../../types/project/project";
 
 function Project() {
-  const [selectedGeneration, setSelectedGeneration] = useState(14);
   const navigate = useNavigate();
 
   const generations = [14, 13, 12];
 
+  const [selectedGeneration, setSelectedGeneration] = useState(14);
+  const [projects, setProjects] = useState<ProjectListItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const result = await getProjects({
+          term: selectedGeneration,
+          page: 0,
+          size: 9,
+          sort: "createdAt/desc",
+        });
+
+        setProjects(result.content);
+      } catch (error) {
+        console.error(error);
+        setError("프로젝트 목록을 불러오지 못했습니다.");
+        setProjects([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, [selectedGeneration]);
+
   return (
     <section className="min-h-screen w-full bg-white">
-      {/* 공통 배너 */}
       <Banner page="Project" />
 
-      {/* 프로젝트 보드 */}
       <div className="relative -mt-6 w-full rounded-t-[25px] bg-white px-[120px] py-8">
         {/* 상단 메뉴 */}
         <div className="mb-[70px] flex items-center justify-between">
-          {/* 기수 선택 버튼 */}
           <div className="flex items-center gap-3">
             {generations.map((generation) => (
               <button
@@ -41,7 +66,6 @@ function Project() {
             ))}
           </div>
 
-          {/* 프로젝트 등록 버튼 */}
           <button
             type="button"
             onClick={() => navigate("/ProjectMaking")}
@@ -51,33 +75,61 @@ function Project() {
           </button>
         </div>
 
-        {/* 프로젝트 카드 */}
-        {selectedGeneration !== 12 ? (
+        {/* 로딩 */}
+        {loading && (
+          <div className="flex min-h-[300px] items-center justify-center">
+            <p className="text-[22px] text-[#808386]">
+              프로젝트를 불러오는 중입니다.
+            </p>
+          </div>
+        )}
+
+        {/* 에러 */}
+        {!loading && error && (
+          <div className="flex min-h-[300px] items-center justify-center">
+            <p className="text-[22px] text-red-500">
+              {error}
+            </p>
+          </div>
+        )}
+
+        {/* 목록 */}
+        {!loading && !error && projects.length > 0 && (
           <div className="grid w-full grid-cols-3 gap-[24px] font-montserrat">
             {projects.map((project) => (
               <div
                 key={project.id}
-                onClick={() => navigate("/ProjectDetail")}
+                onClick={() =>
+                  navigate(`/ProjectDetail/${project.id}`)
+                }
                 className="w-full cursor-pointer overflow-hidden rounded-[20px] border border-[#E5E5E5] bg-white"
               >
-                {/* 프로젝트 이미지 */}
-                <div className="aspect-[384/233] w-full bg-[#D9D9D9]" />
+                <div className="aspect-[384/233] w-full overflow-hidden bg-[#D9D9D9]">
+                  {project.logoUrl && (
+                    <img
+                      src={project.logoUrl}
+                      alt={project.title}
+                      className="h-full w-full object-cover"
+                    />
+                  )}
+                </div>
 
-                {/* 프로젝트 정보 */}
                 <div className="h-[137px] w-full px-5 py-5">
                   <p className="text-[24px] font-bold text-[#121212]">
-                    {project.name}
+                    {project.title}
                   </p>
 
-                  <p className="mt-3 text-[16px] font-medium text-[#121212]">
-                    {project.description}
+                  <p className="mt-3 line-clamp-2 text-[16px] font-medium text-[#121212]">
+                    {project.summary}
                   </p>
                 </div>
               </div>
             ))}
           </div>
-        ) : (
-          /* 프로젝트 없음 */
+        )}
+
+        {/* 프로젝트 없음 */}
+        {!loading && !error && projects.length === 0 && (
           <div className="flex min-h-[300px] w-full items-start justify-center pt-[20px]">
             <p className="text-center text-[34px] font-semibold leading-[50px] text-black">
               조회된 프로젝트가 없습니다.

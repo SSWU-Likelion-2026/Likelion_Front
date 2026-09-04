@@ -6,6 +6,7 @@ import Signup from './pages/signup/Signup'
 import People from './pages/People'
 import Project from './pages/project/Project'
 import ProjectMaking from './pages/project/ProjectMaking'
+import ProjectEdit from './pages/project/ProjectEdit'
 import ProjectDetail from './pages/project/ProjectDetail'
 import Recruiting from './pages/recruiting/Recruiting'
 import Apply from './pages/recruiting/Apply'
@@ -25,8 +26,9 @@ function App() {
         <Route path="/session" element={<Session />} />
         <Route path="/session/:week" element={<SessionDetail />} />
         <Route path="/project" element={<Project />} />
-         <Route path="/projectmaking" element={<ProjectMaking />} />
-         <Route path="/projectdetail" element={<ProjectDetail />} />
+        <Route path="/projectmaking" element={<ProjectMaking />} />
+         <Route path="/ProjectEdit/:projectId" element={<ProjectEdit />} />
+        <Route path="/ProjectDetail/:projectId" element={<ProjectDetail />} />
         <Route path="/people" element={<People />} />
         <Route path="/recruiting" element={<Recruiting />} />
         <Route path="/recruiting/apply" element={<Apply />} />

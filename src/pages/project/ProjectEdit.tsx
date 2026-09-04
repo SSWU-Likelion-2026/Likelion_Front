@@ -1,31 +1,35 @@
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import backbtn from "../../img/project/backbtn.svg";
 import underbtn from "../../img/project/underbtn.svg";
 import downloadbtn from "../../img/project/download.svg";
 import deletebtn from "../../img/project/deletebtn.svg";
 
-import { createProject } from '../../api/project/project'
-import { ApiError } from '../../api/instance'
+import {
+    getProjectDetail,
+    updateProject,
+} from "../../api/project/project";
+
+import { ApiError } from "../../api/instance";
 
 import type {
     ProjectMemberRequest,
     ProjectRequest,
 } from "../../types/project/project";
 
-// ==============================
+// ======================================================
 // 기수
-// ==============================
+// ======================================================
 
 const generations = [14, 13, 12];
 
-// ==============================
+// ======================================================
 // 해커톤
-// ==============================
+// ======================================================
 //
-// 백엔드 enum 값은 최종 명세 확인 필요.
-// 현재 받은 명세에서 HERETHON은 확인됨.
+// 백엔드 enum은 최종 확인 필요.
+// 현재 명세에서 IDEATHON / HERETHON 형태를 기준으로 작성.
 //
 
 const eventOptions = [
@@ -43,14 +47,9 @@ const eventOptions = [
     },
 ];
 
-// ==============================
+// ======================================================
 // 기술 스택
-// ==============================
-//
-// 현재는 퍼블리싱용 이름 목록.
-// 추후 기술스택 조회 API가 생기면
-// name + id 형태로 교체해야 함.
-//
+// ======================================================
 
 const stackList = {
     기획: [
@@ -143,9 +142,9 @@ const stackList = {
     ],
 };
 
-// ==============================
-// Type
-// ==============================
+// ======================================================
+// 타입
+// ======================================================
 
 type TeamCategory =
     | "planning"
@@ -159,16 +158,20 @@ type TeamMembers = {
 };
 
 type ImageFile = {
-    file: File;
+    file?: File;
     url: string;
 };
 
-// ==============================
+// ======================================================
 // Component
-// ==============================
+// ======================================================
 
-export default function ProjectMaking() {
+export default function ProjectEdit() {
     const navigate = useNavigate();
+
+    const { projectId } = useParams();
+
+    const numericProjectId = Number(projectId);
 
     const logoInput =
         useRef<HTMLInputElement>(null);
@@ -176,9 +179,15 @@ export default function ProjectMaking() {
     const bannerInput =
         useRef<HTMLInputElement>(null);
 
-    // ==============================
-    // 기본 정보
-    // ==============================
+    // ======================================================
+    // 상태
+    // ======================================================
+
+    const [loading, setLoading] =
+        useState(true);
+
+    const [submitting, setSubmitting] =
+        useState(false);
 
     const [generation, setGeneration] =
         useState(14);
@@ -192,19 +201,11 @@ export default function ProjectMaking() {
     const [description, setDescription] =
         useState("");
 
-    // ==============================
-    // 해커톤
-    // ==============================
-
     const [eventType, setEventType] =
         useState("");
 
     const [eventOpen, setEventOpen] =
         useState(false);
-
-    // ==============================
-    // 기간
-    // ==============================
 
     const [startDate, setStartDate] =
         useState("");
@@ -212,28 +213,16 @@ export default function ProjectMaking() {
     const [endDate, setEndDate] =
         useState("");
 
-    // ==============================
-    // 이미지
-    // ==============================
-
     const [logo, setLogo] =
         useState<ImageFile | null>(null);
 
     const [banners, setBanners] =
         useState<ImageFile[]>([]);
 
-    // ==============================
-    // 기술 스택
-    // ==============================
-
     const [
         selectedStacks,
         setSelectedStacks,
     ] = useState<string[]>([]);
-
-    // ==============================
-    // 팀원
-    // ==============================
 
     const [members, setMembers] =
         useState<TeamMembers>({
@@ -242,16 +231,202 @@ export default function ProjectMaking() {
             backend: [""],
         });
 
-    // ==============================
-    // 등록 상태
-    // ==============================
+    // ======================================================
+    // 프로젝트 상세 조회 → 수정 폼 초기값
+    // ======================================================
 
-    const [submitting, setSubmitting] =
-        useState(false);
+    useEffect(() => {
+        if (
+            !projectId ||
+            Number.isNaN(numericProjectId)
+        ) {
+            alert(
+                "잘못된 프로젝트 주소입니다.",
+            );
 
-    // ==============================
+            navigate("/Project");
+
+            return;
+        }
+
+        const fetchProject =
+            async () => {
+                try {
+                    setLoading(true);
+
+                    const project =
+                        await getProjectDetail(
+                            numericProjectId,
+                        );
+
+                    setGeneration(
+                        project.term,
+                    );
+
+                    setProjectName(
+                        project.title,
+                    );
+
+                    setSlogan(
+                        project.summary,
+                    );
+
+                    setDescription(
+                        project.description,
+                    );
+
+                    setEventType(
+                        project.hackathon,
+                    );
+
+                    setStartDate(
+                        project.startMonth.slice(
+                            0,
+                            7,
+                        ),
+                    );
+
+                    setEndDate(
+                        project.endMonth.slice(
+                            0,
+                            7,
+                        ),
+                    );
+
+                    setLogo({
+                        url:
+                            project.logoUrl,
+                    });
+
+                    setBanners(
+                        [...project.slides]
+                            .sort(
+                                (
+                                    a,
+                                    b,
+                                ) =>
+                                    a.sequenceNum -
+                                    b.sequenceNum,
+                            )
+                            .map(
+                                (
+                                    slide,
+                                ) => ({
+                                    url:
+                                        slide.imageUrl,
+                                }),
+                            ),
+                    );
+
+                    setSelectedStacks(
+                        project.techStacks.map(
+                            (
+                                stack,
+                            ) =>
+                                stack.name,
+                        ),
+                    );
+
+                    const planning =
+                        project.members
+                            .filter(
+                                (
+                                    member,
+                                ) =>
+                                    [
+                                        "PM",
+                                        "PLANNING",
+                                        "DESIGN",
+                                    ].includes(
+                                        member.part,
+                                    ),
+                            )
+                            .map(
+                                (
+                                    member,
+                                ) =>
+                                    member.name,
+                            );
+
+                    const frontend =
+                        project.members
+                            .filter(
+                                (
+                                    member,
+                                ) =>
+                                    member.part ===
+                                    "FRONTEND",
+                            )
+                            .map(
+                                (
+                                    member,
+                                ) =>
+                                    member.name,
+                            );
+
+                    const backend =
+                        project.members
+                            .filter(
+                                (
+                                    member,
+                                ) =>
+                                    member.part ===
+                                    "BACKEND",
+                            )
+                            .map(
+                                (
+                                    member,
+                                ) =>
+                                    member.name,
+                            );
+
+                    setMembers({
+                        planning:
+                            planning.length >
+                                0
+                                ? planning
+                                : [""],
+
+                        frontend:
+                            frontend.length >
+                                0
+                                ? frontend
+                                : [""],
+
+                        backend:
+                            backend.length >
+                                0
+                                ? backend
+                                : [""],
+                    });
+                } catch (error) {
+                    console.error(
+                        "프로젝트 상세 조회 실패:",
+                        error,
+                    );
+
+                    alert(
+                        "프로젝트 정보를 불러오지 못했습니다.",
+                    );
+
+                    navigate(
+                        "/Project",
+                    );
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+        fetchProject();
+    }, [
+        navigate,
+        numericProjectId,
+        projectId,
+    ]);
+
+    // ======================================================
     // 팀원 추가
-    // ==============================
+    // ======================================================
 
     const addMember = (
         category: TeamCategory,
@@ -266,9 +441,9 @@ export default function ProjectMaking() {
         }));
     };
 
-    // ==============================
-    // 팀원 입력
-    // ==============================
+    // ======================================================
+    // 팀원 변경
+    // ======================================================
 
     const changeMember = (
         category: TeamCategory,
@@ -278,18 +453,84 @@ export default function ProjectMaking() {
         setMembers((prev) => ({
             ...prev,
 
-            [category]: prev[category].map(
-                (member, memberIndex) =>
-                    memberIndex === index
-                        ? value
-                        : member,
-            ),
+            [category]:
+                prev[category].map(
+                    (
+                        member,
+                        memberIndex,
+                    ) =>
+                        memberIndex ===
+                            index
+                            ? value
+                            : member,
+                ),
         }));
     };
 
-    // ==============================
-    // 로고 선택
-    // ==============================
+    // ======================================================
+    // 팀원 → API payload
+    // ======================================================
+
+    const createMembersPayload =
+        (): ProjectMemberRequest[] => {
+            const result: ProjectMemberRequest[] =
+                [];
+
+            members.planning.forEach(
+                (name) => {
+                    const trimmedName =
+                        name.trim();
+
+                    if (trimmedName) {
+                        result.push({
+                            name:
+                                trimmedName,
+                            part: "PM",
+                        });
+                    }
+                },
+            );
+
+            members.frontend.forEach(
+                (name) => {
+                    const trimmedName =
+                        name.trim();
+
+                    if (trimmedName) {
+                        result.push({
+                            name:
+                                trimmedName,
+
+                            part:
+                                "FRONTEND",
+                        });
+                    }
+                },
+            );
+
+            members.backend.forEach(
+                (name) => {
+                    const trimmedName =
+                        name.trim();
+
+                    if (trimmedName) {
+                        result.push({
+                            name:
+                                trimmedName,
+
+                            part:
+                                "BACKEND",
+                        });
+                    }
+                },
+            );
+
+            return result;
+        };
+
+    // ======================================================
+    // 로고
+    // ======================================================
 
     const handleLogo = (
         file?: File,
@@ -307,7 +548,9 @@ export default function ProjectMaking() {
             return;
         }
 
-        if (logo) {
+        if (
+            logo?.file
+        ) {
             URL.revokeObjectURL(
                 logo.url,
             );
@@ -315,34 +558,38 @@ export default function ProjectMaking() {
 
         setLogo({
             file,
-            url: URL.createObjectURL(
-                file,
-            ),
+
+            url:
+                URL.createObjectURL(
+                    file,
+                ),
         });
     };
-
-    // ==============================
-    // 로고 삭제
-    // ==============================
 
     const removeLogo = () => {
         if (!logo) return;
 
-        URL.revokeObjectURL(
-            logo.url,
-        );
+        if (
+            logo.file
+        ) {
+            URL.revokeObjectURL(
+                logo.url,
+            );
+        }
 
         setLogo(null);
 
-        if (logoInput.current) {
+        if (
+            logoInput.current
+        ) {
             logoInput.current.value =
                 "";
         }
     };
 
-    // ==============================
-    // 장표 선택
-    // ==============================
+    // ======================================================
+    // 장표
+    // ======================================================
 
     const handleBanner = (
         files: FileList | null,
@@ -350,7 +597,8 @@ export default function ProjectMaking() {
         if (!files) return;
 
         const remainingCount =
-            10 - banners.length;
+            10 -
+            banners.length;
 
         if (
             remainingCount <= 0
@@ -363,7 +611,9 @@ export default function ProjectMaking() {
         }
 
         const selectedFiles =
-            Array.from(files).slice(
+            Array.from(
+                files,
+            ).slice(
                 0,
                 remainingCount,
             );
@@ -379,31 +629,45 @@ export default function ProjectMaking() {
 
         const newImages =
             selectedFiles
-                .filter((file) => {
-                    if (
-                        file.size >
-                        10 * 1024 * 1024
-                    ) {
-                        alert(
-                            `${file.name}은 10MB를 초과합니다.`,
-                        );
-
-                        return false;
-                    }
-
-                    return true;
-                })
-                .map((file) => ({
-                    file,
-                    url: URL.createObjectURL(
+                .filter(
+                    (
                         file,
-                    ),
-                }));
+                    ) => {
+                        if (
+                            file.size >
+                            10 *
+                            1024 *
+                            1024
+                        ) {
+                            alert(
+                                `${file.name}은 10MB를 초과합니다.`,
+                            );
 
-        setBanners((prev) => [
-            ...prev,
-            ...newImages,
-        ]);
+                            return false;
+                        }
+
+                        return true;
+                    },
+                )
+                .map(
+                    (
+                        file,
+                    ) => ({
+                        file,
+
+                        url:
+                            URL.createObjectURL(
+                                file,
+                            ),
+                    }),
+                );
+
+        setBanners(
+            (prev) => [
+                ...prev,
+                ...newImages,
+            ],
+        );
 
         if (
             bannerInput.current
@@ -413,10 +677,6 @@ export default function ProjectMaking() {
         }
     };
 
-    // ==============================
-    // 장표 삭제
-    // ==============================
-
     const removeBanner = (
         index: number,
     ) => {
@@ -424,7 +684,9 @@ export default function ProjectMaking() {
             const target =
                 prev[index];
 
-            if (target) {
+            if (
+                target?.file
+            ) {
                 URL.revokeObjectURL(
                     target.url,
                 );
@@ -435,86 +697,41 @@ export default function ProjectMaking() {
                     _,
                     bannerIndex,
                 ) =>
-                    bannerIndex !== index,
+                    bannerIndex !==
+                    index,
             );
         });
     };
 
-    // ==============================
-    // 기술 스택 선택
-    // ==============================
+    // ======================================================
+    // 기술스택 선택
+    // ======================================================
 
     const toggleStack = (
         stack: string,
     ) => {
         setSelectedStacks(
             (prev) =>
-                prev.includes(stack)
+                prev.includes(
+                    stack,
+                )
                     ? prev.filter(
-                        (item) =>
-                            item !== stack,
+                        (
+                            item,
+                        ) =>
+                            item !==
+                            stack,
                     )
-                    : [...prev, stack],
+                    : [
+                        ...prev,
+                        stack,
+                    ],
         );
     };
 
-    // ==============================
-    // 팀원 → API 형식
-    // ==============================
-
-    const createMembersPayload =
-        (): ProjectMemberRequest[] => {
-            const result: ProjectMemberRequest[] =
-                [];
-
-            members.planning.forEach(
-                (name) => {
-                    const trimmedName =
-                        name.trim();
-
-                    if (trimmedName) {
-                        result.push({
-                            name: trimmedName,
-                            part: "PM",
-                        });
-                    }
-                },
-            );
-
-            members.frontend.forEach(
-                (name) => {
-                    const trimmedName =
-                        name.trim();
-
-                    if (trimmedName) {
-                        result.push({
-                            name: trimmedName,
-                            part: "FRONTEND",
-                        });
-                    }
-                },
-            );
-
-            members.backend.forEach(
-                (name) => {
-                    const trimmedName =
-                        name.trim();
-
-                    if (trimmedName) {
-                        result.push({
-                            name: trimmedName,
-                            part: "BACKEND",
-                        });
-                    }
-                },
-            );
-
-            return result;
-        };
-
-    // ==============================
-    // validation
-    // ==============================
+    // ======================================================
+    // Validation
+    // ======================================================
 
     const validateForm = () => {
         if (
@@ -527,7 +744,9 @@ export default function ProjectMaking() {
             return false;
         }
 
-        if (!slogan.trim()) {
+        if (
+            !slogan.trim()
+        ) {
             alert(
                 "프로젝트 슬로건을 입력해주세요.",
             );
@@ -584,7 +803,8 @@ export default function ProjectMaking() {
         }
 
         if (
-            banners.length === 0
+            banners.length ===
+            0
         ) {
             alert(
                 "프로젝트 장표를 최소 1개 등록해주세요.",
@@ -594,7 +814,8 @@ export default function ProjectMaking() {
         }
 
         if (
-            banners.length > 10
+            banners.length >
+            10
         ) {
             alert(
                 "프로젝트 장표는 최대 10개까지 등록할 수 있습니다.",
@@ -603,199 +824,238 @@ export default function ProjectMaking() {
             return false;
         }
 
-        if (
-            createMembersPayload()
-                .length === 0
-        ) {
-            alert(
-                "프로젝트 팀원을 최소 1명 입력해주세요.",
-            );
-
-            return false;
-        }
-
         return true;
     };
 
-    // ==============================
-    // 프로젝트 등록
-    // ==============================
+    // ======================================================
+    // PATCH 프로젝트 수정
+    // ======================================================
 
-    const handleSubmit =
-        async () => {
-            if (submitting) return;
+    const handleSubmit = async () => {
+        if (submitting) {
+            return;
+        }
 
-            if (!validateForm()) {
-                return;
-            }
+        if (!validateForm()) {
+            return;
+        }
 
-            /*
-             * 중요
-             * --------------------------------
-             * 현재 선택한 이미지의 logo.url,
-             * banner.url은
-             *
-             * blob:http://localhost:...
-             *
-             * 형태의 임시 URL이다.
-             *
-             * 프로젝트 POST API는
-             * 실제 https:// 형태 URL을 요구한다.
-             *
-             * 따라서 S3 업로드 API가 오기 전에는
-             * 실제 등록 요청을 보내면 안 된다.
-             */
+        if (
+            !projectId ||
+            Number.isNaN(numericProjectId)
+        ) {
+            alert("잘못된 프로젝트입니다.");
+            return;
+        }
 
-            if (
-                logo?.url.startsWith(
-                    "blob:",
-                ) ||
-                banners.some(
-                    (banner) =>
-                        banner.url.startsWith(
-                            "blob:",
-                        ),
-                )
-            ) {
-                alert(
-                    "이미지 업로드 API 연결이 필요합니다. 백엔드에서 S3 이미지 업로드 API 명세를 받은 후 연결해야 실제 프로젝트 등록이 가능합니다.",
-                );
+        /*
+         * 중요
+         *
+         * 기존 서버 이미지:
+         * https://....
+         *
+         * 새로 선택한 이미지:
+         * blob:http://....
+         *
+         * 새 이미지는 S3 업로드 API가 있어야
+         * 실제 https URL로 변환할 수 있다.
+         */
 
-                return;
-            }
+        const hasNewLogo = Boolean(
+            logo?.file,
+        );
 
-            /*
-             * 현재 UI는 기술스택을 문자열 이름으로 관리한다.
-             *
-             * 예:
-             * ["Figma", "Notion"]
-             *
-             * 프로젝트 등록 API는:
-             *
-             * techStackIds: [1, 2]
-             *
-             * 형태를 요구한다.
-             *
-             * 따라서 기술스택 조회 API가 필요하다.
-             */
+        const hasNewBanner = banners.some(
+            (banner) =>
+                Boolean(banner.file),
+        );
 
-            if (
-                selectedStacks.length >
-                0
-            ) {
-                alert(
-                    "기술 스택 ID 조회 API 연결이 필요합니다. 백엔드에서 기술스택 목록 API를 받은 후 연결해야 합니다.",
-                );
+        if (
+            hasNewLogo ||
+            hasNewBanner
+        ) {
+            alert(
+                "새 이미지가 선택되었습니다. 이미지 업로드 API 연결 후 실제 URL로 변환해야 수정할 수 있습니다.",
+            );
 
-                return;
-            }
+            return;
+        }
 
-            /*
-             * S3 + 기술스택 API 연결 후
-             * 아래 값만 실제 데이터로 교체하면 됨.
-             */
+        /*
+         * 기술스택 문제
+         *
+         * 현재 UI는 문자열:
+         * ["Figma", "Notion"]
+         *
+         * PATCH API는 ID:
+         * [1, 5]
+         *
+         * 형태를 요구한다.
+         */
 
-            const logoUrl =
-                logo?.url ?? "";
+        if (
+            selectedStacks.length > 0
+        ) {
+            alert(
+                "기술스택 ID 조회 API가 필요합니다. 현재 선택된 기술스택 이름을 techStackIds로 변환할 수 없습니다.",
+            );
 
-            const slideUrls =
+            return;
+        }
+
+        const requestData: ProjectRequest = {
+            term: generation,
+
+            hackathon: eventType,
+
+            title:
+                projectName.trim(),
+
+            summary:
+                slogan.trim(),
+
+            description:
+                description.trim(),
+
+            startMonth:
+                startDate,
+
+            endMonth:
+                endDate,
+
+            logoUrl:
+                logo?.url ?? "",
+
+            slideUrls:
                 banners.map(
                     (banner) =>
                         banner.url,
-                );
+                ),
 
-            const techStackIds: number[] =
-                [];
+            members:
+                createMembersPayload(),
 
-            const requestData: ProjectRequest =
-            {
-                term: generation,
+            techStackIds: [],
+        };
 
-                hackathon:
-                    eventType,
+        try {
+            setSubmitting(true);
 
-                title:
-                    projectName.trim(),
+            await updateProject(
+                numericProjectId,
+                requestData,
+            );
 
-                summary:
-                    slogan.trim(),
+            alert(
+                "프로젝트가 수정되었습니다.",
+            );
 
-                description:
-                    description.trim(),
+            navigate(
+                `/ProjectDetail/${numericProjectId}`,
+            );
+        } catch (error) {
+            console.error(
+                "프로젝트 수정 실패:",
+                error,
+            );
 
-                startMonth:
-                    startDate,
-
-                endMonth: endDate,
-
-                logoUrl,
-
-                slideUrls,
-
-                members:
-                    createMembersPayload(),
-
-                techStackIds,
-            };
-
-            try {
-                setSubmitting(true);
-
-                const result =
-                    await createProject(
-                        requestData,
+            if (
+                error instanceof ApiError
+            ) {
+                if (
+                    error.status === 401
+                ) {
+                    alert(
+                        "로그인이 필요합니다.",
                     );
 
-                alert(
-                    "프로젝트가 등록되었습니다.",
-                );
-
-                navigate(
-                    `/ProjectDetail/${result.projectId}`,
-                );
-            } catch (error) {
-                console.error("프로젝트 등록 실패:", error);
-
-                if (error instanceof ApiError) {
-                    if (error.status === 401) {
-                        alert("로그인이 필요합니다.");
-                        return;
-                    }
-
-                    if (error.status === 403) {
-                        alert("프로젝트를 등록할 권한이 없습니다.");
-                        return;
-                    }
-
-                    if (error.status === 404) {
-                        alert("존재하지 않는 데이터가 포함되어 있습니다.");
-                        return;
-                    }
-
-                    const body = error.body as {
-                        result?: Record<string, string>;
-                    };
-
-                    const validation = body?.result;
-
-                    if (validation) {
-                        const firstMessage = Object.values(validation)[0];
-
-                        if (firstMessage) {
-                            alert(firstMessage);
-                            return;
-                        }
-                    }
-
-                    alert(error.message);
                     return;
                 }
 
-                alert("프로젝트 등록 중 오류가 발생했습니다.");
-            } finally {
-                setSubmitting(false);
+                if (
+                    error.status === 403
+                ) {
+                    alert(
+                        "해당 프로젝트를 수정할 권한이 없습니다.",
+                    );
+
+                    return;
+                }
+
+                if (
+                    error.status === 404
+                ) {
+                    alert(
+                        "존재하지 않거나 이미 삭제된 프로젝트입니다.",
+                    );
+
+                    navigate(
+                        "/Project",
+                    );
+
+                    return;
+                }
+
+                const body =
+                    error.body as {
+                        result?: Record<
+                            string,
+                            string
+                        >;
+                    };
+
+                const validation =
+                    body?.result;
+
+                if (validation) {
+                    const firstMessage =
+                        Object.values(
+                            validation,
+                        )[0];
+
+                    if (
+                        firstMessage
+                    ) {
+                        alert(
+                            firstMessage,
+                        );
+
+                        return;
+                    }
+                }
+
+                alert(
+                    error.message,
+                );
+
+                return;
             }
-        };
+
+            alert(
+                "프로젝트 수정 중 오류가 발생했습니다.",
+            );
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    // ======================================================
+    // Loading
+    // ======================================================
+
+    if (loading) {
+        return (
+            <section className="flex min-h-screen w-full items-center justify-center bg-white">
+                <p className="text-[22px] text-[#808386]">
+                    프로젝트 정보를 불러오는 중입니다.
+                </p>
+            </section>
+        );
+    }
+
+    // ======================================================
+    // UI
+    // ======================================================
 
     return (
         <section className="min-h-screen w-full bg-white">
@@ -817,12 +1077,12 @@ export default function ProjectMaking() {
                     </button>
 
                     <h1 className="text-[32px] font-semibold text-[#121212]">
-                        프로젝트 등록
+                        프로젝트 수정
                     </h1>
                 </div>
 
                 <div className="pm flex flex-col gap-[45px]">
-                    {/* 기수 선택 */}
+                    {/* 기수 */}
                     <div>
                         <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
                             기수 선택
@@ -830,9 +1090,13 @@ export default function ProjectMaking() {
 
                         <div className="th flex gap-[15px]">
                             {generations.map(
-                                (item) => (
+                                (
+                                    item,
+                                ) => (
                                     <button
-                                        key={item}
+                                        key={
+                                            item
+                                        }
                                         type="button"
                                         onClick={() =>
                                             setGeneration(
@@ -840,9 +1104,9 @@ export default function ProjectMaking() {
                                             )
                                         }
                                         className={`num h-[79px] w-[118px] rounded-[15px] border text-[24px] font-semibold transition-colors ${generation ===
-                                            item
-                                            ? "border-[#8557FF] bg-[#8557FF] text-white"
-                                            : "border-[#D0D6DD] bg-white text-[#121212]"
+                                                item
+                                                ? "border-[#8557FF] bg-[#8557FF] text-white"
+                                                : "border-[#D0D6DD] bg-white text-[#121212]"
                                             }`}
                                     >
                                         {item}기
@@ -858,44 +1122,40 @@ export default function ProjectMaking() {
                             프로젝트 명
                         </h2>
 
-                        <div className="pm_name_input">
-                            <input
-                                type="text"
-                                value={
-                                    projectName
-                                }
-                                onChange={(e) =>
-                                    setProjectName(
-                                        e.target
-                                            .value,
-                                    )
-                                }
-                                placeholder="프로젝트 명을 입력해주세요."
-                                className="h-[94px] w-full rounded-[15px] border border-[#8158F6] px-[25px] text-[20px] font-medium text-[#121212] outline-none"
-                            />
-                        </div>
+                        <input
+                            type="text"
+                            value={
+                                projectName
+                            }
+                            onChange={(e) =>
+                                setProjectName(
+                                    e.target.value,
+                                )
+                            }
+                            placeholder="프로젝트 명을 입력해주세요."
+                            className="h-[94px] w-full rounded-[15px] border border-[#8158F6] px-[25px] text-[20px] font-medium text-[#121212] outline-none"
+                        />
                     </div>
 
-                    {/* 프로젝트 슬로건 */}
-                    <div className="pm_slogan">
+                    {/* 슬로건 */}
+                    <div>
                         <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
                             프로젝트 슬로건
                         </h2>
 
-                        <div className="pm_slogan_input">
-                            <input
-                                type="text"
-                                value={slogan}
-                                onChange={(e) =>
-                                    setSlogan(
-                                        e.target
-                                            .value,
-                                    )
-                                }
-                                placeholder="프로젝트의 슬로건 (한 줄 설명)을 입력해주세요."
-                                className="h-[94px] w-full rounded-[15px] border border-[#D0D6DD] px-[25px] text-[20px] text-[#121212] outline-none placeholder:text-[#808386] focus:border-[#865BFF]"
-                            />
-                        </div>
+                        <input
+                            type="text"
+                            value={
+                                slogan
+                            }
+                            onChange={(e) =>
+                                setSlogan(
+                                    e.target.value,
+                                )
+                            }
+                            placeholder="프로젝트의 슬로건 (한 줄 설명)을 입력해주세요."
+                            className="h-[94px] w-full rounded-[15px] border border-[#D0D6DD] px-[25px] text-[20px] text-[#121212] outline-none placeholder:text-[#808386] focus:border-[#865BFF]"
+                        />
                     </div>
 
                     {/* 프로젝트 기간 */}
@@ -911,7 +1171,9 @@ export default function ProjectMaking() {
                                     type="button"
                                     onClick={() =>
                                         setEventOpen(
-                                            (prev) =>
+                                            (
+                                                prev,
+                                            ) =>
                                                 !prev,
                                         )
                                     }
@@ -926,7 +1188,8 @@ export default function ProjectMaking() {
                                                     option.value ===
                                                     eventType,
                                             )
-                                                ?.label
+                                                ?.label ??
+                                            eventType
                                             : "해커톤 입력"}
                                     </span>
 
@@ -936,8 +1199,8 @@ export default function ProjectMaking() {
                                         }
                                         alt=""
                                         className={`h-[16px] w-[14px] transition-transform ${eventOpen
-                                            ? "rotate-180"
-                                            : ""
+                                                ? "rotate-180"
+                                                : ""
                                             }`}
                                     />
                                 </button>
@@ -974,7 +1237,6 @@ export default function ProjectMaking() {
                                 )}
                             </div>
 
-                            {/* 시작 */}
                             <input
                                 type="month"
                                 value={
@@ -982,8 +1244,7 @@ export default function ProjectMaking() {
                                 }
                                 onChange={(e) =>
                                     setStartDate(
-                                        e.target
-                                            .value,
+                                        e.target.value,
                                     )
                                 }
                                 className="h-[78px] w-[303px] rounded-[15px] border border-[#8158F6] px-[20px] text-[20px] text-[#121212] outline-none"
@@ -993,14 +1254,14 @@ export default function ProjectMaking() {
                                 —
                             </span>
 
-                            {/* 종료 */}
                             <input
                                 type="month"
-                                value={endDate}
+                                value={
+                                    endDate
+                                }
                                 onChange={(e) =>
                                     setEndDate(
-                                        e.target
-                                            .value,
+                                        e.target.value,
                                     )
                                 }
                                 className="h-[78px] w-[303px] rounded-[15px] border border-[#D0D6DD] px-[20px] text-[20px] text-[#121212] outline-none focus:border-[#865BFF]"
@@ -1008,7 +1269,7 @@ export default function ProjectMaking() {
                         </div>
                     </div>
 
-                    {/* 프로젝트 설명 */}
+                    {/* 설명 */}
                     <div>
                         <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
                             프로젝트 설명
@@ -1028,7 +1289,7 @@ export default function ProjectMaking() {
                         />
                     </div>
 
-                    {/* 프로젝트 팀원 */}
+                    {/* 팀원 */}
                     <div>
                         <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
                             프로젝트 팀원
@@ -1103,21 +1364,22 @@ export default function ProjectMaking() {
                         </div>
                     </div>
 
-                    {/* 프로젝트 로고 */}
+                    {/* 로고 */}
                     <div className="logo">
                         <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
                             프로젝트 로고
                         </h2>
 
                         <input
-                            ref={logoInput}
+                            ref={
+                                logoInput
+                            }
                             type="file"
                             accept=".jpg,.jpeg,.png"
                             className="hidden"
                             onChange={(e) =>
                                 handleLogo(
-                                    e.target
-                                        .files?.[0],
+                                    e.target.files?.[0],
                                 )
                             }
                         />
@@ -1172,7 +1434,7 @@ export default function ProjectMaking() {
                         </div>
                     </div>
 
-                    {/* 프로젝트 장표 */}
+                    {/* 장표 */}
                     <div className="banner">
                         <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
                             프로젝트 장표
@@ -1188,8 +1450,7 @@ export default function ProjectMaking() {
                             className="hidden"
                             onChange={(e) =>
                                 handleBanner(
-                                    e.target
-                                        .files,
+                                    e.target.files,
                                 )
                             }
                         />
@@ -1218,14 +1479,9 @@ export default function ProjectMaking() {
                                     JPG, PNG
                                     (최대 10MB)
                                 </p>
-
-                                <p className="mt-2 text-[18px] text-[#A0A2A5]">
-                                    최대 10개
-                                </p>
                             </div>
                         </div>
 
-                        {/* 장표 미리보기 */}
                         {banners.length >
                             0 && (
                                 <div className="mt-[25px] flex gap-[16px] overflow-x-auto pb-2">
@@ -1235,7 +1491,7 @@ export default function ProjectMaking() {
                                             index,
                                         ) => (
                                             <div
-                                                key={`${image.file.name}-${index}`}
+                                                key={`${image.url}-${index}`}
                                                 className="relative h-[180px] min-w-[180px] overflow-hidden rounded-[15px] bg-[#ECECEF]"
                                             >
                                                 <img
@@ -1318,8 +1574,8 @@ export default function ProjectMaking() {
                                                                 )
                                                             }
                                                             className={`rounded-[5px] border px-[10px] py-[6px] text-[20px] font-medium transition-colors ${selected
-                                                                ? "border-[#A789FF] bg-[#F2EDFF] text-[#7950F2]"
-                                                                : "border-[#DBDEE2] bg-[#FAFAFA] text-[#121212]"
+                                                                    ? "border-[#A789FF] bg-[#F2EDFF] text-[#7950F2]"
+                                                                    : "border-[#DBDEE2] bg-[#FAFAFA] text-[#121212]"
                                                                 }`}
                                                         >
                                                             {
@@ -1336,7 +1592,7 @@ export default function ProjectMaking() {
                         </div>
                     </div>
 
-                    {/* 등록 버튼 */}
+                    {/* 수정 */}
                     <div className="flex justify-end pb-[30px] pt-[10px]">
                         <button
                             type="button"
@@ -1349,8 +1605,8 @@ export default function ProjectMaking() {
                             className="h-[79px] rounded-[15px] bg-[#8158F6] px-[35px] text-[24px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             {submitting
-                                ? "등록 중..."
-                                : "등록하기"}
+                                ? "수정 중..."
+                                : "수정하기"}
                         </button>
                     </div>
                 </div>
@@ -1359,9 +1615,9 @@ export default function ProjectMaking() {
     );
 }
 
-// ==============================
-// 팀원 입력 Column
-// ==============================
+// ======================================================
+// Team Member Column
+// ======================================================
 
 interface TeamMemberColumnProps {
     title: string;
@@ -1395,9 +1651,13 @@ function TeamMemberColumn({
                         index,
                     ) => (
                         <input
-                            key={index}
+                            key={
+                                index
+                            }
                             type="text"
-                            value={member}
+                            value={
+                                member
+                            }
                             onChange={(e) =>
                                 onChange(
                                     index,
@@ -1406,8 +1666,8 @@ function TeamMemberColumn({
                             }
                             placeholder="이름을 입력해주세요"
                             className={`mb-[7px] h-[92px] w-full rounded-[15px] border px-[20px] text-[20px] text-[#121212] outline-none placeholder:text-[#808386] ${index === 0
-                                ? "border-[#865BFF]"
-                                : "border-[#D0D6DD] focus:border-[#865BFF]"
+                                    ? "border-[#865BFF]"
+                                    : "border-[#D0D6DD] focus:border-[#865BFF]"
                                 }`}
                         />
                     ),
@@ -1415,7 +1675,9 @@ function TeamMemberColumn({
 
                 <button
                     type="button"
-                    onClick={onAdd}
+                    onClick={
+                        onAdd
+                    }
                     className="mt-[2px] flex items-center gap-[7px] text-[20px] font-medium text-[#6C6E72]"
                 >
                     <span className="text-[22px] leading-none">
@@ -1427,4 +1689,4 @@ function TeamMemberColumn({
             </div>
         </div>
     );
-}
+};

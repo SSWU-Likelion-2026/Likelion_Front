@@ -1,6 +1,6 @@
 // react
 import { useState, useEffect } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom'
 
 // api
 import { getSessionDetail, getSessionReviews, postSessionReview, editSessionReviews, deleteSessionReview, getSessions } from '../../api/session/session'
@@ -20,6 +20,7 @@ export default function SessionDetail() {
   const { week } = useParams<{ week: string }>()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const { state } = useLocation() as { state: { sessions?: Session[] } | null }
 
   const weekNumber = Number(week)
   const term = Number(searchParams.get('term'))
@@ -27,7 +28,7 @@ export default function SessionDetail() {
 
   // 세션 상세
   const [detailData, setDetailData] = useState<SessionDetailResponse | null>(null)
-  const [sessions, setSessions] = useState<Session[]>([])
+  const [sessions, setSessions] = useState<Session[]>(state?.sessions ?? [])
   const [lockedModalOpen, setLockedModalOpen] = useState(false)
 
   // 세션 후기
@@ -39,12 +40,14 @@ export default function SessionDetail() {
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null)
 
   useEffect(() => {
-    if (!term || !part || !weekNumber) return
+    if (!term || !part || isNaN(weekNumber)) return
     getSessionDetail(term, part, weekNumber).then(res => {
       setDetailData(res.result)
       getSessionReviews(res.result.sessionId).then(r => setReviews(r.result))
     })
-    getSessions(term, part).then(res => setSessions(res.result.sessions))
+    if (!state?.sessions) {
+      getSessions(term, part).then(res => setSessions(res.result.sessions))
+    }
   }, [term, part, weekNumber])
 
   const sessionId = detailData?.sessionId
@@ -86,7 +89,7 @@ export default function SessionDetail() {
         {sessions.map(s => (
           <button
             key={s.sessionId}
-            onClick={() => navigate(`/session/${s.weekNumber}?term=${term}&part=${part}`)}
+            onClick={() => navigate(`/session/${s.weekNumber}?term=${term}&part=${part}`, { state: { sessions } })}
             className={`mb-[21px] px-[28.9px] py-[19px] rounded-[5px] text-[22px] font-medium text-center cursor-pointer
               ${s.weekNumber === weekNumber ? 'bg-black text-white' : 'text-gray-8'}`}
           >
@@ -98,8 +101,8 @@ export default function SessionDetail() {
       <main className="flex-1 flex flex-col justify-center">
 
         <header className='flex flex-col gap-[35px]'>
-            <p className="text-[18px] text-gray-4">{detailData?.part} &gt; {detailData?.weekNumber}</p>
-            <h1 className="text-[32px] text-black">{detailData?.subTitle}</h1>
+            <p className="text-[18px] text-gray-4">{detailData?.part} &gt; W{String(weekNumber).padStart(2, '0')}</p>
+            <h1 className="text-[32px] text-black">[W{String(weekNumber).padStart(2, '0')}] {detailData?.subTitle}</h1>
         </header>
 
         {/* 이미지 */}

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { getProfile, editProfile, editProfileImage, getSubmittedApplications, getDraftApplications, deleteApplication } from '../../api/mypage/mypage'
 import type { ProfileGetResponse, ApplicationGetResponse, DraftApplication } from '../../types/mypage/mypage'
+import { getAccessToken } from '../../lib/auth-storage'
 
 // component
 import Banner from '../../components/Banner'
@@ -117,6 +118,19 @@ export default function MyPage() {
     setPreviewUrl(URL.createObjectURL(file))
   }
   
+  const isLoggedIn = !!getAccessToken()
+
+  if (!isLoggedIn) {
+    return (
+      <div className="flex flex-col">
+        <Banner page="MyPage" />
+        <div className="rounded-t-[25px] bg-white -mt-6 flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
+          <p className="text-[32px] font-medium text-gray-6">마이페이지는 로그인 후에 이용할 수 있어요.</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
     <div className="flex flex-col">

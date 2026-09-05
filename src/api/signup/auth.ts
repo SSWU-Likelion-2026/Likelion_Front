@@ -1,11 +1,6 @@
 import instance from '../instance'
-import type { ApiResponse } from '../../types/type'
+import { patch, post } from '../client'
 import { clearSession, setSession, setTokens } from '../../lib/auth-storage'
-
-async function post<T>(url: string, body?: unknown): Promise<T> {
-  const res = await instance.post<ApiResponse<T>>(url, body)
-  return res.data.result
-}
 
 /* ------------------------------------------------------------------ *
  * 공통 응답 타입
@@ -157,13 +152,9 @@ export type RoleChangeResponse = {
   role: string
 }
 
-export async function changeUserRole(
+export function changeUserRole(
   userId: number,
   role: UserRole,
 ): Promise<RoleChangeResponse> {
-  const res = await instance.patch<ApiResponse<RoleChangeResponse>>(
-    `/api/auth/${userId}/role`,
-    { role },
-  )
-  return res.data.result
+  return patch<RoleChangeResponse>(`/api/auth/${userId}/role`, { role })
 }

@@ -1,14 +1,11 @@
-import instance from '../instance'
-import type { ApiResponse } from '../../types/type'
+import { get, post } from '../client'
 
-async function get<T>(url: string): Promise<T> {
-  const res = await instance.get<ApiResponse<T>>(url)
-  return res.data.result
-}
+/* ------------------------------------------------------------------ *
+ * POST /api/v1/recruitments/alerts  — 모집 시작 사전 알림 신청
+ * ------------------------------------------------------------------ */
 
-async function post<T>(url: string, body?: unknown): Promise<T> {
-  const res = await instance.post<ApiResponse<T>>(url, body)
-  return res.data.result
+export function registerAlert(email: string): Promise<void> {
+  return post<void>('/api/v1/recruitments/alerts', { email })
 }
 
 /* ------------------------------------------------------------------ *
@@ -59,11 +56,12 @@ export function getLandingInfo(): Promise<LandingPageResponse> {
  * ------------------------------------------------------------------ */
 
 export type CurrentRecruitment = {
-  recruitmentId: number
-  term: number
-  title: string
+  /** 모집 중이 아니면 recruitmentId/term/title/dDay는 null */
+  recruitmentId: number | null
+  term: number | null
+  title: string | null
   recruiting: boolean
-  dDay: string
+  dDay: string | null
   /** APPLY = 지원서 작성 버튼, NOTIFICATION = 알림 신청 폼 */
   action: 'APPLY' | 'NOTIFICATION'
 }
@@ -132,12 +130,9 @@ export function submitApplication(body: ApplicationSaveRequest): Promise<number>
 export async function uploadApplicationFile(file: File): Promise<string> {
   const form = new FormData()
   form.append('file', file)
-  const res = await instance.post<ApiResponse<string>>(
-    '/api/v1/applications/files',
-    form,
-    { headers: { 'Content-Type': 'multipart/form-data' } },
-  )
-  return res.data.result
+  return post<string>('/api/v1/applications/files', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
 }
 
 /* ------------------------------------------------------------------ *

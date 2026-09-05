@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "figma:colors": "node --env-file-if-exists=.env scripts/fetch-figma-colors.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "api:types": "openapi-typescript http://52.79.239.27:8080/v3/api-docs -o src/api/schema.d.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -23,6 +24,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
+    "openapi-typescript": "^7.13.0",
     "oxlint": "^1.75.0",
     "typescript": "~6.0.2",
     "vite": "^8.2.0"

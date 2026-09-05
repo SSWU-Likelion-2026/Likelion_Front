@@ -96,7 +96,7 @@ function Session() {
               key={item.sessionId}
               week={item.weekNumber}
               title={item.title}
-              onClick={() => navigate(`/session/${item.weekNumber}?term=${parseInt(generation)}&part=${partMap[track]}`)}
+              onClick={() => navigate(`/session/${item.weekNumber}?term=${parseInt(generation)}&part=${partMap[track]}`, { state: { sessions: sessionData } })}
             />
           ))}
         </div>

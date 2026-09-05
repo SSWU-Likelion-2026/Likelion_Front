@@ -1,71 +1,121 @@
-import { get, post, put, del } from '../client'
-import type { components } from '../schema'
+import instance from '../instance'
 
-/* ------------------------------------------------------------------ *
- * GET /api/v1/projects  — 프로젝트 목록 조회
- * ------------------------------------------------------------------ */
+import type { ApiResponse } from '../../types/type'
 
-export type ProjectSummary = components['schemas']['ProjectListResponse']
-export type ProjectPage = components['schemas']['PageResponseProjectListResponse']
+import type {
+  ProjectDeleteResponse,
+  ProjectDetail,
+  ProjectListParams,
+  ProjectListResult,
+  ProjectMutationResult,
+  ProjectRequest,
+} from '../../types/project/project'
 
-export function getProjects(params?: {
-  term?: number
-  page?: number
-  size?: number
-  sort?: string[]
-}): Promise<ProjectPage> {
-  return get<ProjectPage>('/api/v1/projects', { params })
+// ======================================================
+// 1. 프로젝트 목록 조회
+// GET /api/v1/projects
+//
+// query
+// term?: number
+// page?: number = 0
+// size?: number = 9
+// sort?: string = createdAt/desc
+// ======================================================
+
+export async function getProjects(
+  params: ProjectListParams = {},
+): Promise<ProjectListResult> {
+  const res = await instance.get<ApiResponse<ProjectListResult>>(
+    '/api/v1/projects',
+    {
+      params: {
+        term: params.term,
+        page: params.page ?? 0,
+        size: params.size ?? 9,
+        sort: params.sort ?? 'createdAt/desc',
+      },
+    },
+  )
+
+  return res.data.result
 }
 
-/* ------------------------------------------------------------------ *
- * POST /api/v1/projects  — 프로젝트 생성 (운영진)
- * ------------------------------------------------------------------ */
+// ======================================================
+// 2. 프로젝트 상세 조회
+// GET /api/v1/projects/{projectId}
+// ======================================================
 
-export type ProjectCreateUpdateRequest = components['schemas']['ProjectCreateUpdateRequest']
-export type ProjectCreateUpdateResponse = components['schemas']['ProjectCreateUpdateResponse']
-
-export function createProject(
-  body: ProjectCreateUpdateRequest,
-): Promise<ProjectCreateUpdateResponse> {
-  return post<ProjectCreateUpdateResponse>('/api/v1/projects', body)
-}
-
-/* ------------------------------------------------------------------ *
- * GET /api/v1/projects/{projectId}  — 프로젝트 상세 조회
- * ------------------------------------------------------------------ */
-
-export type ProjectDetail = components['schemas']['ProjectDetailResponse']
-
-export function getProjectDetail(projectId: number): Promise<ProjectDetail> {
-  return get<ProjectDetail>(`/api/v1/projects/${projectId}`)
-}
-
-/* ------------------------------------------------------------------ *
- * PUT /api/v1/projects/{projectId}  — 프로젝트 수정 (운영진)
- * ------------------------------------------------------------------ */
-
-export function updateProject(
+export async function getProjectDetail(
   projectId: number,
-  body: ProjectCreateUpdateRequest,
-): Promise<ProjectCreateUpdateResponse> {
-  return put<ProjectCreateUpdateResponse>(`/api/v1/projects/${projectId}`, body)
+): Promise<ProjectDetail> {
+  const res = await instance.get<ApiResponse<ProjectDetail>>(
+    `/api/v1/projects/${projectId}`,
+  )
+
+  return res.data.result
 }
 
-/* ------------------------------------------------------------------ *
- * DELETE /api/v1/projects/{projectId}  — 프로젝트 삭제 (운영진)
- * ------------------------------------------------------------------ */
+// ======================================================
+// 3. 프로젝트 등록
+// POST /api/v1/projects
+//
+// 인증:
+// instance request interceptor에서
+// Authorization: Bearer {accessToken}
+// 자동 첨부
+// ======================================================
 
-export function deleteProject(projectId: number): Promise<void> {
-  return del<void>(`/api/v1/projects/${projectId}`)
+export async function createProject(
+  payload: ProjectRequest,
+): Promise<ProjectMutationResult> {
+  const res = await instance.post<ApiResponse<ProjectMutationResult>>(
+    '/api/v1/projects',
+    payload,
+  )
+
+  return res.data.result
 }
 
-/* ------------------------------------------------------------------ *
- * GET /api/v1/home/projects  — 최근 프로젝트 조회 (홈 화면)
- * ------------------------------------------------------------------ */
+// ======================================================
+// 4. 프로젝트 수정
+// PATCH /api/v1/projects/{projectId}
+//
+// 인증:
+// instance에서 accessToken 자동 첨부
+// ======================================================
 
-export type RecentProject = components['schemas']['RecentProjectResponse']
+export async function updateProject(
+  projectId: number,
+  payload: ProjectRequest,
+): Promise<ProjectMutationResult> {
+  const res = await instance.patch<ApiResponse<ProjectMutationResult>>(
+    `/api/v1/projects/${projectId}`,
+    payload,
+  )
 
-/** @param size 조회 개수 (기본 3개, 최대 10개) */
-export function getRecentProjects(size?: number): Promise<RecentProject[]> {
-  return get<RecentProject[]>('/api/v1/home/projects', { params: { size } })
+  return res.data.result
 }
+
+// ======================================================
+// 5. 프로젝트 삭제
+// DELETE /api/v1/projects/{projectId}
+//
+// 응답:
+// {
+//   isSuccess,
+//   code,
+//   message,
+//   timestamp
+// }
+//
+// result가 없기 때문에 ApiResponse<T>를 사용하지 않는다.
+// ======================================================
+
+export async function deleteProject(
+  projectId: number,
+): Promise<void> {
+  await instance.delete<ProjectDeleteResponse>(
+    `/api/v1/projects/${projectId}`,
+  )
+}
+

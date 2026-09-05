@@ -225,7 +225,7 @@ export default function MyPage() {
                   <div className='flex flex-col items-center justify-center h-full'>
                     <h1 className='text-[34px] font-semibold'>제출한 지원 내역이 없어요.</h1>
                     <p className='mt-[15px] mb-[50px] text-[18px] text-gray-7'>지원서 작성을 완료한 후 확인해주세요</p>
-                    <Button color='black'>지원서 작성하기</Button>
+                    <Button color='black' onClick={() => navigate(`/recruiting/apply?applicationId=${draftData?.applicationId}`)}>지원서 작성하기</Button>
                   </div>
                 </main>
               ) : (
@@ -250,24 +250,34 @@ export default function MyPage() {
             )}
 
             {applicationTab === '임시저장' && (
-              <>
-                <main className='bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 flex flex-col gap-[30px] px-[49px] py-[47px]'>
-                  {[
-                    { title: '이름', content: draftData?.name },
-                    { title: '지원파트', content: draftData?.part },
-                    { title: '지원서', content: draftData?.applicationStatus },
-                  ].map((item) => (
-                    <div key={item.title} className='flex items-center h-[47px]'>
-                      <p className='text-[24px] text-black font-semibold w-[117px]'>{item.title}</p>
-                      <p className='text-[22px] text-gray-5'>{item.content}</p>
-                    </div>
-                  ))}
+              draftData?.applicationId === null ? (
+                <main className='relative bg-[#FAFAFA] rounded-[20px] h-[439px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[45px] px-[49px] py-[47px]'>
+                  <div className='flex flex-col items-center justify-center h-full'>
+                    <h1 className='text-[34px] font-semibold'>임시 저장된 지원 내역이 없어요.</h1>
+                    <p className='mt-[15px] mb-[50px] text-[18px] text-gray-7'>지원서 작성 후 확인해주세요.</p>
+                    <Button color='black' onClick={() => navigate(`/recruiting/apply?applicationId=${draftData?.applicationId}`)}>지원서 작성하기</Button>
+                  </div>
                 </main>
-                <div className='flex justify-end gap-[15px] mt-[20px] mb-[79px]'>
-                  <Button color='white' onClick={() => setDeleteModalOpen(true)}>삭제</Button>
-                  <Button color='black' onClick={() => navigate(`/recruiting/apply?applicationId=${draftData?.applicationId}`)}>계속 작성</Button>
-                </div>
-              </>
+              ) : (
+                <>
+                  <main className='bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 flex flex-col gap-[30px] px-[49px] py-[47px]'>
+                    {[
+                      { title: '이름', content: draftData?.name },
+                      { title: '지원파트', content: draftData?.part },
+                      { title: '지원서', content: draftData?.applicationStatus },
+                    ].map((item) => (
+                      <div key={item.title} className='flex items-center h-[47px]'>
+                        <p className='text-[24px] text-black font-semibold w-[117px]'>{item.title}</p>
+                        <p className='text-[22px] text-gray-5'>{item.content}</p>
+                      </div>
+                    ))}
+                  </main>
+                  <div className='flex justify-end gap-[15px] mt-[20px] mb-[79px]'>
+                    <Button color='white' onClick={() => setDeleteModalOpen(true)}>삭제</Button>
+                    <Button color='black' onClick={() => navigate(`/recruiting/apply?applicationId=${draftData?.applicationId}`)}>계속 작성</Button>
+                  </div>
+                </>
+              )
             )}
           </div>
         )}

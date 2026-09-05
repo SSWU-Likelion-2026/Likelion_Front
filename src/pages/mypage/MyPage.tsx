@@ -33,6 +33,7 @@ export default function MyPage() {
   const [editValues, setEditValues] = useState<string[]>([])
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [result, setResult] = useState<boolean | null>(false)
 
   const profileItems = [
     { title: "이메일", content: profileData?.email },
@@ -66,9 +67,13 @@ export default function MyPage() {
   useEffect(() => {
     if (tab !== '지원 현황') return
     if (applicationTab === '지원완료') {
-      getSubmittedApplications().then(res => setSubmittedData(res.result))
+      getSubmittedApplications()
+        .then(res => setSubmittedData(res.result))
+        .catch(err => console.error('지원완료 조회 실패:', err))
     } else {
-      getDraftApplications().then(res => setDraftData(res.result))
+      getDraftApplications()
+        .then(res => setDraftData(res.result))
+        .catch(err => console.error('임시저장 조회 실패:', err))
     }
   }, [tab, applicationTab])
 
@@ -208,45 +213,50 @@ export default function MyPage() {
         {tab === '지원 현황' && (
           <div className='mt-[33px]'>
             <h1 className='text-[32px] font-semibold '>지원 현황</h1>
-            <header className='text-[28px] font-semibold flex gap-[35px] py-10'>
-              {(['지원완료', '임시저장'] as const).map(t => (
-                <button
-                  key={t}
-                  onClick={() => setApplicationTab(t)}
-                  className={`cursor-pointer ${applicationTab === t ? 'text-black' : 'text-[#BFBFBF]'}`}
-                >
-                  {t}
-                </button>
-              ))}
-            </header>
+            {!result && (
+              <header className='text-[28px] font-semibold flex gap-[35px] py-10'>
+                {(['지원완료', '임시저장'] as const).map(t => (
+                  <button
+                    key={t}
+                    onClick={() => setApplicationTab(t)}
+                    className={`cursor-pointer ${applicationTab === t ? 'text-black' : 'text-[#BFBFBF]'}`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </header>
+            )}
+            {result && applicationTab === '지원완료' && submittedData?.applications[0]?.applicationStatus === '최종 합격' && (
+              <h1 className='text-[24px] text-center font-semibold mt-[53px] mb-[75px]'>지원해주신 과정에 <span className='text-primary-100'>최종 합격</span>하셨습니다. <br /> 앞으로의 일정과 안내사항을 확인해 주세요.</h1>
+            )}
+            {result && applicationTab === '지원완료' && submittedData?.applications[0]?.applicationStatus === '최종 불합격' && (
+              <h1 className='text-[24px] text-center font-semibold mt-[53px] mb-[75px]'>아쉽게도 이번 기수에는 함께하지 못하게 되었습니다. <br /> 보내주신 관심과 시간을 진심으로 감사드립니다.</h1>
+            )}
             {applicationTab === '지원완료' && (
-              submittedData?.totalCount === 0 ? (
-                <main className='relative bg-[#FAFAFA] rounded-[20px] h-[439px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[45px] px-[49px] py-[47px]'>
-                  <div className='flex flex-col items-center justify-center h-full'>
-                    <h1 className='text-[34px] font-semibold'>제출한 지원 내역이 없어요.</h1>
-                    <p className='mt-[15px] mb-[50px] text-[18px] text-gray-7'>지원서 작성을 완료한 후 확인해주세요</p>
-                    <Button color='black' onClick={() => navigate(`/recruiting/apply?applicationId=${draftData?.applicationId}`)}>지원서 작성하기</Button>
-                  </div>
-                </main>
-              ) : (
+              submittedData ? (
                 <main className='relative bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[30px] px-[49px] py-[47px]'>
                   {[
-                    { title: '이름', content: submittedData?.applications[0]?.name },
-                    { title: '지원파트', content: submittedData?.applications[0]?.part },
-                    { title: '지원상태', content: submittedData?.applications[0]?.applicationStatus },
-                    { title: '결과확인', content: null },
+                    { title: '이름', content: submittedData.applications[0]?.name },
+                    { title: '지원파트', content: submittedData.applications[0]?.part },
+                    { title: '지원상태', content: submittedData.applications[0]?.applicationStatus },
+                    ...(!result ? [{ title: '결과확인', content: null }] : []),
                   ].map((item) => (
                     <div key={item.title} className='flex items-center h-[47px]'>
                       <p className='text-[24px] text-black font-semibold w-[117px]'>{item.title}</p>
                       {item.content === null
-                        ? <Button color='Main100'>결과확인</Button>
-                        : <p className='text-[22px] text-gray-5'>{item.content}</p>
+                        ? (submittedData.applications[0]?.applicationStatus === "평가 대기"
+                            ? <p className='text-[22px] text-gray-5'>심사 중</p>
+                            : <Button color='Main100' onClick={() => setResult(true)}>결과 확인</Button>
+                          )
+                        : item.title === '지원상태' && result
+                          ? <p className={`text-[22px] ${['서류 합격', '최종 합격'].includes(item.content ?? '') ? 'text-primary-100' : 'text-black'}`}>{item.content}</p>
+                          : <p className='text-[22px] text-gray-5'>{item.content}</p>
                       }
                     </div>
                   ))}
-                  <p className='absolute right-[35px] bottom-[25px] text-[#979797] text-[18px]'>최종 제출일 {submittedData?.applications[0]?.submittedAt}</p>
+                  <p className='absolute right-[35px] bottom-[25px] text-[#979797] text-[18px]'>최종 제출일 {submittedData.applications[0]?.submittedAt}</p>
                 </main>
-              )
+              ) : null
             )}
 
             {applicationTab === '임시저장' && (

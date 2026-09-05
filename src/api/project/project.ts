@@ -1,5 +1,3 @@
-// src/api/project/project.ts
-
 import instance from '../instance'
 
 import type { ApiResponse } from '../../types/type'
@@ -120,3 +118,4 @@ export async function deleteProject(
     `/api/v1/projects/${projectId}`,
   )
 }
+

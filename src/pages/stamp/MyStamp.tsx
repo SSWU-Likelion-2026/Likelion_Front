@@ -147,19 +147,18 @@ export default function MyStamp({
                 {/* 인증 완료된 경우 도장 표시 */}
                 {completed && (
                   <img
-                    src={completed.imageUrl || realstamp}
+                    src={realstamp}
                     alt="획득한 스탬프"
                     className="
-                      realStamp
-                      absolute
-                      left-1/2
-                      top-1/2
-                      h-[140px]
-                      w-[140px]
-                      -translate-x-1/2
-                      -translate-y-1/2
-                      object-contain
-                    "
+    realStamp
+    absolute
+    left-1/2
+    top-1/2
+    h-[140px]
+    w-[140px]
+    -translate-x-1/2
+    -translate-y-1/2
+  "
                   />
                 )}
               </div>

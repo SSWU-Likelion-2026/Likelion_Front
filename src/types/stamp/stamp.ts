@@ -32,6 +32,7 @@ export type StampMissionListResponse = ApiResponse<StampMission[]>;
  */
 
 export interface StampAuthRequest {
+  image: File;
   authDate: string;
   content: string;
 }

@@ -1,6 +1,6 @@
 // react
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 // api
 import { getSessions } from '../../api/session/session'
@@ -26,8 +26,12 @@ const partMap: Record<string, string> = {
 
 function Session() {
   const navigate = useNavigate()
-  const [track, setTrack] = useState('기획/디자인')
-  const [generation, setGeneration] = useState('14기')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const track = searchParams.get('track') ?? '기획/디자인'
+  const generation = searchParams.get('generation') ?? '14기'
+
+  const setTrack = (value: string) => setSearchParams(prev => { prev.set('track', value); return prev })
+  const setGeneration = (value: string) => setSearchParams(prev => { prev.set('generation', value); return prev })
   const [sessionData, setSessionData] = useState<Session[]>([])
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -96,7 +100,7 @@ function Session() {
               key={item.sessionId}
               week={item.weekNumber}
               title={item.title}
-              onClick={() => navigate(`/session/${item.weekNumber}?term=${parseInt(generation)}&part=${partMap[track]}`)}
+              onClick={() => navigate(`/session/${item.weekNumber}?term=${parseInt(generation)}&part=${partMap[track]}`, { state: { sessions: sessionData } })}
             />
           ))}
         </div>

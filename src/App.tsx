@@ -34,7 +34,7 @@ function App() {
         <Route path="/recruiting/apply" element={<Apply />} />
         <Route path="/recruiting/complete" element={<ApplyComplete />} />
         <Route path="/stamp" element={<Stamp />} />
-        <Route path="/stamp/:id" element={<StampDetail />} />
+        <Route path="/stamp/:missionId" element={<StampDetail />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

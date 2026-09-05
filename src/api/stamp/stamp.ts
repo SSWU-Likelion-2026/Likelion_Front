@@ -44,14 +44,19 @@ export const authenticateStampMission = async (
   missionId: number,
   data: StampAuthRequest,
 ): Promise<StampAuthResponse> => {
+  const formData = new FormData();
+
+  formData.append("image", data.image);
+  formData.append("authDate", data.authDate);
+  formData.append("content", data.content);
+
   const response = await instance.post<StampAuthResponse>(
     `/api/v1/stamps/missions/${missionId}/auth`,
-    data,
+    formData,
   );
 
   return response.data;
 };
-
 
 /**
  * 마이 스탬프 조회

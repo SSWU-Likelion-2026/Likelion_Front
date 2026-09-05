@@ -74,8 +74,8 @@ export default function StampDetail() {
 
   const locationMission =
     location.state?.mission as
-      | StampMission
-      | undefined;
+    | StampMission
+    | undefined;
 
   const [mission, setMission] =
     useState<StampMission | null>(
@@ -174,14 +174,9 @@ export default function StampDetail() {
   ]);
 
 
-  /**
-   * 이미지 선택
-   *
-   * 현재 스탬프 인증 API 명세에는
-   * 이미지 필드가 존재하지 않으므로
-   * UI에서 파일만 선택하고
-   * 인증 API Body에는 포함하지 않는다.
-   */
+ /**
+ * 인증 이미지 선택
+ */
   const handleImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -221,16 +216,18 @@ export default function StampDetail() {
       return;
     }
 
+    if (!image) {
+      alert("인증 이미지를 업로드해주세요.");
+      return;
+    }
+
     if (!authDate) {
       alert("날짜를 입력해주세요.");
       return;
     }
 
     if (!description.trim()) {
-      alert(
-        "미션 후기를 입력해주세요.",
-      );
-
+      alert("미션 후기를 입력해주세요.");
       return;
     }
 
@@ -248,6 +245,7 @@ export default function StampDetail() {
       await authenticateStampMission(
         missionNumber,
         {
+          image,
           authDate,
           content: description.trim(),
         },
@@ -299,7 +297,7 @@ export default function StampDetail() {
           default:
             alert(
               message ||
-                "스탬프 인증에 실패했습니다.",
+              "스탬프 인증에 실패했습니다.",
             );
         }
 

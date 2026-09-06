@@ -29,11 +29,23 @@
   --color-gray-8: var(--color-gray-8);
   --color-gray-9: var(--color-gray-9);
   --color-gray-10: var(--color-gray-10);
+  --color-black-1: var(--color-black-1);
+  --color-black-2: var(--color-black-2);
+  --color-sswu-text: var(--color-sswu-text);
+  --color-warm-black: var(--color-warm-black);
 }
 
 :root {
   color-scheme: light dark;
   font-family: 'Pretendard', system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* zoom: calc(100vw/1440px) 방식은 100vw가 세로 스크롤바 폭까지 포함해 계산되는 특성 때문에
+   세로 스크롤바가 생기면 실제 보이는 영역보다 살짝 넓게 렌더링되어 가로 스크롤이 생긴다.
+   전역으로 가로 스크롤만 숨겨서 이 오차를 흡수한다. */
+html,
+body {
+  overflow-x: hidden;
 }
 
 * {

@@ -209,3 +209,28 @@ export async function uploadProjectImages(
 
   return res.data.result.imageUrls;
 }
+
+// ======================================================
+// 8. 홈 화면 최근 프로젝트 조회
+// GET /api/v1/home/projects
+// ======================================================
+
+export type RecentProject = {
+  projectId: number
+  title: string
+  summary: string
+  thumbnailUrl: string | null
+}
+
+export async function getRecentProjects(size?: number): Promise<RecentProject[]> {
+  const res = await instance.get<
+    ApiResponse<{ projectId?: number; title?: string; summary?: string; thumbnailUrl?: string }[]>
+  >('/api/v1/home/projects', { params: { size } })
+
+  return (res.data.result ?? []).map((p) => ({
+    projectId: p.projectId ?? 0,
+    title: p.title ?? '',
+    summary: p.summary ?? '',
+    thumbnailUrl: p.thumbnailUrl ?? null,
+  }))
+}

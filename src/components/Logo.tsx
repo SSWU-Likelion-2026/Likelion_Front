@@ -1,6 +1,7 @@
 type LogoProps = {
   size?: number
   withText?: boolean
+  text?: string
   className?: string
   wordmarkClassName?: string
 }
@@ -8,8 +9,9 @@ type LogoProps = {
 function Logo({
   size = 20,
   withText = true,
+  text = 'LIKELION UNIV SSWU',
   className,
-  wordmarkClassName = 'text-gray-1',
+  wordmarkClassName = 'text-sswu-text',
 }: LogoProps) {
   return (
     <span className={`justify-center inline-flex items-center gap-2 ${className ?? ''}`}>
@@ -25,7 +27,7 @@ function Logo({
           className={`font-montserrat font-extrabold tracking-tight whitespace-nowrap ${wordmarkClassName}`}
           style={{ fontSize: size * 0.8 }}
         >
-          LIKELION UNIV SSWU
+          {text}
         </span>
       )}
     </span>

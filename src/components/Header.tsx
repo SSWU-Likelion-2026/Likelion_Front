@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import Logo from './Logo'
 import { getUser, subscribe } from '../lib/auth-storage'
 import { logout } from '../api/signup/auth'
 
@@ -7,9 +8,8 @@ const navItems = [
   { to: '/session', label: 'Session' },
   { to: '/project', label: 'Project' },
   { to: '/people', label: 'People' },
-  { to: '/recruiting', label: 'Recruiting' },
+  { to: '/recruiting', label: 'Recruit' },
   { to: '/stamp', label: 'Stamp' },
-  { to: '/mypage', label: 'MyPage' },
 ]
 
 function Header() {
@@ -21,15 +21,21 @@ function Header() {
   }
 
   return (
-    <header className="flex items-center px-6 py-4 border-b border-gray-9">
+    <header className="flex h-20 items-center justify-between px-[120px] border-b border-gray-9">
+      <NavLink to="/" className="no-underline shrink-0">
+        <Logo size={32} />
+      </NavLink>
+
       <nav>
-        <ul className="flex gap-6 list-none m-0 p-0">
+        <ul className="flex list-none gap-[25px] m-0 p-0">
           {navItems.map((item) => (
             <li key={item.to}>
               <NavLink
                 to={item.to}
                 className={({ isActive }) =>
-                  `no-underline font-medium ${isActive ? 'text-primary-100' : 'text-gray-1'}`
+                  `flex h-20 items-center justify-center px-[10px] no-underline font-medium text-[20px] whitespace-nowrap transition-colors ${
+                    isActive ? 'text-primary-100' : 'text-gray-7 hover:text-black-1'
+                  }`
                 }
               >
                 {item.label}
@@ -40,25 +46,20 @@ function Header() {
       </nav>
 
       {user ? (
-        <div className="ml-auto flex items-center gap-3 text-gray-1">
+        <div className="flex items-center gap-6 shrink-0 text-black-1">
           <button
             type="button"
             onClick={handleLogout}
-            className="font-semibold cursor-pointer hover:text-primary-100"
+            className="font-medium text-[20px] cursor-pointer hover:text-primary-100"
           >
             로그아웃
           </button>
-          <span className="font-semibold">{user.name}님</span>
+          <NavLink to="/mypage" className="no-underline font-medium text-[20px]">
+            {user.name}님
+          </NavLink>
         </div>
       ) : (
-        <NavLink
-          to="/login"
-          className={({ isActive }) =>
-            `ml-auto no-underline font-semibold ${
-              isActive ? 'text-primary-100' : 'text-gray-1'
-            }`
-          }
-        >
+        <NavLink to="/login" className="shrink-0 no-underline font-medium text-[20px] text-black-1">
           로그인
         </NavLink>
       )}

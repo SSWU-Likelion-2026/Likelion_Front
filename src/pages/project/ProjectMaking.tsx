@@ -6,10 +6,15 @@ import underbtn from "../../img/project/underbtn.svg";
 import downloadbtn from "../../img/project/download.svg";
 import deletebtn from "../../img/project/deletebtn.svg";
 
-import { createProject } from '../../api/project/project'
-import { ApiError } from '../../api/instance'
+import {
+    createProject,
+    uploadProjectImage,
+    uploadProjectImages,
+} from "../../api/project/project";
+import { ApiError } from "../../api/instance";
 
 import type {
+    ProjectHackathon,
     ProjectMemberRequest,
     ProjectRequest,
 } from "../../types/project/project";
@@ -24,11 +29,13 @@ const generations = [14, 13, 12];
 // 해커톤
 // ==============================
 //
-// 백엔드 enum 값은 최종 명세 확인 필요.
-// 현재 받은 명세에서 HERETHON은 확인됨.
+// 백엔드 enum 확정값
 //
 
-const eventOptions = [
+const eventOptions: {
+    label: string;
+    value: ProjectHackathon;
+}[] = [
     {
         label: "아이디어톤",
         value: "IDEATHON",
@@ -47,102 +54,106 @@ const eventOptions = [
 // 기술 스택
 // ==============================
 //
-// 현재는 퍼블리싱용 이름 목록.
-// 추후 기술스택 조회 API가 생기면
-// name + id 형태로 교체해야 함.
+// 백엔드에서 전달받은 고정 기술스택 ID 목록
 //
 
-const stackList = {
-    기획: [
-        "Notion",
-        "Google Workspace",
-        "Miro",
-        "Ms Office",
-        "Confluence",
-        "Figma",
-        "Figjam",
-        "Asana",
-        "Slack",
-        "Discord",
-        "Jira",
-        "Linear",
-        "Trello",
-        "GitHub",
-    ],
+type TechStackCategory =
+    | "PLANNING"
+    | "DESIGN"
+    | "FRONTEND"
+    | "BACKEND"
+    | "AI";
 
-    디자인: [
-        "Figma",
-        "Sketch",
-        "Penpot",
-        "Framer",
-        "ProtoPie",
-        "Adobe Illustrator",
-        "Adobe Photoshop",
-        "Canva",
-        "Spline",
-        "Blender",
-        "After Effects",
-    ],
-
-    프론트엔드: [
-        "Notion",
-        "Google Workspace",
-        "Miro",
-        "Ms Office",
-        "Confluence",
-        "Figma",
-        "Figjam",
-        "Asana",
-        "Slack",
-        "Discord",
-        "Jira",
-        "Linear",
-        "Trello",
-        "GitHub",
-    ],
-
-    백엔드: [
-        "Notion",
-        "Google Workspace",
-        "Miro",
-        "Ms Office",
-        "Confluence",
-        "Figma",
-        "Figjam",
-        "Asana",
-        "Slack",
-        "Discord",
-        "Jira",
-        "Linear",
-        "Trello",
-        "GitHub",
-    ],
-
-    AI: [
-        "Chat GPT",
-        "Claude",
-        "Gemini",
-        "Grok",
-        "Perplexity",
-        "NotebookLM",
-        "HuggingFace",
-        "DALL",
-        "Midjourney",
-        "Stable Diffusion",
-        "Runway",
-        "Kling",
-        "Whisper",
-        "ElevenLabs",
-        "Cursor",
-        "Bolt",
-        "Lovable",
-        "v0",
-        "n8n",
-        "Zapier",
-        "Make",
-    ],
+type TechStackOption = {
+    id: number;
+    name: string;
+    category: TechStackCategory;
 };
 
+const techStacks: TechStackOption[] = [
+    { id: 1, name: "Notion", category: "PLANNING" },
+    { id: 2, name: "Google Workspace", category: "PLANNING" },
+    { id: 3, name: "Miro", category: "PLANNING" },
+    { id: 4, name: "Ms Office", category: "PLANNING" },
+    { id: 5, name: "Confluence", category: "PLANNING" },
+    { id: 6, name: "Figma", category: "PLANNING" },
+    { id: 7, name: "Figjam", category: "PLANNING" },
+    { id: 8, name: "Asana", category: "PLANNING" },
+    { id: 9, name: "Slack", category: "PLANNING" },
+    { id: 10, name: "Discord", category: "PLANNING" },
+    { id: 11, name: "Jira", category: "PLANNING" },
+    { id: 12, name: "Linear", category: "PLANNING" },
+    { id: 13, name: "Trello", category: "PLANNING" },
+    { id: 14, name: "GitHub", category: "PLANNING" },
+
+    { id: 15, name: "Figma", category: "DESIGN" },
+    { id: 16, name: "Sketch", category: "DESIGN" },
+    { id: 17, name: "Penpot", category: "DESIGN" },
+    { id: 18, name: "Framer", category: "DESIGN" },
+    { id: 19, name: "ProtoPie", category: "DESIGN" },
+    { id: 20, name: "Adobe Illustrator", category: "DESIGN" },
+    { id: 21, name: "Adobe Photoshop", category: "DESIGN" },
+    { id: 22, name: "Canva", category: "DESIGN" },
+    { id: 23, name: "Spline", category: "DESIGN" },
+    { id: 24, name: "Blender", category: "DESIGN" },
+    { id: 25, name: "After Effects", category: "DESIGN" },
+
+    { id: 26, name: "React", category: "FRONTEND" },
+    { id: 27, name: "Next.js", category: "FRONTEND" },
+    { id: 28, name: "Vue.js", category: "FRONTEND" },
+    { id: 29, name: "Flutter", category: "FRONTEND" },
+    { id: 30, name: "React Native", category: "FRONTEND" },
+    { id: 31, name: "Swift", category: "FRONTEND" },
+    { id: 32, name: "Kotlin", category: "FRONTEND" },
+    { id: 33, name: "Unity", category: "FRONTEND" },
+    { id: 34, name: "Unreal Engine", category: "FRONTEND" },
+    { id: 35, name: "Godot", category: "FRONTEND" },
+    { id: 36, name: "Three.js", category: "FRONTEND" },
+
+    { id: 37, name: "Node.js", category: "BACKEND" },
+    { id: 38, name: "Express.js", category: "BACKEND" },
+    { id: 39, name: "NestJs", category: "BACKEND" },
+    { id: 40, name: "Spring Boot", category: "BACKEND" },
+    { id: 41, name: "Django", category: "BACKEND" },
+    { id: 42, name: "FastAPI", category: "BACKEND" },
+    { id: 43, name: "MySQL", category: "BACKEND" },
+    { id: 44, name: "PostgreSQL", category: "BACKEND" },
+    { id: 45, name: "MongoDB", category: "BACKEND" },
+    { id: 46, name: "Redis", category: "BACKEND" },
+    { id: 47, name: "Prisma", category: "BACKEND" },
+    { id: 48, name: "Firebase", category: "BACKEND" },
+    { id: 49, name: "Supabase", category: "BACKEND" },
+    { id: 50, name: "AWS", category: "BACKEND" },
+    { id: 51, name: "GCP", category: "BACKEND" },
+    { id: 52, name: "Azure", category: "BACKEND" },
+    { id: 53, name: "Vercel", category: "BACKEND" },
+    { id: 54, name: "Docker", category: "BACKEND" },
+    { id: 55, name: "PyTorch", category: "BACKEND" },
+    { id: 56, name: "TensorFlow", category: "BACKEND" },
+    { id: 57, name: "LangChain", category: "BACKEND" },
+
+    { id: 58, name: "Chat GPT", category: "AI" },
+    { id: 59, name: "Claude", category: "AI" },
+    { id: 60, name: "Gemini", category: "AI" },
+    { id: 61, name: "Grok", category: "AI" },
+    { id: 62, name: "Perplexity", category: "AI" },
+    { id: 63, name: "NotebookLM", category: "AI" },
+    { id: 64, name: "HuggingFace", category: "AI" },
+    { id: 65, name: "DALL", category: "AI" },
+    { id: 66, name: "Midjourney", category: "AI" },
+    { id: 67, name: "Stable Diffusion", category: "AI" },
+    { id: 68, name: "Runway", category: "AI" },
+    { id: 69, name: "Kling", category: "AI" },
+    { id: 70, name: "Whisper", category: "AI" },
+    { id: 71, name: "ElevenLabs", category: "AI" },
+    { id: 72, name: "Cursor", category: "AI" },
+    { id: 73, name: "Bolt", category: "AI" },
+    { id: 74, name: "Lovable", category: "AI" },
+    { id: 75, name: "v0", category: "AI" },
+    { id: 76, name: "n8n", category: "AI" },
+    { id: 77, name: "Zapier", category: "AI" },
+    { id: 78, name: "Make", category: "AI" },
+];
 // ==============================
 // Type
 // ==============================
@@ -197,7 +208,7 @@ export default function ProjectMaking() {
     // ==============================
 
     const [eventType, setEventType] =
-        useState("");
+        useState<ProjectHackathon | "">("");
 
     const [eventOpen, setEventOpen] =
         useState(false);
@@ -226,10 +237,7 @@ export default function ProjectMaking() {
     // 기술 스택
     // ==============================
 
-    const [
-        selectedStacks,
-        setSelectedStacks,
-    ] = useState<string[]>([]);
+    const [selectedStackIds, setSelectedStackIds] = useState<number[]>([]);
 
     // ==============================
     // 팀원
@@ -444,17 +452,11 @@ export default function ProjectMaking() {
     // 기술 스택 선택
     // ==============================
 
-    const toggleStack = (
-        stack: string,
-    ) => {
-        setSelectedStacks(
-            (prev) =>
-                prev.includes(stack)
-                    ? prev.filter(
-                        (item) =>
-                            item !== stack,
-                    )
-                    : [...prev, stack],
+    const toggleStack = (id: number) => {
+        setSelectedStackIds((prev) =>
+            prev.includes(id)
+                ? prev.filter((item) => item !== id)
+                : [...prev, id],
         );
     };
 
@@ -621,181 +623,101 @@ export default function ProjectMaking() {
     // 프로젝트 등록
     // ==============================
 
-    const handleSubmit =
-        async () => {
-            if (submitting) return;
+    const handleSubmit = async () => {
+        if (submitting) return;
 
-            if (!validateForm()) {
-                return;
-            }
+        if (!validateForm()) {
+            return;
+        }
 
-            /*
-             * 중요
-             * --------------------------------
-             * 현재 선택한 이미지의 logo.url,
-             * banner.url은
-             *
-             * blob:http://localhost:...
-             *
-             * 형태의 임시 URL이다.
-             *
-             * 프로젝트 POST API는
-             * 실제 https:// 형태 URL을 요구한다.
-             *
-             * 따라서 S3 업로드 API가 오기 전에는
-             * 실제 등록 요청을 보내면 안 된다.
-             */
+        if (!logo) {
+            alert("프로젝트 로고를 등록해주세요.");
+            return;
+        }
 
-            if (
-                logo?.url.startsWith(
-                    "blob:",
-                ) ||
-                banners.some(
-                    (banner) =>
-                        banner.url.startsWith(
-                            "blob:",
-                        ),
-                )
-            ) {
-                alert(
-                    "이미지 업로드 API 연결이 필요합니다. 백엔드에서 S3 이미지 업로드 API 명세를 받은 후 연결해야 실제 프로젝트 등록이 가능합니다.",
-                );
+        if (!eventType) {
+            alert("해커톤을 선택해주세요.");
+            return;
+        }
 
-                return;
-            }
+        try {
+            setSubmitting(true);
 
-            /*
-             * 현재 UI는 기술스택을 문자열 이름으로 관리한다.
-             *
-             * 예:
-             * ["Figma", "Notion"]
-             *
-             * 프로젝트 등록 API는:
-             *
-             * techStackIds: [1, 2]
-             *
-             * 형태를 요구한다.
-             *
-             * 따라서 기술스택 조회 API가 필요하다.
-             */
+            // 1. 로고 S3 업로드
+            const logoUrl = await uploadProjectImage(
+                logo.file,
+                "LOGO",
+            );
 
-            if (
-                selectedStacks.length >
-                0
-            ) {
-                alert(
-                    "기술 스택 ID 조회 API 연결이 필요합니다. 백엔드에서 기술스택 목록 API를 받은 후 연결해야 합니다.",
-                );
+            // 2. 장표 S3 다건 업로드
+            const slideUrls = await uploadProjectImages(
+                banners.map((banner) => banner.file),
+                "SLIDE",
+            );
 
-                return;
-            }
-
-            /*
-             * S3 + 기술스택 API 연결 후
-             * 아래 값만 실제 데이터로 교체하면 됨.
-             */
-
-            const logoUrl =
-                logo?.url ?? "";
-
-            const slideUrls =
-                banners.map(
-                    (banner) =>
-                        banner.url,
-                );
-
-            const techStackIds: number[] =
-                [];
-
-            const requestData: ProjectRequest =
-            {
+            // 3. 프로젝트 등록
+            const requestData: ProjectRequest = {
                 term: generation,
-
-                hackathon:
-                    eventType,
-
-                title:
-                    projectName.trim(),
-
-                summary:
-                    slogan.trim(),
-
-                description:
-                    description.trim(),
-
-                startMonth:
-                    startDate,
-
+                hackathon: eventType,
+                title: projectName.trim(),
+                summary: slogan.trim(),
+                description: description.trim(),
+                startMonth: startDate,
                 endMonth: endDate,
-
                 logoUrl,
-
                 slideUrls,
-
-                members:
-                    createMembersPayload(),
-
-                techStackIds,
+                members: createMembersPayload(),
+                techStackIds: selectedStackIds,
             };
 
-            try {
-                setSubmitting(true);
+            const result = await createProject(requestData);
 
-                const result =
-                    await createProject(
-                        requestData,
-                    );
+            alert("프로젝트가 등록되었습니다.");
 
-                alert(
-                    "프로젝트가 등록되었습니다.",
-                );
+            navigate(`/ProjectDetail/${result.projectId}`);
+        } catch (error) {
+            console.error("프로젝트 등록 실패:", error);
 
-                navigate(
-                    `/ProjectDetail/${result.projectId}`,
-                );
-            } catch (error) {
-                console.error("프로젝트 등록 실패:", error);
-
-                if (error instanceof ApiError) {
-                    if (error.status === 401) {
-                        alert("로그인이 필요합니다.");
-                        return;
-                    }
-
-                    if (error.status === 403) {
-                        alert("프로젝트를 등록할 권한이 없습니다.");
-                        return;
-                    }
-
-                    if (error.status === 404) {
-                        alert("존재하지 않는 데이터가 포함되어 있습니다.");
-                        return;
-                    }
-
-                    const body = error.body as {
-                        result?: Record<string, string>;
-                    };
-
-                    const validation = body?.result;
-
-                    if (validation) {
-                        const firstMessage = Object.values(validation)[0];
-
-                        if (firstMessage) {
-                            alert(firstMessage);
-                            return;
-                        }
-                    }
-
-                    alert(error.message);
+            if (error instanceof ApiError) {
+                if (error.status === 401) {
+                    alert("로그인이 필요합니다.");
                     return;
                 }
 
-                alert("프로젝트 등록 중 오류가 발생했습니다.");
-            } finally {
-                setSubmitting(false);
+                if (error.status === 403) {
+                    alert("프로젝트를 등록할 권한이 없습니다.");
+                    return;
+                }
+
+                if (error.status === 404) {
+                    alert("존재하지 않는 데이터가 포함되어 있습니다.");
+                    return;
+                }
+
+                const body = error.body as {
+                    result?: Record<string, string>;
+                };
+
+                const validation = body?.result;
+
+                if (validation) {
+                    const firstMessage = Object.values(validation)[0];
+
+                    if (firstMessage) {
+                        alert(firstMessage);
+                        return;
+                    }
+                }
+
+                alert(error.message);
+                return;
             }
-        };
+
+            alert("프로젝트 등록 중 오류가 발생했습니다.");
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     return (
         <section className="min-h-screen w-full bg-white">
@@ -1279,60 +1201,50 @@ export default function ProjectMaking() {
                         </h2>
 
                         <div className="flex flex-col gap-[26px]">
-                            {Object.entries(
-                                stackList,
-                            ).map(
-                                ([
-                                    category,
-                                    stacks,
-                                ]) => (
+                            {[
+                                ["기획", "PLANNING"],
+                                ["디자인", "DESIGN"],
+                                ["프론트엔드", "FRONTEND"],
+                                ["백엔드", "BACKEND"],
+                                ["AI", "AI"],
+                            ].map(([label, category]) => {
+                                const stacks = techStacks.filter(
+                                    (stack) => stack.category === category,
+                                );
+
+                                return (
                                     <div
-                                        key={
-                                            category
-                                        }
+                                        key={category}
                                         className="grid grid-cols-[90px_1fr] items-start gap-x-[50px]"
                                     >
                                         <p className="pt-[7px] text-[20px] font-medium text-[#808386]">
-                                            {
-                                                category
-                                            }
+                                            {label}
                                         </p>
 
                                         <div className="flex flex-wrap gap-[8px]">
-                                            {stacks.map(
-                                                (
-                                                    stack,
-                                                ) => {
-                                                    const selected =
-                                                        selectedStacks.includes(
-                                                            stack,
-                                                        );
+                                            {stacks.map((stack) => {
+                                                const selected =
+                                                    selectedStackIds.includes(stack.id);
 
-                                                    return (
-                                                        <button
-                                                            key={`${category}-${stack}`}
-                                                            type="button"
-                                                            onClick={() =>
-                                                                toggleStack(
-                                                                    stack,
-                                                                )
-                                                            }
-                                                            className={`rounded-[5px] border px-[10px] py-[6px] text-[20px] font-medium transition-colors ${selected
+                                                return (
+                                                    <button
+                                                        key={stack.id}
+                                                        type="button"
+                                                        onClick={() => toggleStack(stack.id)}
+                                                        className={`rounded-[5px] border px-[10px] py-[6px] text-[20px] font-medium transition-colors ${selected
                                                                 ? "border-[#A789FF] bg-[#F2EDFF] text-[#7950F2]"
                                                                 : "border-[#DBDEE2] bg-[#FAFAFA] text-[#121212]"
-                                                                }`}
-                                                        >
-                                                            {
-                                                                stack
-                                                            }
-                                                        </button>
-                                                    );
-                                                },
-                                            )}
+                                                            }`}
+                                                    >
+                                                        {stack.name}
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
                                     </div>
-                                ),
-                            )}
+                                );
+                            })}
+
                         </div>
                     </div>
 
@@ -1340,17 +1252,11 @@ export default function ProjectMaking() {
                     <div className="flex justify-end pb-[30px] pt-[10px]">
                         <button
                             type="button"
-                            onClick={
-                                handleSubmit
-                            }
-                            disabled={
-                                submitting
-                            }
+                            onClick={handleSubmit}
+                            disabled={submitting}
                             className="h-[79px] rounded-[15px] bg-[#8158F6] px-[35px] text-[24px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                            {submitting
-                                ? "등록 중..."
-                                : "등록하기"}
+                            {submitting ? "등록 중..." : "등록하기"}
                         </button>
                     </div>
                 </div>
@@ -1364,67 +1270,67 @@ export default function ProjectMaking() {
 // ==============================
 
 interface TeamMemberColumnProps {
-    title: string;
+                    title: string;
 
-    members: string[];
+                members: string[];
 
-    onChange: (
-        index: number,
-        value: string,
+                onChange: (
+                index: number,
+                value: string,
     ) => void;
 
     onAdd: () => void;
 }
 
-function TeamMemberColumn({
-    title,
-    members,
-    onChange,
-    onAdd,
+                function TeamMemberColumn({
+                    title,
+                    members,
+                    onChange,
+                    onAdd,
 }: TeamMemberColumnProps) {
     return (
-        <div>
-            <p className="mb-[24px] text-[20px] font-medium text-[#121212]">
-                {title}
-            </p>
+                <div>
+                    <p className="mb-[24px] text-[20px] font-medium text-[#121212]">
+                        {title}
+                    </p>
 
-            <div className="flex flex-col gap-[10px]">
-                {members.map(
-                    (
-                        member,
-                        index,
-                    ) => (
-                        <input
-                            key={index}
-                            type="text"
-                            value={member}
-                            onChange={(e) =>
-                                onChange(
-                                    index,
-                                    e.target.value,
-                                )
-                            }
-                            placeholder="이름을 입력해주세요"
-                            className={`mb-[7px] h-[92px] w-full rounded-[15px] border px-[20px] text-[20px] text-[#121212] outline-none placeholder:text-[#808386] ${index === 0
-                                ? "border-[#865BFF]"
-                                : "border-[#D0D6DD] focus:border-[#865BFF]"
-                                }`}
-                        />
-                    ),
-                )}
+                    <div className="flex flex-col gap-[10px]">
+                        {members.map(
+                            (
+                                member,
+                                index,
+                            ) => (
+                                <input
+                                    key={index}
+                                    type="text"
+                                    value={member}
+                                    onChange={(e) =>
+                                        onChange(
+                                            index,
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="이름을 입력해주세요"
+                                    className={`mb-[7px] h-[92px] w-full rounded-[15px] border px-[20px] text-[20px] text-[#121212] outline-none placeholder:text-[#808386] ${index === 0
+                                        ? "border-[#865BFF]"
+                                        : "border-[#D0D6DD] focus:border-[#865BFF]"
+                                        }`}
+                                />
+                            ),
+                        )}
 
-                <button
-                    type="button"
-                    onClick={onAdd}
-                    className="mt-[2px] flex items-center gap-[7px] text-[20px] font-medium text-[#6C6E72]"
-                >
-                    <span className="text-[22px] leading-none">
-                        +
-                    </span>
+                        <button
+                            type="button"
+                            onClick={onAdd}
+                            className="mt-[2px] flex items-center gap-[7px] text-[20px] font-medium text-[#6C6E72]"
+                        >
+                            <span className="text-[22px] leading-none">
+                                +
+                            </span>
 
-                    새로운 멤버 추가하기
-                </button>
-            </div>
-        </div>
-    );
+                            새로운 멤버 추가하기
+                        </button>
+                    </div>
+                </div>
+                );
 }

@@ -9,11 +9,14 @@ import deletebtn from "../../img/project/deletebtn.svg";
 import {
     getProjectDetail,
     updateProject,
+    uploadProjectImage,
+    uploadProjectImages,
 } from "../../api/project/project";
 
 import { ApiError } from "../../api/instance";
 
 import type {
+    ProjectHackathon,
     ProjectMemberRequest,
     ProjectRequest,
 } from "../../types/project/project";
@@ -32,7 +35,10 @@ const generations = [14, 13, 12];
 // 현재 명세에서 IDEATHON / HERETHON 형태를 기준으로 작성.
 //
 
-const eventOptions = [
+const eventOptions: {
+    label: string;
+    value: ProjectHackathon;
+}[] = [
     {
         label: "아이디어톤",
         value: "IDEATHON",
@@ -47,100 +53,114 @@ const eventOptions = [
     },
 ];
 
+const isProjectHackathon = (
+    value: string,
+): value is ProjectHackathon =>
+    eventOptions.some(
+        (option) => option.value === value,
+    );
+
 // ======================================================
 // 기술 스택
 // ======================================================
 
-const stackList = {
-    기획: [
-        "Notion",
-        "Google Workspace",
-        "Miro",
-        "Ms Office",
-        "Confluence",
-        "Figma",
-        "Figjam",
-        "Asana",
-        "Slack",
-        "Discord",
-        "Jira",
-        "Linear",
-        "Trello",
-        "GitHub",
-    ],
+type TechStackCategory =
+    | "PLANNING"
+    | "DESIGN"
+    | "FRONTEND"
+    | "BACKEND"
+    | "AI";
 
-    디자인: [
-        "Figma",
-        "Sketch",
-        "Penpot",
-        "Framer",
-        "ProtoPie",
-        "Adobe Illustrator",
-        "Adobe Photoshop",
-        "Canva",
-        "Spline",
-        "Blender",
-        "After Effects",
-    ],
-
-    프론트엔드: [
-        "Notion",
-        "Google Workspace",
-        "Miro",
-        "Ms Office",
-        "Confluence",
-        "Figma",
-        "Figjam",
-        "Asana",
-        "Slack",
-        "Discord",
-        "Jira",
-        "Linear",
-        "Trello",
-        "GitHub",
-    ],
-
-    백엔드: [
-        "Notion",
-        "Google Workspace",
-        "Miro",
-        "Ms Office",
-        "Confluence",
-        "Figma",
-        "Figjam",
-        "Asana",
-        "Slack",
-        "Discord",
-        "Jira",
-        "Linear",
-        "Trello",
-        "GitHub",
-    ],
-
-    AI: [
-        "Chat GPT",
-        "Claude",
-        "Gemini",
-        "Grok",
-        "Perplexity",
-        "NotebookLM",
-        "HuggingFace",
-        "DALL",
-        "Midjourney",
-        "Stable Diffusion",
-        "Runway",
-        "Kling",
-        "Whisper",
-        "ElevenLabs",
-        "Cursor",
-        "Bolt",
-        "Lovable",
-        "v0",
-        "n8n",
-        "Zapier",
-        "Make",
-    ],
+type TechStackOption = {
+    id: number;
+    name: string;
+    category: TechStackCategory;
 };
+
+const techStacks: TechStackOption[] = [
+    { id: 1, name: "Notion", category: "PLANNING" },
+    { id: 2, name: "Google Workspace", category: "PLANNING" },
+    { id: 3, name: "Miro", category: "PLANNING" },
+    { id: 4, name: "Ms Office", category: "PLANNING" },
+    { id: 5, name: "Confluence", category: "PLANNING" },
+    { id: 6, name: "Figma", category: "PLANNING" },
+    { id: 7, name: "Figjam", category: "PLANNING" },
+    { id: 8, name: "Asana", category: "PLANNING" },
+    { id: 9, name: "Slack", category: "PLANNING" },
+    { id: 10, name: "Discord", category: "PLANNING" },
+    { id: 11, name: "Jira", category: "PLANNING" },
+    { id: 12, name: "Linear", category: "PLANNING" },
+    { id: 13, name: "Trello", category: "PLANNING" },
+    { id: 14, name: "GitHub", category: "PLANNING" },
+
+    { id: 15, name: "Figma", category: "DESIGN" },
+    { id: 16, name: "Sketch", category: "DESIGN" },
+    { id: 17, name: "Penpot", category: "DESIGN" },
+    { id: 18, name: "Framer", category: "DESIGN" },
+    { id: 19, name: "ProtoPie", category: "DESIGN" },
+    { id: 20, name: "Adobe Illustrator", category: "DESIGN" },
+    { id: 21, name: "Adobe Photoshop", category: "DESIGN" },
+    { id: 22, name: "Canva", category: "DESIGN" },
+    { id: 23, name: "Spline", category: "DESIGN" },
+    { id: 24, name: "Blender", category: "DESIGN" },
+    { id: 25, name: "After Effects", category: "DESIGN" },
+
+    { id: 26, name: "React", category: "FRONTEND" },
+    { id: 27, name: "Next.js", category: "FRONTEND" },
+    { id: 28, name: "Vue.js", category: "FRONTEND" },
+    { id: 29, name: "Flutter", category: "FRONTEND" },
+    { id: 30, name: "React Native", category: "FRONTEND" },
+    { id: 31, name: "Swift", category: "FRONTEND" },
+    { id: 32, name: "Kotlin", category: "FRONTEND" },
+    { id: 33, name: "Unity", category: "FRONTEND" },
+    { id: 34, name: "Unreal Engine", category: "FRONTEND" },
+    { id: 35, name: "Godot", category: "FRONTEND" },
+    { id: 36, name: "Three.js", category: "FRONTEND" },
+
+    { id: 37, name: "Node.js", category: "BACKEND" },
+    { id: 38, name: "Express.js", category: "BACKEND" },
+    { id: 39, name: "NestJs", category: "BACKEND" },
+    { id: 40, name: "Spring Boot", category: "BACKEND" },
+    { id: 41, name: "Django", category: "BACKEND" },
+    { id: 42, name: "FastAPI", category: "BACKEND" },
+    { id: 43, name: "MySQL", category: "BACKEND" },
+    { id: 44, name: "PostgreSQL", category: "BACKEND" },
+    { id: 45, name: "MongoDB", category: "BACKEND" },
+    { id: 46, name: "Redis", category: "BACKEND" },
+    { id: 47, name: "Prisma", category: "BACKEND" },
+    { id: 48, name: "Firebase", category: "BACKEND" },
+    { id: 49, name: "Supabase", category: "BACKEND" },
+    { id: 50, name: "AWS", category: "BACKEND" },
+    { id: 51, name: "GCP", category: "BACKEND" },
+    { id: 52, name: "Azure", category: "BACKEND" },
+    { id: 53, name: "Vercel", category: "BACKEND" },
+    { id: 54, name: "Docker", category: "BACKEND" },
+    { id: 55, name: "PyTorch", category: "BACKEND" },
+    { id: 56, name: "TensorFlow", category: "BACKEND" },
+    { id: 57, name: "LangChain", category: "BACKEND" },
+
+    { id: 58, name: "Chat GPT", category: "AI" },
+    { id: 59, name: "Claude", category: "AI" },
+    { id: 60, name: "Gemini", category: "AI" },
+    { id: 61, name: "Grok", category: "AI" },
+    { id: 62, name: "Perplexity", category: "AI" },
+    { id: 63, name: "NotebookLM", category: "AI" },
+    { id: 64, name: "HuggingFace", category: "AI" },
+    { id: 65, name: "DALL", category: "AI" },
+    { id: 66, name: "Midjourney", category: "AI" },
+    { id: 67, name: "Stable Diffusion", category: "AI" },
+    { id: 68, name: "Runway", category: "AI" },
+    { id: 69, name: "Kling", category: "AI" },
+    { id: 70, name: "Whisper", category: "AI" },
+    { id: 71, name: "ElevenLabs", category: "AI" },
+    { id: 72, name: "Cursor", category: "AI" },
+    { id: 73, name: "Bolt", category: "AI" },
+    { id: 74, name: "Lovable", category: "AI" },
+    { id: 75, name: "v0", category: "AI" },
+    { id: 76, name: "n8n", category: "AI" },
+    { id: 77, name: "Zapier", category: "AI" },
+    { id: 78, name: "Make", category: "AI" },
+];
 
 // ======================================================
 // 타입
@@ -201,8 +221,10 @@ export default function ProjectEdit() {
     const [description, setDescription] =
         useState("");
 
-    const [eventType, setEventType] =
-        useState("");
+    const [
+        eventType,
+        setEventType,
+    ] = useState<ProjectHackathon | "">("");
 
     const [eventOpen, setEventOpen] =
         useState(false);
@@ -219,10 +241,7 @@ export default function ProjectEdit() {
     const [banners, setBanners] =
         useState<ImageFile[]>([]);
 
-    const [
-        selectedStacks,
-        setSelectedStacks,
-    ] = useState<string[]>([]);
+    const [selectedStackIds, setSelectedStackIds] = useState<number[]>([]);
 
     const [members, setMembers] =
         useState<TeamMembers>({
@@ -259,9 +278,9 @@ export default function ProjectEdit() {
                             numericProjectId,
                         );
 
-                    setGeneration(
-                        project.term,
-                    );
+                    if (project.term !== undefined) {
+                        setGeneration(project.term);
+                    }
 
                     setProjectName(
                         project.title,
@@ -275,9 +294,17 @@ export default function ProjectEdit() {
                         project.description,
                     );
 
-                    setEventType(
-                        project.hackathon,
-                    );
+                    if (
+                        isProjectHackathon(
+                            project.hackathon,
+                        )
+                    ) {
+                        setEventType(
+                            project.hackathon,
+                        );
+                    } else {
+                        setEventType("");
+                    }
 
                     setStartDate(
                         project.startMonth.slice(
@@ -318,14 +345,22 @@ export default function ProjectEdit() {
                             ),
                     );
 
-                    setSelectedStacks(
-                        project.techStacks.map(
-                            (
-                                stack,
-                            ) =>
-                                stack.name,
-                        ),
-                    );
+                    const initialStackIds = project.techStacks
+                        .map((selected) => {
+                            const matched = techStacks.find(
+                                (stack) =>
+                                    stack.name === selected.name &&
+                                    stack.category === selected.category,
+                            );
+
+                            return matched?.id;
+                        })
+                        .filter(
+                            (id): id is number =>
+                                id !== undefined,
+                        );
+
+                    setSelectedStackIds(initialStackIds);
 
                     const planning =
                         project.members
@@ -707,25 +742,11 @@ export default function ProjectEdit() {
     // 기술스택 선택
     // ======================================================
 
-    const toggleStack = (
-        stack: string,
-    ) => {
-        setSelectedStacks(
-            (prev) =>
-                prev.includes(
-                    stack,
-                )
-                    ? prev.filter(
-                        (
-                            item,
-                        ) =>
-                            item !==
-                            stack,
-                    )
-                    : [
-                        ...prev,
-                        stack,
-                    ],
+    const toggleStack = (id: number) => {
+        setSelectedStackIds((prev) =>
+            prev.includes(id)
+                ? prev.filter((item) => item !== id)
+                : [...prev, id],
         );
     };
 
@@ -848,107 +869,69 @@ export default function ProjectEdit() {
             return;
         }
 
-        /*
-         * 중요
-         *
-         * 기존 서버 이미지:
-         * https://....
-         *
-         * 새로 선택한 이미지:
-         * blob:http://....
-         *
-         * 새 이미지는 S3 업로드 API가 있어야
-         * 실제 https URL로 변환할 수 있다.
-         */
-
-        const hasNewLogo = Boolean(
-            logo?.file,
-        );
-
-        const hasNewBanner = banners.some(
-            (banner) =>
-                Boolean(banner.file),
-        );
-
-        if (
-            hasNewLogo ||
-            hasNewBanner
-        ) {
-            alert(
-                "새 이미지가 선택되었습니다. 이미지 업로드 API 연결 후 실제 URL로 변환해야 수정할 수 있습니다.",
-            );
-
+        if (!eventType) {
+            alert("해커톤을 선택해주세요.");
             return;
         }
-
-        /*
-         * 기술스택 문제
-         *
-         * 현재 UI는 문자열:
-         * ["Figma", "Notion"]
-         *
-         * PATCH API는 ID:
-         * [1, 5]
-         *
-         * 형태를 요구한다.
-         */
-
-        if (
-            selectedStacks.length > 0
-        ) {
-            alert(
-                "기술스택 ID 조회 API가 필요합니다. 현재 선택된 기술스택 이름을 techStackIds로 변환할 수 없습니다.",
-            );
-
-            return;
-        }
-
-        const requestData: ProjectRequest = {
-            term: generation,
-
-            hackathon: eventType,
-
-            title:
-                projectName.trim(),
-
-            summary:
-                slogan.trim(),
-
-            description:
-                description.trim(),
-
-            startMonth:
-                startDate,
-
-            endMonth:
-                endDate,
-
-            logoUrl:
-                logo?.url ?? "",
-
-            slideUrls:
-                banners.map(
-                    (banner) =>
-                        banner.url,
-                ),
-
-            members:
-                createMembersPayload(),
-
-            techStackIds: [],
-        };
 
         try {
             setSubmitting(true);
+
+            // 기존 로고 URL은 그대로 사용하고,
+            // 새 File을 선택한 경우에만 S3에 다시 업로드한다.
+            let logoUrl = logo?.url ?? "";
+
+            if (logo?.file) {
+                logoUrl = await uploadProjectImage(
+                    logo.file,
+                    "LOGO",
+                );
+            }
+
+            // 기존 장표는 기존 URL을 유지한다.
+            const existingSlideUrls = banners
+                .filter((banner) => !banner.file)
+                .map((banner) => banner.url);
+
+            // 새로 선택한 장표만 업로드한다.
+            const newSlideFiles = banners
+                .filter((banner) => Boolean(banner.file))
+                .map((banner) => banner.file!);
+
+            let newSlideUrls: string[] = [];
+
+            if (newSlideFiles.length > 0) {
+                newSlideUrls = await uploadProjectImages(
+                    newSlideFiles,
+                    "SLIDE",
+                );
+            }
+
+            const slideUrls = [
+                ...existingSlideUrls,
+                ...newSlideUrls,
+            ];
+
+            const requestData: ProjectRequest = {
+                term: generation,
+                hackathon: eventType,
+                title: projectName.trim(),
+                summary: slogan.trim(),
+                description: description.trim(),
+                startMonth: startDate,
+                endMonth: endDate,
+                logoUrl,
+                slideUrls,
+                members: createMembersPayload(),
+                techStackIds: selectedStackIds,
+            };
 
             await updateProject(
                 numericProjectId,
                 requestData,
             );
 
-            alert(
-                "프로젝트가 수정되었습니다.",
-            );
+            alert("프로젝트가 수정되었습니다.");
 
             navigate(
                 `/ProjectDetail/${numericProjectId}`,
@@ -959,75 +942,45 @@ export default function ProjectEdit() {
                 error,
             );
 
-            if (
-                error instanceof ApiError
-            ) {
-                if (
-                    error.status === 401
-                ) {
-                    alert(
-                        "로그인이 필요합니다.",
-                    );
-
+            if (error instanceof ApiError) {
+                if (error.status === 401) {
+                    alert("로그인이 필요합니다.");
                     return;
                 }
 
-                if (
-                    error.status === 403
-                ) {
+                if (error.status === 403) {
                     alert(
                         "해당 프로젝트를 수정할 권한이 없습니다.",
                     );
-
                     return;
                 }
 
-                if (
-                    error.status === 404
-                ) {
+                if (error.status === 404) {
                     alert(
                         "존재하지 않거나 이미 삭제된 프로젝트입니다.",
                     );
 
-                    navigate(
-                        "/Project",
-                    );
-
+                    navigate("/Project");
                     return;
                 }
 
-                const body =
-                    error.body as {
-                        result?: Record<
-                            string,
-                            string
-                        >;
-                    };
+                const body = error.body as {
+                    result?: Record<string, string>;
+                };
 
-                const validation =
-                    body?.result;
+                const validation = body?.result;
 
                 if (validation) {
                     const firstMessage =
-                        Object.values(
-                            validation,
-                        )[0];
+                        Object.values(validation)[0];
 
-                    if (
-                        firstMessage
-                    ) {
-                        alert(
-                            firstMessage,
-                        );
-
+                    if (firstMessage) {
+                        alert(firstMessage);
                         return;
                     }
                 }
 
-                alert(
-                    error.message,
-                );
-
+                alert(error.message);
                 return;
             }
 
@@ -1104,9 +1057,9 @@ export default function ProjectEdit() {
                                             )
                                         }
                                         className={`num h-[79px] w-[118px] rounded-[15px] border text-[24px] font-semibold transition-colors ${generation ===
-                                                item
-                                                ? "border-[#8557FF] bg-[#8557FF] text-white"
-                                                : "border-[#D0D6DD] bg-white text-[#121212]"
+                                            item
+                                            ? "border-[#8557FF] bg-[#8557FF] text-white"
+                                            : "border-[#D0D6DD] bg-white text-[#121212]"
                                             }`}
                                     >
                                         {item}기
@@ -1199,8 +1152,8 @@ export default function ProjectEdit() {
                                         }
                                         alt=""
                                         className={`h-[16px] w-[14px] transition-transform ${eventOpen
-                                                ? "rotate-180"
-                                                : ""
+                                            ? "rotate-180"
+                                            : ""
                                             }`}
                                     />
                                 </button>
@@ -1535,60 +1488,56 @@ export default function ProjectEdit() {
                         </h2>
 
                         <div className="flex flex-col gap-[26px]">
-                            {Object.entries(
-                                stackList,
-                            ).map(
-                                ([
-                                    category,
-                                    stacks,
-                                ]) => (
+                            {[
+                                ["기획", "PLANNING"],
+                                ["디자인", "DESIGN"],
+                                ["프론트엔드", "FRONTEND"],
+                                ["백엔드", "BACKEND"],
+                                ["AI", "AI"],
+                            ].map(([label, category]) => {
+                                const stacks = techStacks.filter(
+                                    (stack) =>
+                                        stack.category === category,
+                                );
+
+                                return (
                                     <div
-                                        key={
-                                            category
-                                        }
+                                        key={category}
                                         className="grid grid-cols-[90px_1fr] items-start gap-x-[50px]"
                                     >
                                         <p className="pt-[7px] text-[20px] font-medium text-[#808386]">
-                                            {
-                                                category
-                                            }
+                                            {label}
                                         </p>
 
                                         <div className="flex flex-wrap gap-[8px]">
-                                            {stacks.map(
-                                                (
-                                                    stack,
-                                                ) => {
-                                                    const selected =
-                                                        selectedStacks.includes(
-                                                            stack,
-                                                        );
-
-                                                    return (
-                                                        <button
-                                                            key={`${category}-${stack}`}
-                                                            type="button"
-                                                            onClick={() =>
-                                                                toggleStack(
-                                                                    stack,
-                                                                )
-                                                            }
-                                                            className={`rounded-[5px] border px-[10px] py-[6px] text-[20px] font-medium transition-colors ${selected
-                                                                    ? "border-[#A789FF] bg-[#F2EDFF] text-[#7950F2]"
-                                                                    : "border-[#DBDEE2] bg-[#FAFAFA] text-[#121212]"
-                                                                }`}
-                                                        >
-                                                            {
-                                                                stack
-                                                            }
-                                                        </button>
+                                            {stacks.map((stack) => {
+                                                const selected =
+                                                    selectedStackIds.includes(
+                                                        stack.id,
                                                     );
-                                                },
-                                            )}
+
+                                                return (
+                                                    <button
+                                                        key={stack.id}
+                                                        type="button"
+                                                        onClick={() =>
+                                                            toggleStack(
+                                                                stack.id,
+                                                            )
+                                                        }
+                                                        className={`rounded-[5px] border px-[10px] py-[6px] text-[20px] font-medium transition-colors ${selected
+                                                            ? "border-[#A789FF] bg-[#F2EDFF] text-[#7950F2]"
+                                                            : "border-[#DBDEE2] bg-[#FAFAFA] text-[#121212]"
+                                                            }`}
+                                                    >
+                                                        {stack.name}
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
                                     </div>
-                                ),
-                            )}
+                                );
+                            })}
                         </div>
                     </div>
 
@@ -1666,8 +1615,8 @@ function TeamMemberColumn({
                             }
                             placeholder="이름을 입력해주세요"
                             className={`mb-[7px] h-[92px] w-full rounded-[15px] border px-[20px] text-[20px] text-[#121212] outline-none placeholder:text-[#808386] ${index === 0
-                                    ? "border-[#865BFF]"
-                                    : "border-[#D0D6DD] focus:border-[#865BFF]"
+                                ? "border-[#865BFF]"
+                                : "border-[#D0D6DD] focus:border-[#865BFF]"
                                 }`}
                         />
                     ),

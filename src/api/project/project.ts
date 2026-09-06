@@ -1,43 +1,41 @@
-import instance from '../instance'
+import instance from "../instance";
 
-import type { ApiResponse } from '../../types/type'
+import type { ApiResponse } from "../../types/type";
 
 import type {
   ProjectDeleteResponse,
   ProjectDetail,
+  ProjectImageType,
+  ProjectImagesUploadResult,
+  ProjectImageUploadResult,
   ProjectListParams,
   ProjectListResult,
   ProjectMutationResult,
   ProjectRequest,
-} from '../../types/project/project'
+  ProjectDetailApiResult,
+} from "../../types/project/project";
 
 // ======================================================
 // 1. 프로젝트 목록 조회
 // GET /api/v1/projects
-//
-// query
-// term?: number
-// page?: number = 0
-// size?: number = 9
-// sort?: string = createdAt/desc
 // ======================================================
 
 export async function getProjects(
   params: ProjectListParams = {},
 ): Promise<ProjectListResult> {
   const res = await instance.get<ApiResponse<ProjectListResult>>(
-    '/api/v1/projects',
+    "/api/v1/projects",
     {
       params: {
         term: params.term,
         page: params.page ?? 0,
         size: params.size ?? 9,
-        sort: params.sort ?? 'createdAt/desc',
+        sort: params.sort ?? "createdAt,desc",
       },
     },
-  )
+  );
 
-  return res.data.result
+  return res.data.result;
 }
 
 // ======================================================
@@ -48,40 +46,85 @@ export async function getProjects(
 export async function getProjectDetail(
   projectId: number,
 ): Promise<ProjectDetail> {
-  const res = await instance.get<ApiResponse<ProjectDetail>>(
+  const res = await instance.get<
+    ApiResponse<ProjectDetailApiResult>
+  >(
     `/api/v1/projects/${projectId}`,
-  )
+  );
 
-  return res.data.result
+  const data = res.data.result;
+
+  const slides = (data.slideUrls ?? []).map(
+    (imageUrl, index) => ({
+      slideId: index + 1,
+      imageUrl,
+      sequenceNum: index,
+    }),
+  );
+
+  let memberIndex = 1;
+
+  const members = Object.entries(
+    data.membersByPart ?? {},
+  ).flatMap(([part, names]) =>
+    names.map((name) => ({
+      projectMemberId: memberIndex++,
+      name,
+      part:
+        part as
+          | "PM"
+          | "PLANNING"
+          | "DESIGN"
+          | "FRONTEND"
+          | "BACKEND"
+          | "AI",
+    })),
+  );
+
+  const techStacks = Object.entries(
+    data.techStacksByCategory ?? {},
+  ).flatMap(([category, stacks]) =>
+    stacks.map((stack) => ({
+      projectTechStackId: stack.id,
+      name: stack.name,
+      category,
+    })),
+  );
+
+  return {
+    projectId: data.id,
+    hackathon: data.hackathon,
+    title: data.title,
+    summary: data.summary,
+    description: data.description,
+    logoUrl: data.logoUrl,
+    startMonth: data.startMonth,
+    endMonth: data.endMonth,
+    slides,
+    members,
+    techStacks,
+  };
 }
 
 // ======================================================
 // 3. 프로젝트 등록
 // POST /api/v1/projects
-//
-// 인증:
-// instance request interceptor에서
-// Authorization: Bearer {accessToken}
-// 자동 첨부
 // ======================================================
 
 export async function createProject(
   payload: ProjectRequest,
 ): Promise<ProjectMutationResult> {
   const res = await instance.post<ApiResponse<ProjectMutationResult>>(
-    '/api/v1/projects',
+    "/api/v1/projects",
     payload,
-  )
+  );
 
-  return res.data.result
+  return res.data.result;
 }
 
 // ======================================================
 // 4. 프로젝트 수정
 // PATCH /api/v1/projects/{projectId}
-//
-// 인증:
-// instance에서 accessToken 자동 첨부
 // ======================================================
 
 export async function updateProject(
@@ -91,24 +134,14 @@ export async function updateProject(
   const res = await instance.patch<ApiResponse<ProjectMutationResult>>(
     `/api/v1/projects/${projectId}`,
     payload,
-  )
+  );
 
-  return res.data.result
+  return res.data.result;
 }
 
 // ======================================================
 // 5. 프로젝트 삭제
 // DELETE /api/v1/projects/{projectId}
-//
-// 응답:
-// {
-//   isSuccess,
-//   code,
-//   message,
-//   timestamp
-// }
-//
-// result가 없기 때문에 ApiResponse<T>를 사용하지 않는다.
 // ======================================================
 
 export async function deleteProject(
@@ -116,6 +149,63 @@ export async function deleteProject(
 ): Promise<void> {
   await instance.delete<ProjectDeleteResponse>(
     `/api/v1/projects/${projectId}`,
-  )
+  );
 }
 
+// ======================================================
+// 6. 프로젝트 이미지 단건 업로드
+// POST /api/v1/projects/images/upload
+// ======================================================
+
+export async function uploadProjectImage(
+  file: File,
+  type: ProjectImageType,
+): Promise<string> {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  const res = await instance.post<
+    ApiResponse<ProjectImageUploadResult>
+  >(
+    "/api/v1/projects/images/upload",
+    formData,
+    {
+      params: {
+        type,
+      },
+    },
+  );
+
+  return res.data.result.imageUrl;
+}
+
+// ======================================================
+// 7. 프로젝트 이미지 다건 업로드
+// POST /api/v1/projects/images/upload/bulk
+// ======================================================
+
+export async function uploadProjectImages(
+  files: File[],
+  type: ProjectImageType = "SLIDE",
+): Promise<string[]> {
+  const formData = new FormData();
+
+  files.forEach((file) => {
+    formData.append("files", file);
+  });
+
+  const res = await instance.post<
+    ApiResponse<ProjectImagesUploadResult>
+  >(
+    "/api/v1/projects/images/upload/bulk",
+    formData,
+    {
+      params: {
+        type,
+      },
+    },
+  );
+
+  return res.data.result.imageUrls;
+}

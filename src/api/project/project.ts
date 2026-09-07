@@ -131,7 +131,7 @@ export async function updateProject(
   projectId: number,
   payload: ProjectRequest,
 ): Promise<ProjectMutationResult> {
-  const res = await instance.patch<ApiResponse<ProjectMutationResult>>(
+  const res = await instance.put<ApiResponse<ProjectMutationResult>>(
     `/api/v1/projects/${projectId}`,
     payload,
   );

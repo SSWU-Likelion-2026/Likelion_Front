@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import Header from './components/Header'
-import Home from './pages/Home'
+import Footer from './components/Footer'
+import Home from './pages/home/Home'
 import Login from './pages/signup/Login'
 import Signup from './pages/signup/Signup'
 import People from './pages/People'
@@ -19,26 +20,29 @@ import StampDetail from './pages/stamp/StampDetail'
 
 function App() {
   return (
-    <div>
+    <div className="flex min-h-screen flex-col">
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/session" element={<Session />} />
-        <Route path="/session/:week" element={<SessionDetail />} />
-        <Route path="/project" element={<Project />} />
-        <Route path="/projectmaking" element={<ProjectMaking />} />
-         <Route path="/ProjectEdit/:projectId" element={<ProjectEdit />} />
-        <Route path="/ProjectDetail/:projectId" element={<ProjectDetail />} />
-        <Route path="/people" element={<People />} />
-        <Route path="/recruiting" element={<Recruiting />} />
-        <Route path="/recruiting/apply" element={<Apply />} />
-        <Route path="/recruiting/complete" element={<ApplyComplete />} />
-        <Route path="/stamp" element={<Stamp />} />
-        <Route path="/stamp/:missionId" element={<StampDetail />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
+      <main className="flex-1">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/session" element={<Session />} />
+          <Route path="/session/:week" element={<SessionDetail />} />
+          <Route path="/project" element={<Project />} />
+          <Route path="/projectmaking" element={<ProjectMaking />} />
+          <Route path="/ProjectEdit/:projectId" element={<ProjectEdit />} />
+          <Route path="/ProjectDetail/:projectId" element={<ProjectDetail />} />
+          <Route path="/people" element={<People />} />
+          <Route path="/recruiting" element={<Recruiting />} />
+          <Route path="/recruiting/apply" element={<Apply />} />
+          <Route path="/recruiting/complete" element={<ApplyComplete />} />
+          <Route path="/stamp" element={<Stamp />} />
+          <Route path="/stamp/:missionId" element={<StampDetail />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
+      </main>
+      <Footer />
     </div>
   )
 }

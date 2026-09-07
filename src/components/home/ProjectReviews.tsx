@@ -2,6 +2,7 @@ import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useStat
 import {
   animate,
   motion,
+  useInView,
   useMotionValue,
   useTransform,
   type MotionValue,
@@ -106,6 +107,32 @@ const ProjectSlide = memo(function ProjectSlide({ project, index, x, containerWi
   )
 })
 
+const PROJECT_COUNT_TARGET = 20
+const PROJECT_COUNT_DURATION = 0.8
+
+// 화면에 처음 들어올 때 한 번만 0에서 목표 숫자까지 세는 애니메이션
+function ProjectCountLabel() {
+  const ref = useRef<HTMLSpanElement>(null)
+  const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!isInView) return
+    const controls = animate(0, PROJECT_COUNT_TARGET, {
+      duration: PROJECT_COUNT_DURATION,
+      ease: 'easeOut',
+      onUpdate: (v) => setCount(Math.round(v)),
+    })
+    return () => controls.stop()
+  }, [isInView])
+
+  return (
+    <span ref={ref} className="text-primary-100">
+      {count}+개의 프로젝트
+    </span>
+  )
+}
+
 function ProjectReviews() {
   const [projects, setProjects] = useState<RecentProject[] | null>(null)
   const [containerWidth, setContainerWidth] = useState(0)
@@ -193,7 +220,7 @@ function ProjectReviews() {
       <div className="flex w-[1200px] flex-col items-center gap-[15px]">
         <p className="m-0 py-[10px] text-[18px] font-semibold text-black">Project Preview</p>
         <p className="m-0 text-center text-[32px] font-semibold text-black">
-          매 기수 <span className="text-primary-100">00+개의 프로젝트</span>
+          매 기수 <ProjectCountLabel />
         </p>
       </div>
 

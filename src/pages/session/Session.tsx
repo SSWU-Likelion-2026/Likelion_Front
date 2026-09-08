@@ -48,9 +48,9 @@ function Session() {
 
   useEffect(() => {
     const term = parseInt(generation)
-    getSessions(term, partMap[track]).then(res =>
-      setSessionData(res.result.sessions)
-    )
+    getSessions(term, partMap[track])
+      .then(res => setSessionData(res.result?.sessions ?? []))
+      .catch(() => setSessionData([]))
   }, [track, generation])
 
   return (

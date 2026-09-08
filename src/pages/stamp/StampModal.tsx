@@ -1,4 +1,4 @@
-import checkIcon from "../../img/stamp/check.svg";
+import check from "../../img/stamp/check.svg";
 
 interface StampModalProps {
   onClose: () => void;
@@ -10,10 +10,9 @@ export default function StampModal({
   return (
     <div
       className="
-        stampModalBackground
         fixed
         inset-0
-        z-[999]
+        z-50
         flex
         items-center
         justify-center
@@ -22,56 +21,106 @@ export default function StampModal({
     >
       <div
         className="
-          stampModal
           flex
           h-[700px]
           w-[700px]
           flex-col
           items-center
+          justify-center
           rounded-[20px]
           bg-white
-          px-[80px]
-          pt-[85px]
-          pb-[60px]
+
+          max-[393px]:h-[270px]
+          max-[393px]:w-[calc(100%-80px)]
+          max-[393px]:rounded-[8px]
         "
       >
-        <img
-          src={checkIcon}
-          alt="인증 완료"
-          className="stampModalCheck h-[130px] w-[130px]"
-        />
+        <div
+          className="
+            flex
+            w-full
+            flex-col
+            items-center
+            px-[100px]
 
-        <div className="stampModalText mt-[80px] text-center">
-          <h2 className="text-[34px] font-semibold text-[#121212]">
+            max-[393px]:px-[73px]
+          "
+        >
+          {/* 체크 아이콘 */}
+          <img
+            src={check}
+            alt="인증 완료"
+            className="
+              h-[70px]
+              w-[70px]
+
+              max-[393px]:h-[50px]
+              max-[393px]:w-[50px]
+            "
+          />
+
+          {/* 제목 */}
+          <h2
+            className="
+              mt-[30px]
+              text-center
+              text-[30px]
+              font-semibold
+              text-[#121212]
+
+              max-[393px]:mt-[16px]
+              max-[393px]:whitespace-nowrap
+              max-[393px]:text-[16px]
+            "
+          >
             인증이 완료되었습니다
           </h2>
 
-          <p className="mt-[25px] text-[28px] leading-[1.6] text-[#808386]">
+          {/* 설명 */}
+          <p
+            className="
+              mt-[14px]
+              text-center
+              text-[20px]
+              leading-[1.5]
+              text-[#808386]
+
+              max-[393px]:mt-[8px]
+              max-[393px]:whitespace-nowrap
+              max-[393px]:text-[13px]
+              max-[393px]:leading-[15px]
+            "
+          >
             스탬프가 지급되었어요.
             <br />
-            마이 스탬프에서 계속 도전해보세요!
+            다른 미션도 계속 도전해보세요!
           </p>
-        </div>
 
-        <button
-          type="button"
-          onClick={onClose}
-          className="
-            stampModalConfirm
-            mt-auto
-            h-[83px]
-            w-[397px]
-            rounded-[20px]
-            bg-[#242424]
-            text-[28px]
-            font-semibold
-            text-white
-            transition
-            hover:bg-black
-          "
-        >
-          확인
-        </button>
+          {/* 확인 버튼 */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="
+              mt-[35px]
+              h-[83px]
+              w-[397px]
+              rounded-[10px]
+              bg-[#242424]
+              text-[24px]
+              font-semibold
+              text-white
+
+              max-[393px]:mt-[15px]
+              max-[393px]:h-[50px]
+              max-[393px]:w-full
+              max-[393px]:min-w-[145px]
+              max-[393px]:rounded-full
+              max-[393px]:text-[20px]
+            "
+          >
+            확인
+          </button>
+        </div>
       </div>
     </div>
   );

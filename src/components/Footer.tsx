@@ -5,7 +5,7 @@ function Footer() {
   return (
     <footer className="mt-[100px] flex w-full items-center justify-center bg-warm-black py-[80px]">
       <div className="flex w-[523px] flex-col items-center gap-[25px]">
-        <Logo size={64} text="SSWU LIKELION UNIV" />
+        <Logo size={64} text="SSWU LIKELION UNIV" wordmarkFontSize={41} />
         <div className="flex items-center gap-[31px]">
           {Array.from({ length: 3 }, (_, i) => (
             <button

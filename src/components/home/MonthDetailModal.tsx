@@ -6,11 +6,12 @@ type MonthDetailModalProps = {
   onClose: () => void
   title: string
   description: string
+  image?: string
 }
 
 // AnnualSchedule은 hover 상태가 바뀔 때마다 리렌더되지만, 이 모달은 open/title/description이
 // 바뀌지 않는 한(즉 열려있지 않은 동안) 다시 렌더링될 필요가 없다.
-const MonthDetailModal = memo(function MonthDetailModal({ open, onClose, title, description }: MonthDetailModalProps) {
+const MonthDetailModal = memo(function MonthDetailModal({ open, onClose, title, description, image }: MonthDetailModalProps) {
   const stopPropagation = useCallback((e: MouseEvent<HTMLDivElement>) => e.stopPropagation(), [])
 
   if (!open) return null
@@ -25,6 +26,7 @@ const MonthDetailModal = memo(function MonthDetailModal({ open, onClose, title, 
         onClick={stopPropagation}
       >
         <div className="relative h-[339px] w-full bg-[#f3f4f6]">
+          {image && <img src={image} alt="" className="absolute inset-0 size-full object-cover" />}
           <button
             type="button"
             onClick={onClose}

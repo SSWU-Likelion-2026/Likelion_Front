@@ -34,8 +34,6 @@ const MONTH_KOREAN: Record<string, number> = {
   Dec: 12,
 }
 
-// TODO: 월별 실제 사진/날짜 API 연동 전까지는 임시 콘텐츠
-const HOVER_PREVIEW_DATE = '2000.00.00'
 const HOVER_DEBOUNCE_MS = 200
 const ITEM_HEIGHT = 100
 
@@ -170,7 +168,6 @@ const HoverPreview = memo(function HoverPreview({ item }: HoverPreviewProps) {
       <p className="m-0 whitespace-nowrap text-[21px] font-semibold leading-[1.5]">
         {MONTH_KOREAN[item.label]}월의 활동
       </p>
-      <p className="m-0 whitespace-nowrap text-[13px] leading-[1.6]">{HOVER_PREVIEW_DATE}</p>
     </motion.div>
   )
 })

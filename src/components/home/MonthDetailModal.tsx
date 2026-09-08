@@ -31,9 +31,9 @@ const MonthDetailModal = memo(function MonthDetailModal({ open, onClose, title, 
             type="button"
             onClick={onClose}
             aria-label="닫기"
-            className="absolute right-[40px] top-[39px] size-[29px] cursor-pointer border-0 bg-transparent p-0"
+            className="absolute right-[40px] top-[39px] flex size-[36px] cursor-pointer items-center justify-center rounded-full border-0 bg-white p-0"
           >
-            <img src={closeIcon} alt="" className="size-full" />
+            <img src={closeIcon} alt="" className="size-[20px]" />
           </button>
         </div>
         <div className="flex flex-col gap-[14px] p-[38px]">

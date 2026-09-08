@@ -39,13 +39,13 @@ export default function Modal({ open, title, message, onClose, onConfirm, confir
             <Button
               onClick={onClose}
               color="white"
-              className={`w-full ${compact ? '!px-5 !py-2 !text-[14px]' : ''}`}>
+              className={`w-full ${compact ? 'px-5! py-2! text-[14px]!' : ''}`}>
               취소
             </Button>
           )}
           <Button
             onClick={onConfirm}
-            className={`w-full ${confirmClassName ?? 'bg-red-500 text-white'} ${compact ? '!px-5 !py-2 !text-[14px]' : ''}`}>
+            className={`w-full ${confirmClassName ?? 'bg-red-500 text-white'} ${compact ? 'px-5! py-2! text-[14px]!' : ''}`}>
             확인
           </Button>
         </div>

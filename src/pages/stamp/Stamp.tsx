@@ -90,7 +90,7 @@ export default function Stamp() {
         // → 백엔드에서 가장 최근 기수 조회
         const response = await getStampMissions();
 
-        setMissions(response.result);
+        setMissions(response.result ?? []);
       } catch (error) {
         console.error(
           "스탬프 미션 목록 조회 실패:",

@@ -174,7 +174,8 @@ function MainWrap() {
 
   useEffect(() => {
     getCurrentRecruitment()
-      .then(setRecruitment)
+      // 서버 응답이 예상 형태가 아니어도(빈 값 등) 알림 신청으로 안전하게 대체
+      .then((data) => setRecruitment(data?.action ? data : NOTIFICATION_FALLBACK))
       .catch(() => setRecruitment(NOTIFICATION_FALLBACK))
   }, [])
 

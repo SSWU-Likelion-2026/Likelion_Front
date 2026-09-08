@@ -9,6 +9,7 @@ import {
   type PanInfo,
 } from 'framer-motion'
 import { getRecentProjects, type RecentProject } from '../../api/project/project'
+import { HOME_SHOWCASE_PROJECTS } from '../../data/homeProjects'
 import arrowIcon from '../../img/home/project-arrow.svg'
 
 // 홈 화면 방문마다 다시 호출하지 않도록 응답을 모듈 레벨에 캐싱
@@ -27,18 +28,12 @@ function preloadImage(src: string) {
   img.src = src
 }
 
-// TODO: 실제로 등록된 프로젝트가 없을 때(개발/디자인 확인용) 보여주는 임시 카드 — 실제 데이터 생기면 자동으로 안 쓰임
-const MOCK_THUMBNAIL =
-  'data:image/svg+xml;utf8,' +
-  encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="704" height="400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8158F6"/><stop offset="1" stop-color="#B0E7D5"/></linearGradient></defs><rect width="704" height="400" fill="url(#g)"/></svg>`,
-  )
-
-const MOCK_PROJECTS: RecentProject[] = Array.from({ length: 7 }, (_, i) => ({
+// 실제로 등록된 프로젝트가 없을 때 보여주는 14기 중앙해커톤 프로젝트 소개 (data/homeProjects.ts) — 실제 데이터 생기면 자동으로 안 쓰임
+const MOCK_PROJECTS: RecentProject[] = HOME_SHOWCASE_PROJECTS.map((project, i) => ({
   projectId: -(i + 1),
-  title: `프로젝트 제목 ${i + 1}`,
-  summary: '프로젝트의 한줄 설명이 들어갑니다.',
-  thumbnailUrl: MOCK_THUMBNAIL,
+  title: project.title,
+  summary: project.summary,
+  thumbnailUrl: project.thumbnailUrl,
 }))
 
 const CARD_WIDTH = 570

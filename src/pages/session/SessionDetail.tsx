@@ -47,12 +47,20 @@ export default function SessionDetail() {
 
   useEffect(() => {
     if (!term || !part || isNaN(weekNumber)) return
-    getSessionDetail(term, part, weekNumber).then(res => {
-      setDetailData(res.result)
-      getSessionReviews(res.result.sessionId).then(r => setReviews(r.result))
-    })
+    getSessionDetail(term, part, weekNumber)
+      .then(res => {
+        if (!res.result) return
+        setDetailData(res.result)
+        const sessionId = res.result.sessionId
+        getSessionReviews(sessionId)
+          .then(r => setReviews(r.result ?? []))
+          .catch(() => setReviews([]))
+      })
+      .catch(() => {})
     if (!state?.sessions) {
-      getSessions(term, part).then(res => setSessions(res.result.sessions))
+      getSessions(term, part)
+        .then(res => setSessions(res.result?.sessions ?? []))
+        .catch(() => setSessions([]))
     }
   }, [term, part, weekNumber])
 
@@ -62,13 +70,13 @@ export default function SessionDetail() {
     if (!content.trim() || !sessionId) return
     postSessionReview(sessionId, content).then(() => {
       setContent('')
-      getSessionReviews(sessionId).then(res => setReviews(res.result))
+      getSessionReviews(sessionId).then(res => setReviews(res.result ?? []))
     })
   }
 
   const handleDelete = (commentId: number) => {
     deleteSessionReview(commentId).then(() => {
-      if (sessionId) getSessionReviews(sessionId).then(res => setReviews(res.result))
+      if (sessionId) getSessionReviews(sessionId).then(res => setReviews(res.result ?? []))
       setDeleteTargetId(null)
       setOpenMenuId(null)
     })
@@ -83,7 +91,7 @@ export default function SessionDetail() {
   const handleEditSave = (commentId: number) => {
     if (!editComment.trim() || !sessionId) return
     editSessionReviews(commentId, editComment).then(() => {
-      getSessionReviews(sessionId).then(res => setReviews(res.result))
+      getSessionReviews(sessionId).then(res => setReviews(res.result ?? []))
       setEditingId(null)
     })
   }
@@ -124,7 +132,7 @@ export default function SessionDetail() {
 
             <h3 className="text-[18px] lg:text-[24px] font-semibold mt-[45px]">주요학습 내용</h3>
             <div className="flex flex-wrap gap-2 mt-[15px]">
-            {detailData?.learningTopics.map(tag => (
+            {detailData?.learningTopics?.map(tag => (
                 <span key={tag.sequenceNum} className="px-3 py-3 rounded-[5px] bg-[#F3F4F6] text-[13px] lg:text-[16px]">
                 {tag.content}
                 </span>

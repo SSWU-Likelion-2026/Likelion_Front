@@ -4,6 +4,8 @@ type LogoProps = {
   text?: string
   className?: string
   wordmarkClassName?: string
+  /** 워드마크 폰트 크기(px) 직접 지정. 생략하면 기본값(size * 0.8)을 사용 */
+  wordmarkFontSize?: number
 }
 
 function Logo({
@@ -12,6 +14,7 @@ function Logo({
   text = 'LIKELION UNIV SSWU',
   className,
   wordmarkClassName = 'text-sswu-text',
+  wordmarkFontSize,
 }: LogoProps) {
   return (
     <span className={`justify-center inline-flex items-center gap-2 ${className ?? ''}`}>
@@ -25,7 +28,7 @@ function Logo({
       {withText && (
         <span
           className={`font-montserrat font-extrabold tracking-tight whitespace-nowrap ${wordmarkClassName}`}
-          style={{ fontSize: size * 0.8 }}
+          style={{ fontSize: wordmarkFontSize ?? size * 0.8 }}
         >
           {text}
         </span>

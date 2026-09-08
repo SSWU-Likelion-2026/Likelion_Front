@@ -7,10 +7,7 @@ import arrow1 from '../../img/home/schedule-arrow1.svg'
 import arrow2 from '../../img/home/schedule-arrow2.svg'
 import checkIcon from '../../img/home/schedule-check.svg'
 import MonthDetailModal from './MonthDetailModal'
-
-// TODO: 실제 일정 API 연동 전까지는 임시 문구
-const PLACEHOLDER_DESCRIPTION =
-  '2025 TRENDITHON은 서경대학교가 주최하는 멋쟁이사자처럼 13기 대학 연합 운영진 해커톤으로 기획자, 개발자, 디자이너 총 6명이 팀을 이루어 약 한 달간 2025년의 트렌드를 이끌 서비스를 기획, 디자인, 개발하고, 창업으로 이어지는 것을 목표로 하는 해커톤입니다.'
+import { MONTH_SCHEDULE } from '../../data/homeSchedule'
 
 type MonthColor = 'primary' | 'neutral'
 type ConnectorColor = 'primary' | 'mint' | 'neutral'
@@ -37,8 +34,6 @@ const MONTH_KOREAN: Record<string, number> = {
   Dec: 12,
 }
 
-// TODO: 월별 실제 사진/날짜 API 연동 전까지는 임시 콘텐츠
-const HOVER_PREVIEW_DATE = '2000.00.00'
 const HOVER_DEBOUNCE_MS = 200
 const ITEM_HEIGHT = 100
 
@@ -173,7 +168,6 @@ const HoverPreview = memo(function HoverPreview({ item }: HoverPreviewProps) {
       <p className="m-0 whitespace-nowrap text-[21px] font-semibold leading-[1.5]">
         {MONTH_KOREAN[item.label]}월의 활동
       </p>
-      <p className="m-0 whitespace-nowrap text-[13px] leading-[1.6]">{HOVER_PREVIEW_DATE}</p>
     </motion.div>
   )
 })
@@ -201,6 +195,8 @@ function AnnualSchedule() {
     const item = items[hoveredIndex]
     return item.kind === 'month' ? item : null
   }, [hoveredIndex])
+
+  const selectedSchedule = selectedMonth ? MONTH_SCHEDULE[selectedMonth] : null
 
   return (
     <section className="flex w-full flex-col items-center gap-[50px] py-[45px]">
@@ -232,8 +228,9 @@ function AnnualSchedule() {
       <MonthDetailModal
         open={selectedMonth !== null}
         onClose={closeModal}
-        title="일정의 제목"
-        description={PLACEHOLDER_DESCRIPTION}
+        title={selectedSchedule?.title ?? ''}
+        description={selectedSchedule?.description ?? ''}
+        image={selectedSchedule?.image}
       />
     </section>
   )

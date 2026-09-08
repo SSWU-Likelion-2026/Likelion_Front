@@ -2,6 +2,16 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { motion, type Transition } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
 import { getCurrentRecruitment, type CurrentRecruitment } from '../../api/recruiting/recruit'
+
+// 서버에서 모집 상태를 못 불러올 때(로딩 중 포함)는 알림 신청을 기본값으로 보여준다
+const NOTIFICATION_FALLBACK: CurrentRecruitment = {
+  recruitmentId: null,
+  term: null,
+  title: null,
+  recruiting: false,
+  dDay: null,
+  action: 'NOTIFICATION',
+}
 import NotifySignupModal from './NotifySignupModal'
 import ctaArrowPng from '../../img/home/cta-arrow.png'
 import applyButtonPng from '../../img/home/apply-button.png'
@@ -159,14 +169,17 @@ const RecruitCta = memo(function RecruitCta({ isNotification, hoverPillImage, on
 })
 
 function MainWrap() {
-  const [recruitment, setRecruitment] = useState<CurrentRecruitment | null>(null)
+  const [recruitment, setRecruitment] = useState<CurrentRecruitment>(NOTIFICATION_FALLBACK)
   const [notifyOpen, setNotifyOpen] = useState(false)
 
   useEffect(() => {
-    getCurrentRecruitment().then(setRecruitment).catch(() => {})
+    getCurrentRecruitment()
+      // 서버 응답이 예상 형태가 아니어도(빈 값 등) 알림 신청으로 안전하게 대체
+      .then((data) => setRecruitment(data?.action ? data : NOTIFICATION_FALLBACK))
+      .catch(() => setRecruitment(NOTIFICATION_FALLBACK))
   }, [])
 
-  const isNotification = recruitment?.action === 'NOTIFICATION'
+  const isNotification = recruitment.action === 'NOTIFICATION'
   const hoverPillImage = isNotification ? notifyButtonPng : applyButtonPng
 
   const openNotifyModal = useCallback(() => setNotifyOpen(true), [])

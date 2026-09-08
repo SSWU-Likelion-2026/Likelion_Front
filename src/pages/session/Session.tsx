@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getSessions } from '../../api/session/session'
 
 // types 
-import type { Session } from '../../types/session/session'
+import type { Session as SessionItem } from '../../types/session/session'
 
 // components
 import Banner from '../../components/Banner'
@@ -32,7 +32,7 @@ function Session() {
 
   const setTrack = (value: string) => setSearchParams(prev => { prev.set('track', value); return prev })
   const setGeneration = (value: string) => setSearchParams(prev => { prev.set('generation', value); return prev })
-  const [sessionData, setSessionData] = useState<Session[]>([])
+  const [sessionData, setSessionData] = useState<SessionItem[]>([])
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   

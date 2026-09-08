@@ -1,9 +1,51 @@
 @import 'tailwindcss';
+
 @import './styles/colors.css';
+
+@theme inline {
+  --font-montserrat: 'Montserrat', sans-serif;
+
+  /* 카드 공통 그림자 → shadow-card 로 사용 */
+  --shadow-card: 4px 4px 5px 0 rgba(0, 0, 0, 0.03);
+
+  --color-primary-100: var(--color-primary-100);
+  --color-primary-80: var(--color-primary-80);
+  --color-primary-65: var(--color-primary-65);
+  --color-primary-50: var(--color-primary-50);
+  --color-primary-35: var(--color-primary-35);
+  --color-primary-15: var(--color-primary-15);
+  --color-accent-100: var(--color-accent-100);
+  --color-accent-75: var(--color-accent-75);
+  --color-accent-55: var(--color-accent-55);
+  --color-accent-35: var(--color-accent-35);
+  --color-accent-15: var(--color-accent-15);
+  --color-gray-1: var(--color-gray-1);
+  --color-gray-2: var(--color-gray-2);
+  --color-gray-3: var(--color-gray-3);
+  --color-gray-4: var(--color-gray-4);
+  --color-gray-5: var(--color-gray-5);
+  --color-gray-6: var(--color-gray-6);
+  --color-gray-7: var(--color-gray-7);
+  --color-gray-8: var(--color-gray-8);
+  --color-gray-9: var(--color-gray-9);
+  --color-gray-10: var(--color-gray-10);
+  --color-black-1: var(--color-black-1);
+  --color-black-2: var(--color-black-2);
+  --color-sswu-text: var(--color-sswu-text);
+  --color-warm-black: var(--color-warm-black);
+}
 
 :root {
   color-scheme: light dark;
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Pretendard', system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* zoom: calc(100vw/1440px) 방식은 100vw가 세로 스크롤바 폭까지 포함해 계산되는 특성 때문에
+   세로 스크롤바가 생기면 실제 보이는 영역보다 살짝 넓게 렌더링되어 가로 스크롤이 생긴다.
+   전역으로 가로 스크롤만 숨겨서 이 오차를 흡수한다. */
+html,
+body {
+  overflow-x: hidden;
 }
 
 * {

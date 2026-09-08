@@ -26,6 +26,17 @@
   --color-gray-9: #d0d6dd;
   --color-gray-10: #ebebeb;
 
-  /* TODO: black/bg/warm/cool 라벨 확인 후 추가
-     #121212, #212121, #fafafa, #f5f5f5, #ffffff */
+  /* Black (헤더 로그인/유저 텍스트) */
+  --color-black-1: #121212;
+  /* Black (리뷰 카드 배경) */
+  --color-black-2: #323232;
+
+  /* SSWU 워드마크 텍스트 (Figma 스타일명: sswu/text) */
+  --color-sswu-text: #6b69af;
+
+  /* Warm black (Figma 스타일명: GrayScale/Warmblack, 푸터 배경) */
+  --color-warm-black: #212121;
+
+  /* TODO: bg/cool 라벨 확인 후 추가
+     #fafafa, #f5f5f5, #ffffff */
 }

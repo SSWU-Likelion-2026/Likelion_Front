@@ -6,7 +6,7 @@ interface Props {
 
 export default function ToggleGroup({ options, value, onChange }: Props) {
   return (
-    <div className="flex items-center gap-8">
+    <div className="flex items-center gap-2 lg:gap-8">
       {options.map((option) => {
         const selected = option === value
         return (

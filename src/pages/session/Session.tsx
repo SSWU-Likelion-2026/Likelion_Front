@@ -143,7 +143,7 @@ function Session() {
         
         {sessionData.length === 0 && (
           <div className="flex flex-col items-center justify-center pt-25">
-            <h1 className='text-[34px] font-semibold'>조회된 세션이 없습니다.</h1>
+            <h1 className='text-[20px] lg:text-[34px] font-semibold'>조회된 세션이 없습니다.</h1>
           </div>
         )}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-10 pb-12">

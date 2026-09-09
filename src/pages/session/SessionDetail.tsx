@@ -16,6 +16,12 @@ import Modal from '../../components/Modal'
 // assests
 import ProfileImg from '../../img/session/profile.jpg'
 
+const partLabelMap: Record<string, string> = {
+  'PM': '기획/디자인',
+  'FRONTEND': '프론트엔드',
+  'BACKEND': '백엔드',
+}
+
 export default function SessionDetail() {
   const { week } = useParams<{ week: string }>()
   const [searchParams] = useSearchParams()
@@ -41,12 +47,20 @@ export default function SessionDetail() {
 
   useEffect(() => {
     if (!term || !part || isNaN(weekNumber)) return
-    getSessionDetail(term, part, weekNumber).then(res => {
-      setDetailData(res.result)
-      getSessionReviews(res.result.sessionId).then(r => setReviews(r.result))
-    })
+    getSessionDetail(term, part, weekNumber)
+      .then(res => {
+        if (!res.result) return
+        setDetailData(res.result)
+        const sessionId = res.result.sessionId
+        getSessionReviews(sessionId)
+          .then(r => setReviews(r.result ?? []))
+          .catch(() => setReviews([]))
+      })
+      .catch(() => {})
     if (!state?.sessions) {
-      getSessions(term, part).then(res => setSessions(res.result.sessions))
+      getSessions(term, part)
+        .then(res => setSessions(res.result?.sessions ?? []))
+        .catch(() => setSessions([]))
     }
   }, [term, part, weekNumber])
 
@@ -56,13 +70,13 @@ export default function SessionDetail() {
     if (!content.trim() || !sessionId) return
     postSessionReview(sessionId, content).then(() => {
       setContent('')
-      getSessionReviews(sessionId).then(res => setReviews(res.result))
+      getSessionReviews(sessionId).then(res => setReviews(res.result ?? []))
     })
   }
 
   const handleDelete = (commentId: number) => {
     deleteSessionReview(commentId).then(() => {
-      if (sessionId) getSessionReviews(sessionId).then(res => setReviews(res.result))
+      if (sessionId) getSessionReviews(sessionId).then(res => setReviews(res.result ?? []))
       setDeleteTargetId(null)
       setOpenMenuId(null)
     })
@@ -77,15 +91,15 @@ export default function SessionDetail() {
   const handleEditSave = (commentId: number) => {
     if (!editComment.trim() || !sessionId) return
     editSessionReviews(commentId, editComment).then(() => {
-      getSessionReviews(sessionId).then(res => setReviews(res.result))
+      getSessionReviews(sessionId).then(res => setReviews(res.result ?? []))
       setEditingId(null)
     })
   }
 
   return (
-    <div className="mt-[43px] px-30 flex justify-center gap-[78px] min-h-screen">
+    <div className="mt-[43px] px-6 lg:px-30 flex justify-center gap-[78px] min-h-screen">
 
-      <aside className="w-[102px] y-[64px] shrink-0 flex flex-col">
+      <aside className="hidden lg:flex w-[102px] y-[64px] shrink-0 flex-col">
         {sessions.map(s => (
           <button
             key={s.sessionId}
@@ -100,36 +114,38 @@ export default function SessionDetail() {
 
       <main className="flex-1 flex flex-col justify-center">
 
-        <header className='flex flex-col gap-[35px]'>
-            <p className="text-[18px] text-gray-4">{detailData?.part} &gt; W{String(weekNumber).padStart(2, '0')}</p>
-            <h1 className="text-[32px] text-black">[W{String(weekNumber).padStart(2, '0')}] {detailData?.subTitle}</h1>
+        <header className='flex flex-col gap-[5px] lg:gap-[35px]'>
+            <p className="text-[14px] lg:text-[18px] text-gray-4">{partLabelMap[detailData?.part ?? ''] ?? detailData?.part} &gt; W{String(weekNumber).padStart(2, '0')}</p>
+            <h1 className="text-[20px] lg:text-[32px] font-semibold text-black">[W{String(weekNumber).padStart(2, '0')}] {detailData?.subTitle}</h1>
         </header>
 
         {/* 이미지 */}
-        <div className="w-full h-[693px] bg-gray-10 rounded-[20px] mt-[45px] mb-[45px] overflow-hidden">
+        <div className="w-full h-[234px] lg:h-[693px] bg-gray-10 rounded-[20px] my-[35px] lg:my-[45px] overflow-hidden">
           <img src={detailData?.thumbnailUrl} alt="" className="w-full h-full object-cover" />
         </div>
 
         <div>
-            <h2 className="text-[24px] font-semibold">{detailData?.title}</h2>
-            <p className="text-[18px] mt-[15px]">{detailData?.content}</p>
+            <div className="flex flex-col gap-[5px] lg:gap-[15px]">
+              <h2 className="text-[18px] lg:text-[24px] font-semibold">{detailData?.title}</h2>
+              <p className="text-[14px] lg:text-[18px]">{detailData?.content}</p>
+            </div>
 
-            <h3 className="text-[24px] font-semibold mt-[45px]">주요학습 내용</h3>
+            <h3 className="text-[18px] lg:text-[24px] font-semibold mt-[45px]">주요학습 내용</h3>
             <div className="flex flex-wrap gap-2 mt-[15px]">
-            {detailData?.learningTopics.map(tag => (
-                <span key={tag.sequenceNum} className="px-3 py-3 rounded-[5px] bg-[#F3F4F6] text-[16px]">
+            {detailData?.learningTopics?.map(tag => (
+                <span key={tag.sequenceNum} className="px-3 py-3 rounded-[5px] bg-[#F3F4F6] text-[13px] lg:text-[16px]">
                 {tag.content}
                 </span>
             ))}
             </div>
         </div>
 
-        <div className="mt-[87px] border border-gray-9 rounded-[15px] p-[35px]">
+        <div className="mt-[87px] border border-gray-9 rounded-[15px] p-6 lg:p-[35px]">
           <textarea
             value={content}
             onChange={e => setContent(e.target.value)}
             placeholder="세션 후기 입력하기"
-            className="w-full h-[245px] text-[20px] text-black placeholder:text-gray-4 resize-none outline-none"
+            className="w-full h-[245px] text-[14px] lg:text-[20px] text-black placeholder:text-gray-4 resize-none outline-none"
           />
         </div>
         <div className="flex justify-end mt-5.25">
@@ -145,15 +161,15 @@ export default function SessionDetail() {
             const isEditing = editingId === review.commentId
             return (
               <div key={review.commentId} className="flex gap-[13px] relative p-2">
-                <img src={review.profileImageUrl ?? ProfileImg} alt="profile" className="w-[50px] h-[50px] object-cover shrink-0 rounded-full" />
+                <img src={review.profileImageUrl ?? ProfileImg} alt="profile" className="w-[38px] h-[38px] lg:w-[50px] lg:h-[50px] object-cover shrink-0 rounded-full" />
                 <div className="flex-1">
-                  <p className="text-[22px] font-semibold mb-[6px]">{review.userName}</p>
+                  <p className="text-[16px] lg:text-[22px] font-semibold mb-[6px]">{review.userName}</p>
                   {isEditing ? (
                     <>
                       <textarea
                         value={editComment}
                         onChange={e => setEditComment(e.target.value)}
-                        className="w-full text-[18px] resize-none outline-none border-b border-gray-8 pb-8px]"
+                        className="w-full text-[14px] lg:text-[18px] resize-none outline-none border-b border-gray-8 pb-8px]"
                         rows={3}
                         autoFocus
                       />
@@ -167,7 +183,7 @@ export default function SessionDetail() {
                       </div>
                     </>
                   ) : (
-                    <p className="text-[18px] font-normal">{review.content}</p>
+                    <p className="text-[14px] lg:text-[18px] font-normal">{review.content}</p>
                   )}
                 </div>
                 {review.isOwner && (

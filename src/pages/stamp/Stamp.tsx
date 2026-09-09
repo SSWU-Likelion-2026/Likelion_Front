@@ -122,7 +122,7 @@ export default function Stamp() {
         const response =
           await getStampMissions();
 
-        setMissions(response.result);
+        setMissions(response.result ?? []);
       } catch (error) {
         console.error(
           "스탬프 미션 목록 조회 실패:",

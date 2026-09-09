@@ -53,6 +53,9 @@ export async function getProjectDetail(
   );
 
   const data = res.data.result;
+  if (!data) {
+    throw new Error(`프로젝트(${projectId}) 상세 응답이 비어 있습니다.`);
+  }
 
   const slides = (data.slideUrls ?? []).map(
     (imageUrl, index) => ({

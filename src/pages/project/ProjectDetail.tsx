@@ -432,7 +432,7 @@ export default function ProjectDetail() {
   if (loading) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-white">
-        <p className="text-[22px] text-[#808386]">
+        <p className="text-[22px] text-gray-5">
           프로젝트 정보를
           불러오는 중입니다.
         </p>
@@ -503,7 +503,7 @@ export default function ProjectDetail() {
                 `/ProjectEdit/${project.projectId}`,
               )
             }
-            className="h-[46px] rounded-[10px] border border-[#D0D6DD] px-[10px] text-[16px] font-medium text-[#808386]"
+            className="h-[46px] rounded-[10px] border border-gray-9 px-[10px] text-[16px] font-medium text-gray-5"
           >
             프로젝트 수정
           </button>
@@ -515,7 +515,7 @@ export default function ProjectDetail() {
             onClick={
               handleDelete
             }
-            className="h-[46px] rounded-[10px] border border-[#D0D6DD] px-[10px] text-[16px] font-medium text-[#808386]"
+            className="h-[46px] rounded-[10px] border border-gray-9 px-[10px] text-[16px] font-medium text-gray-5"
           >
             프로젝트 삭제
           </button>
@@ -535,7 +535,7 @@ export default function ProjectDetail() {
           {/* 로고 + 제목 */}
 
           <div className="mb-[15px] flex items-center gap-4">
-            <div className="h-[93px] w-[93px] overflow-hidden rounded-[20px] bg-[#D9D9D9]">
+            <div className="h-[93px] w-[93px] overflow-hidden rounded-[20px] bg-misc-d9d9d9">
               {project.logoUrl && (
                 <img
                   src={
@@ -549,7 +549,7 @@ export default function ProjectDetail() {
               )}
             </div>
 
-            <h1 className="text-[50px] font-medium text-[#222]">
+            <h1 className="text-[50px] font-medium text-misc-222">
               {
                 project.title
               }
@@ -558,7 +558,7 @@ export default function ProjectDetail() {
 
           {/* 슬로건 */}
 
-          <p className="mb-[30px] text-[20px] font-medium text-[#121212]">
+          <p className="mb-[30px] text-[20px] font-medium text-black-1">
             {
               project.summary
             }
@@ -566,8 +566,8 @@ export default function ProjectDetail() {
 
           {/* 해커톤 / 기간 */}
 
-          <div className="h-[179px] rounded-[12px] border border-[#DADDE1] px-[25px] py-[20px]">
-            <p className="text-[18px] text-[#6C6E72]">
+          <div className="h-[179px] rounded-[12px] border border-misc-dadde1 px-[25px] py-[20px]">
+            <p className="text-[18px] text-gray-4">
               해커톤
             </p>
 
@@ -578,7 +578,7 @@ export default function ProjectDetail() {
                 project.hackathon}
             </p>
 
-            <p className="text-[18px] text-[#6C6E72]">
+            <p className="text-[18px] text-gray-4">
               프로젝트 기간
             </p>
 
@@ -604,7 +604,7 @@ export default function ProjectDetail() {
 
           {/* 메인 장표 */}
 
-          <div className="relative h-[529px] w-full overflow-hidden bg-[#CCCED0]">
+          <div className="relative h-[529px] w-full overflow-hidden bg-gray-8">
             {project.slides
               .length >
               0 ? (
@@ -621,7 +621,7 @@ export default function ProjectDetail() {
               />
             ) : (
               <div className="flex h-full items-center justify-center">
-                <p className="text-[20px] text-[#808386]">
+                <p className="text-[20px] text-gray-5">
                   등록된 장표가
                   없습니다.
                 </p>
@@ -639,7 +639,7 @@ export default function ProjectDetail() {
                     onClick={
                       handlePreviousSlide
                     }
-                    className="absolute left-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[8px] bg-[#212121]"
+                    className="absolute left-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[8px] bg-warm-black"
                   >
                     <img
                       src={
@@ -655,7 +655,7 @@ export default function ProjectDetail() {
                     onClick={
                       handleNextSlide
                     }
-                    className="absolute right-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[8px] bg-[#212121]"
+                    className="absolute right-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[8px] bg-warm-black"
                   >
                     <img
                       src={
@@ -692,7 +692,7 @@ export default function ProjectDetail() {
                       }
                       className={`h-[80px] overflow-hidden border-2 ${currentSlide ===
                         index
-                        ? "border-[#8158F6]"
+                        ? "border-primary-100"
                         : "border-transparent"
                         }`}
                     >
@@ -723,13 +723,13 @@ export default function ProjectDetail() {
         <div className="w-[384px] shrink-0 space-y-4">
 
           {/* 프로젝트 팀원 */}
-          <div className="overflow-hidden rounded-[12px] border border-[#D0D6DD] bg-white">
+          <div className="overflow-hidden rounded-[12px] border border-gray-9 bg-white">
             <button
               type="button"
               onClick={() => setTeamOpen((prev) => !prev)}
               className="flex h-[78px] w-full items-center justify-between px-[20px]"
             >
-              <span className="text-[20px] font-semibold text-[#121212]">
+              <span className="text-[20px] font-semibold text-black-1">
                 프로젝트 팀원
               </span>
 
@@ -742,17 +742,17 @@ export default function ProjectDetail() {
             </button>
 
             {teamOpen && (
-              <div className="border-t border-[#E5E7EB] px-[20px] py-[22px]">
+              <div className="border-t border-misc-e5e7eb px-[20px] py-[22px]">
                 {Object.entries(groupedMembers).length > 0 ? (
                   <div className="space-y-5">
                     {Object.entries(groupedMembers).map(
                       ([part, members]) => (
                         <div key={part}>
-                          <p className="text-[16px] text-[#808386]">
+                          <p className="text-[16px] text-gray-5">
                             {part}
                           </p>
 
-                          <p className="mt-[6px] text-[20px] font-medium text-[#121212]">
+                          <p className="mt-[6px] text-[20px] font-medium text-black-1">
                             {members
                               .map((member) => member.name)
                               .join(" ")}
@@ -762,7 +762,7 @@ export default function ProjectDetail() {
                     )}
                   </div>
                 ) : (
-                  <p className="text-[18px] text-[#808386]">
+                  <p className="text-[18px] text-gray-5">
                     등록된 팀원이 없습니다.
                   </p>
                 )}
@@ -771,13 +771,13 @@ export default function ProjectDetail() {
           </div>
 
           {/* 기술 스택 */}
-          <div className="overflow-hidden rounded-[12px] border border-[#D0D6DD] bg-white">
+          <div className="overflow-hidden rounded-[12px] border border-gray-9 bg-white">
             <button
               type="button"
               onClick={() => setStackOpen((prev) => !prev)}
               className="flex h-[78px] w-full items-center justify-between px-[20px]"
             >
-              <span className="text-[20px] font-semibold text-[#121212]">
+              <span className="text-[20px] font-semibold text-black-1">
                 기술 스택
               </span>
 
@@ -790,7 +790,7 @@ export default function ProjectDetail() {
             </button>
 
             {stackOpen && (
-              <div className="border-t border-[#E5E7EB] px-[20px] py-[22px]">
+              <div className="border-t border-misc-e5e7eb px-[20px] py-[22px]">
                 {Object.entries(groupedTechStacks).length > 0 ? (
                   Object.entries(groupedTechStacks).map(
                     ([category, stacks]) => (
@@ -802,7 +802,7 @@ export default function ProjectDetail() {
                     ),
                   )
                 ) : (
-                  <p className="text-[18px] text-[#808386]">
+                  <p className="text-[18px] text-gray-5">
                     등록된 기술 스택이 없습니다.
                   </p>
                 )}
@@ -819,7 +819,7 @@ export default function ProjectDetail() {
     프로젝트 설명
 ========================================== */}
 
-        <div className="min-h-[calc(100vh-180px)] flex-1 rounded-[15px] border border-[#D0D6DD] bg-[#FAFAFA] px-[65px] py-[35px]">
+        <div className="min-h-[calc(100vh-180px)] flex-1 rounded-[15px] border border-gray-9 bg-surface-faint px-[65px] py-[35px]">
           <h2 className="text-[24px] font-semibold">
             Project Overview
           </h2>
@@ -846,7 +846,7 @@ function SkillRow({
 }) {
   return (
     <div className="mb-5">
-      <p className="mb-2 text-[18px] text-[#6C6E72]">
+      <p className="mb-2 text-[18px] text-gray-4">
         {title}
       </p>
 
@@ -858,7 +858,7 @@ function SkillRow({
           ) => (
             <span
               key={`${item}-${index}`}
-              className="rounded-[5px] bg-[#DBDEE2] px-[12px] py-[8px] text-[16px] font-medium text-black"
+              className="rounded-[5px] bg-border-soft px-[12px] py-[8px] text-[16px] font-medium text-black"
             >
               {item}
             </span>

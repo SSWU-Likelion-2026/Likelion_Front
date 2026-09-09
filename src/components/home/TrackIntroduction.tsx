@@ -46,7 +46,7 @@ const CARD_WRAPPER_CLASS = 'h-[454px] w-[370px] shrink-0 [perspective:1200px]'
 const CARD_FLIPPER_BASE_CLASS =
   'relative size-full transition-transform duration-500 [transform-style:preserve-3d]'
 const CARD_FACE_BASE_CLASS = 'absolute inset-0 overflow-hidden rounded-[25px] [backface-visibility:hidden]'
-const CARD_FRONT_CLASS = `${CARD_FACE_BASE_CLASS} border border-gray-9 bg-[#f3f4f6]`
+const CARD_FRONT_CLASS = `${CARD_FACE_BASE_CLASS} border border-gray-9 bg-surface-neutral`
 const CARD_BACK_CLASS = `${CARD_FACE_BASE_CLASS} bg-primary-100 [transform:rotateY(180deg)]`
 
 type TrackCardProps = {

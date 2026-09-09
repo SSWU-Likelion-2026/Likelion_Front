@@ -8,6 +8,7 @@ import {
   type MotionValue,
   type PanInfo,
 } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { getRecentProjects, type RecentProject } from '../../api/project/project'
 import { HOME_SHOWCASE_PROJECTS } from '../../data/homeProjects'
 import arrowIcon from '../../img/home/project-arrow.svg'
@@ -64,11 +65,12 @@ type SlideProps = {
   index: number
   x: MotionValue<number>
   containerWidth: number
+  onSelect: (projectId: number) => void
 }
 
 // project/index/containerWidth가 바뀌지 않는 한(자동재생·드래그로 x만 바뀌는 동안) 리렌더되지 않는다 —
 // 실제 확대/축소/opacity 변화는 useTransform이 React 리렌더 없이 DOM에 직접 반영한다.
-const ProjectSlide = memo(function ProjectSlide({ project, index, x, containerWidth }: SlideProps) {
+const ProjectSlide = memo(function ProjectSlide({ project, index, x, containerWidth, onSelect }: SlideProps) {
   const baseLeft = index * CARD_STEP
   const emphasis = useTransform(x, (latestX) => {
     const screenCenter = baseLeft + CARD_WIDTH / 2 + latestX
@@ -78,22 +80,27 @@ const ProjectSlide = memo(function ProjectSlide({ project, index, x, containerWi
   const scale = useTransform(emphasis, (e) => SCALE_SMALL + (SCALE_BIG - SCALE_SMALL) * e)
   const dimOpacity = useTransform(emphasis, (e) => 0.5 + 0.5 * e)
   const zIndex = useTransform(emphasis, (e) => Math.round(e * 100))
+  const handleTap = useCallback(() => onSelect(project.projectId), [onSelect, project.projectId])
 
   return (
-    <motion.div className="relative shrink-0" style={{ width: CARD_WIDTH, height: CARD_HEIGHT, scale, zIndex }}>
+    <motion.div
+      className="relative shrink-0 cursor-pointer"
+      style={{ width: CARD_WIDTH, height: CARD_HEIGHT, scale, zIndex }}
+      onTap={handleTap}
+    >
       <div className="absolute inset-0 overflow-hidden rounded-[20px]">
         <motion.div className="absolute inset-0" style={{ opacity: dimOpacity }}>
-          <div className="absolute inset-0 bg-[#f3f4f6]" />
+          <div className="absolute inset-0 bg-white" />
           {project.thumbnailUrl && <img src={project.thumbnailUrl} alt="" draggable={false} className={SLIDE_IMAGE_CLASS} />}
         </motion.div>
         <motion.div
-          className="absolute inset-0 rounded-[20px] bg-gradient-to-b from-transparent to-[#212121]"
+          className="absolute inset-0 rounded-[20px] bg-gradient-to-b from-transparent to-warm-black"
           style={{ opacity: emphasis }}
         />
         <motion.div className={SLIDE_TEXT_CLASS} style={{ opacity: emphasis }}>
-          <div className="flex flex-1 flex-col text-white">
-            <p className="m-0 text-[28px] font-semibold leading-[1.5]">{project.title}</p>
-            <p className="m-0 whitespace-nowrap text-[18px] leading-[1.6]">{project.summary}</p>
+          <div className="flex min-w-0 flex-1 flex-col text-white">
+            <p className="m-0 truncate text-[28px] font-semibold leading-[1.5]">{project.title}</p>
+            <p className="m-0 truncate text-[18px] leading-[1.6]">{project.summary}</p>
           </div>
           <img src={arrowIcon} alt="" draggable={false} className="size-[55px] shrink-0" />
         </motion.div>
@@ -129,6 +136,7 @@ function ProjectCountLabel() {
 }
 
 function ProjectReviews() {
+  const navigate = useNavigate()
   const [projects, setProjects] = useState<RecentProject[] | null>(null)
   const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -184,6 +192,14 @@ function ProjectReviews() {
     [containerWidth, length, x],
   )
 
+  // settle은 containerWidth가 바뀔 때마다(콘텐츠 로딩 중 스크롤바 생김/없어짐 등으로 resize가 잦음)
+  // 새로 만들어지는데, 이 값을 자동재생 interval의 의존성으로 그대로 쓰면 새 값이 생길 때마다
+  // interval이 재생성되어 4초를 다 못 채우고 계속 리셋된다. ref로 최신 settle만 참조하게 해서 분리한다.
+  const settleRef = useRef(settle)
+  useEffect(() => {
+    settleRef.current = settle
+  }, [settle])
+
   // 컨테이너 폭을 처음 알게 되거나(초기 마운트) 리사이즈로 바뀌면 현재 인덱스를 유지한 채 위치를 다시 맞춘다
   useEffect(() => {
     if (!containerWidth || length === 0) return
@@ -191,12 +207,14 @@ function ProjectReviews() {
     x.set(xForIndex(currentIndexRef.current, containerWidth))
   }, [containerWidth, length, x])
 
-  // 4초마다 다음 카드로 자동 재생
+  // 4초마다 다음 카드로 자동 재생 — containerWidth "값"이 아니라 "준비 여부"에만 반응해야
+  // 리사이즈로 값이 미세하게 바뀔 때마다 타이머가 리셋되지 않는다.
+  const isCarouselReady = containerWidth > 0 && length > 0
   useEffect(() => {
-    if (!containerWidth || length === 0) return
-    const id = setInterval(() => settle(currentIndexRef.current + 1), AUTOPLAY_INTERVAL_MS)
+    if (!isCarouselReady) return
+    const id = setInterval(() => settleRef.current(currentIndexRef.current + 1), AUTOPLAY_INTERVAL_MS)
     return () => clearInterval(id)
-  }, [containerWidth, length, settle])
+  }, [isCarouselReady])
 
   const handleDragEnd = useCallback(
     (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -206,6 +224,14 @@ function ProjectReviews() {
       settle(nearest)
     },
     [containerWidth, x, settle],
+  )
+
+  const handleSelectProject = useCallback(
+    (projectId: number) => {
+      if (projectId < 0) return
+      navigate(`/ProjectDetail/${projectId}`)
+    },
+    [navigate],
   )
 
   if (projects === null) return null
@@ -230,7 +256,14 @@ function ProjectReviews() {
             onDragEnd={handleDragEnd}
           >
             {loopedItems.map((project, i) => (
-              <ProjectSlide key={i} project={project} index={i} x={x} containerWidth={containerWidth} />
+              <ProjectSlide
+                key={i}
+                project={project}
+                index={i}
+                x={x}
+                containerWidth={containerWidth}
+                onSelect={handleSelectProject}
+              />
             ))}
           </motion.div>
         )}

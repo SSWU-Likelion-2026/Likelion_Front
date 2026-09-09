@@ -56,7 +56,7 @@ const NotifySignupModal = memo(function NotifySignupModal({ open, onClose }: Not
               </Button>
             </div>
 
-            <p className="mb-4 text-[14px] text-[#697584]">
+            <p className="mb-4 text-[14px] text-text-muted">
               모집이 시작되면 입력하신 이메일로 알려드릴게요.
             </p>
 

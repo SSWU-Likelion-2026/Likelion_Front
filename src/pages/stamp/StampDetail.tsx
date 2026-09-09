@@ -319,7 +319,7 @@ export default function StampDetail() {
         <Banner page="Stamp" />
 
         <main className="relative -mt-6 min-h-screen rounded-t-[25px] bg-white px-[120px] pt-[65px] pb-[80px]">
-          <div className="py-[100px] text-center text-[22px] text-[#808386]">
+          <div className="py-[100px] text-center text-[22px] text-gray-5">
             미션 정보를 불러오는 중입니다.
           </div>
         </main>
@@ -353,18 +353,18 @@ export default function StampDetail() {
         <div className="stampDetailInner mx-auto w-full max-w-[1280px]">
 
           {/* 페이지 제목 */}
-          <h1 className="stampDetailTitle text-[34px] font-semibold text-[#121212]">
+          <h1 className="stampDetailTitle text-[34px] font-semibold text-black-1">
             미션 인증
           </h1>
 
 
           {/* 미션 정보 */}
           <section className="missionInfo mt-[60px]">
-            <h2 className="missionName text-[28px] font-semibold text-[#121212]">
+            <h2 className="missionName text-[28px] font-semibold text-black-1">
               {mission.title}
             </h2>
 
-            <p className="missionDate mt-[8px] text-[22px] text-[#ADAFB2]">
+            <p className="missionDate mt-[8px] text-[22px] text-gray-6">
               {formatMissionDate(
                 mission.startAt,
                 mission.endAt,
@@ -372,7 +372,7 @@ export default function StampDetail() {
             </p>
 
             {mission.description && (
-              <p className="mt-[20px] text-[20px] leading-[1.6] text-[#808386]">
+              <p className="mt-[20px] text-[20px] leading-[1.6] text-gray-5">
                 {mission.description}
               </p>
             )}
@@ -395,8 +395,8 @@ export default function StampDetail() {
                 rounded-[15px]
                 border
                 border-dashed
-                border-[#B8B9BD]
-                bg-[#F3F4F6]
+                border-gray-7
+                bg-surface-neutral
               "
             >
               <div className="flex flex-col items-center">
@@ -414,8 +414,8 @@ export default function StampDetail() {
                     py-[16px]
                     text-[24px]
                     font-medium
-                    text-[#121212]
-                    shadow-[0_4px_20px_rgba(135,104,244,0.15)]
+                    text-black-1
+                    shadow-[0_4px_20px_var(--color-shadow-accent)]
                   "
                 >
                   <img
@@ -427,7 +427,7 @@ export default function StampDetail() {
                   이미지 업로드
                 </div>
 
-                <p className="imageUploadGuide text-[24px] text-[#808386]">
+                <p className="imageUploadGuide text-[24px] text-gray-5">
                   {image
                     ? image.name
                     : "JPG, PNG (최대 10MB)"}
@@ -463,12 +463,12 @@ export default function StampDetail() {
                 w-full
                 rounded-[15px]
                 border
-                border-[#D5D8DC]
+                border-border-faint
                 px-[24px]
                 text-[20px]
-                text-[#121212]
+                text-black-1
                 outline-none
-                focus:border-[#956CF6]
+                focus:border-accent-glow
               "
             />
           </section>
@@ -497,21 +497,21 @@ export default function StampDetail() {
                   resize-none
                   rounded-[15px]
                   border
-                  border-[#D5D8DC]
+                  border-border-faint
                   px-[24px]
                   py-[24px]
                   pr-[60px]
                   pb-[50px]
                   text-[20px]
                   leading-[1.6]
-                  text-[#121212]
+                  text-black-1
                   outline-none
-                  placeholder:text-[#D2D4D8]
-                  focus:border-[#956CF6]
+                  placeholder:text-misc-d2d4d8
+                  focus:border-accent-glow
                 "
               />
 
-              <span className="descriptionCount absolute right-[22px] bottom-[20px] text-[14px] text-[#C7C9CD]">
+              <span className="descriptionCount absolute right-[22px] bottom-[20px] text-[14px] text-misc-c7c9cd">
                 {description.length}/300자
               </span>
             </div>
@@ -530,15 +530,15 @@ export default function StampDetail() {
                 cancelButton
                 rounded-[10px]
                 border
-                border-[#D5D8DC]
+                border-border-faint
                 bg-white
                 px-[18px]
                 py-[11px]
                 text-[20px]
                 font-medium
-                text-[#777A80]
+                text-misc-777a80
                 transition
-                hover:bg-[#F5F5F5]
+                hover:bg-surface-muted
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               "
@@ -556,7 +556,7 @@ export default function StampDetail() {
               className="
                 submitButton
                 rounded-[10px]
-                bg-[#242424]
+                bg-misc-242424
                 px-[20px]
                 py-[13px]
                 text-[20px]
@@ -565,7 +565,7 @@ export default function StampDetail() {
                 transition
                 hover:bg-black
                 disabled:cursor-not-allowed
-                disabled:bg-[#B8B9BD]
+                disabled:bg-gray-7
               "
             >
               {mission.isCompleted

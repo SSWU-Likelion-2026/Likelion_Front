@@ -137,7 +137,7 @@ function Dropdown<T extends string>({ value, placeholder, options, onChange, ari
       </button>
       <ChevronIcon open={open} />
       {open && (
-        <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-10 overflow-hidden rounded-[15px] border border-gray-9 bg-white py-[6px] shadow-[0_8px_24px_rgba(18,18,18,0.1)]">
+        <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-10 overflow-hidden rounded-[15px] border border-gray-9 bg-white py-[6px] shadow-[0_8px_24px_var(--color-shadow-soft)]">
           {options.map((o) => (
             <button
               key={o.value}
@@ -146,8 +146,8 @@ function Dropdown<T extends string>({ value, placeholder, options, onChange, ari
                 onChange(o.value)
                 setOpen(false)
               }}
-              className={`block w-full px-[20px] py-[13px] text-left text-[16px] hover:bg-[#f3f4f6] ${
-                o.value === value ? 'bg-[#f3f4f6] font-semibold text-black' : 'text-gray-7 hover:text-black'
+              className={`block w-full px-[20px] py-[13px] text-left text-[16px] hover:bg-surface-neutral ${
+                o.value === value ? 'bg-surface-neutral font-semibold text-black' : 'text-gray-7 hover:text-black'
               }`}
             >
               {o.label}
@@ -292,7 +292,7 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="relative size-[280px] shrink-0 cursor-pointer overflow-hidden rounded-full border border-gray-9 bg-[#f3f4f6] disabled:opacity-60"
+            className="relative size-[280px] shrink-0 cursor-pointer overflow-hidden rounded-full border border-gray-9 bg-surface-neutral disabled:opacity-60"
           >
             {form.profileImageUrl ? (
               <img src={form.profileImageUrl} alt="" className="size-full object-cover" />
@@ -403,14 +403,14 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
             type="button"
             onClick={handleReset}
             disabled={submitting || uploading}
-            className="cursor-pointer rounded-[10px] border border-gray-9 bg-white px-[28px] py-[15px] text-[20px] font-semibold text-[#697584] disabled:opacity-50"
+            className="cursor-pointer rounded-[10px] border border-gray-9 bg-white px-[28px] py-[15px] text-[20px] font-semibold text-text-muted disabled:opacity-50"
           >
             전체삭제
           </button>
           <button
             type="submit"
             disabled={submitting || uploading}
-            className="cursor-pointer rounded-[10px] bg-[#212121] px-[28px] py-[15px] text-[20px] font-semibold text-white disabled:opacity-50"
+            className="cursor-pointer rounded-[10px] bg-warm-black px-[28px] py-[15px] text-[20px] font-semibold text-white disabled:opacity-50"
           >
             {existing ? '수정' : '등록'}
           </button>

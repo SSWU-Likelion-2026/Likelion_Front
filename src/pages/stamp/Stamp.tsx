@@ -174,8 +174,8 @@ export default function Stamp() {
             onClick={() => setSelectedMenu("mission")}
             className={`text-[24px] font-semibold sm:text-[28px] lg:text-[32px] ${
               selectedMenu === "mission"
-                ? "text-[#121212]"
-                : "text-[#B6B6B6]"
+                ? "text-black-1"
+                : "text-misc-b6b6b6"
             }`}
           >
             스탬프 미션
@@ -186,8 +186,8 @@ export default function Stamp() {
             onClick={() => setSelectedMenu("myStamp")}
             className={`text-[24px] font-semibold sm:text-[28px] lg:text-[32px] ${
               selectedMenu === "myStamp"
-                ? "text-[#121212]"
-                : "text-[#BFBFBF]"
+                ? "text-black-1"
+                : "text-border-light"
             }`}
           >
             마이 스탬프
@@ -201,13 +201,13 @@ export default function Stamp() {
         {selectedMenu === "mission" && (
           <>
             {missionLoading && (
-              <div className="py-[100px] text-center text-[22px] text-[#808386]">
+              <div className="py-[100px] text-center text-[22px] text-gray-5">
                 스탬프 미션을 불러오는 중입니다.
               </div>
             )}
 
             {!missionLoading && missionError && (
-              <div className="py-[100px] text-center text-[22px] text-[#808386]">
+              <div className="py-[100px] text-center text-[22px] text-gray-5">
                 {missionError}
               </div>
             )}
@@ -215,7 +215,7 @@ export default function Stamp() {
             {!missionLoading &&
               !missionError &&
               missions.length === 0 && (
-                <div className="py-[100px] text-center text-[22px] text-[#808386]">
+                <div className="py-[100px] text-center text-[22px] text-gray-5">
                   등록된 스탬프 미션이 없습니다.
                 </div>
               )}
@@ -250,15 +250,15 @@ export default function Stamp() {
                         overflow-hidden
                         rounded-[20px]
                         border
-                        border-[#D0D6DD]
+                        border-gray-9
                         bg-white
                         px-6
                         py-7
                         text-left
                         transition-all
                         duration-200
-                        hover:border-[#956CF6]
-                        hover:bg-[#956CF6]
+                        hover:border-accent-glow
+                        hover:bg-accent-glow
                         sm:px-8
                         sm:py-8
                         lg:px-[40px]
@@ -275,7 +275,7 @@ export default function Stamp() {
                             text-[20px]
                             font-semibold
                             leading-[1.45]
-                            text-[#121212]
+                            text-black-1
                             transition-colors
                             group-hover:text-white
                             sm:text-[24px]
@@ -290,7 +290,7 @@ export default function Stamp() {
                             mt-[15px]
                             break-words
                             text-[17px]
-                            text-[#6C6E72]
+                            text-gray-4
                             transition-colors
                             group-hover:text-white
                             sm:text-[20px]
@@ -309,7 +309,7 @@ export default function Stamp() {
                               mt-[12px]
                               text-[16px]
                               font-semibold
-                              text-[#956CF6]
+                              text-accent-glow
                               transition-colors
                               group-hover:text-white
                             "
@@ -340,13 +340,13 @@ export default function Stamp() {
         {selectedMenu === "myStamp" && (
           <>
             {myStampLoading && (
-              <div className="py-[100px] text-center text-[22px] text-[#808386]">
+              <div className="py-[100px] text-center text-[22px] text-gray-5">
                 마이 스탬프를 불러오는 중입니다.
               </div>
             )}
 
             {!myStampLoading && myStampError && (
-              <div className="py-[100px] text-center text-[22px] text-[#808386]">
+              <div className="py-[100px] text-center text-[22px] text-gray-5">
                 {myStampError}
               </div>
             )}

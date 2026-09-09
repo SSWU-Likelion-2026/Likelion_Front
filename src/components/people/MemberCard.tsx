@@ -70,7 +70,7 @@ const MemberCard = memo(function MemberCard({ member }: MemberCardProps) {
         }`}
       >
         {/* 앞면 */}
-        <div className="absolute inset-0 flex flex-col overflow-hidden rounded-[20px] border border-[#8768f4] bg-[#ebebeb] [backface-visibility:hidden]">
+        <div className="absolute inset-0 flex flex-col overflow-hidden rounded-[20px] border border-misc-8768f4 bg-gray-10 [backface-visibility:hidden]">
           <div className="relative flex-1">
             {member.profileImageUrl ? (
               <img
@@ -79,7 +79,7 @@ const MemberCard = memo(function MemberCard({ member }: MemberCardProps) {
                 className="absolute inset-0 size-full object-cover"
               />
             ) : (
-              <p className="absolute left-1/2 top-1/2 m-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap font-montserrat text-[18px] font-medium text-[#ccced0]">
+              <p className="absolute left-1/2 top-1/2 m-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap font-montserrat text-[18px] font-medium text-gray-8">
                 등록된 이미지가 없습니다.
               </p>
             )}
@@ -87,14 +87,14 @@ const MemberCard = memo(function MemberCard({ member }: MemberCardProps) {
           <div className="flex shrink-0 flex-col items-start gap-[12px] bg-white px-[29px] py-[32px]">
             <div className="flex items-baseline gap-[8px]">
               <p className="m-0 text-[24px] font-bold text-black">{member.name}</p>
-              {positionLabel && <p className="m-0 text-[18px] font-medium text-[#adafb2]">{positionLabel}</p>}
+              {positionLabel && <p className="m-0 text-[18px] font-medium text-gray-6">{positionLabel}</p>}
             </div>
             <p className="m-0 text-[18px] font-medium text-black">{member.departmentStudentId}</p>
           </div>
         </div>
 
         {/* 뒷면 (hover 시, 소개/SNS가 있을 때만) */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-[88px] overflow-hidden rounded-[20px] border border-[#8768f4] bg-white px-[56px] [backface-visibility:hidden] [transform:rotateY(180deg)]">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-[88px] overflow-hidden rounded-[20px] border border-misc-8768f4 bg-white px-[56px] [backface-visibility:hidden] [transform:rotateY(180deg)]">
           {detail?.introduction && (
             <p className="m-0 whitespace-pre-line text-center text-[22px] leading-[32px] text-black">
               {detail.introduction}

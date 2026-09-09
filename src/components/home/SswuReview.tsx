@@ -106,7 +106,7 @@ const REVIEWS_PER_PART: Record<PartKey, Review[]> = {
 }
 
 const ACTIVE_TAB_GRADIENT: CSSProperties = {
-  backgroundImage: 'linear-gradient(152deg, rgb(125, 75, 248) 23.739%, rgb(176, 231, 213) 121.14%)',
+  backgroundImage: 'linear-gradient(152deg, rgb(125, 75, 248) 23.739%, var(--color-accent-100) 121.14%)',
 }
 const TAB_BASE_CLASS = 'rounded-[100px] px-[28px] py-[12px] text-[18px]'
 const REVIEW_CARD_CLASS = 'relative h-[447px] w-[384px] shrink-0 overflow-hidden rounded-[25px] bg-black-2'

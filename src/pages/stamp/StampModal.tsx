@@ -42,11 +42,11 @@ export default function StampModal({
         />
 
         <div className="stampModalText mt-[80px] text-center">
-          <h2 className="text-[34px] font-semibold text-[#121212]">
+          <h2 className="text-[34px] font-semibold text-black-1">
             인증이 완료되었습니다
           </h2>
 
-          <p className="mt-[25px] text-[28px] leading-[1.6] text-[#808386]">
+          <p className="mt-[25px] text-[28px] leading-[1.6] text-gray-5">
             스탬프가 지급되었어요.
             <br />
             마이 스탬프에서 계속 도전해보세요!
@@ -62,7 +62,7 @@ export default function StampModal({
             h-[83px]
             w-[397px]
             rounded-[20px]
-            bg-[#242424]
+            bg-misc-242424
             text-[28px]
             font-semibold
             text-white

@@ -44,7 +44,7 @@ function LoginGate() {
         </Link>
         <Link
           to="/login"
-          className="rounded-[10px] bg-[#212121] px-7 py-3 text-[15px] font-medium text-white hover:opacity-90"
+          className="rounded-[10px] bg-warm-black px-7 py-3 text-[15px] font-medium text-white hover:opacity-90"
         >
           로그인 하기
         </Link>
@@ -261,7 +261,7 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
         <button
           onClick={() => setConfirmOpen(true)}
           disabled={submitting}
-          className="rounded-[10px] bg-[#212121] px-7 py-3 text-[15px] font-medium text-white hover:opacity-90 disabled:opacity-50 cursor-pointer"
+          className="rounded-[10px] bg-warm-black px-7 py-3 text-[15px] font-medium text-white hover:opacity-90 disabled:opacity-50 cursor-pointer"
         >
           {submitting ? '제출 중…' : '제출'}
         </button>
@@ -274,7 +274,7 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
           message="제출 후에는 지원서를 수정할 수 없습니다. 제출하시겠어요?"
           onClose={() => setConfirmOpen(false)}
           onConfirm={handleSubmit}
-          confirmClassName="px-6 py-2.5 bg-[#212121] text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
+          confirmClassName="px-6 py-2.5 bg-warm-black text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
         />
         <Modal
           open={savedOpen}
@@ -283,7 +283,7 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
           onClose={() => setSavedOpen(false)}
           onConfirm={() => setSavedOpen(false)}
           confirmOnly
-          confirmClassName="px-6 py-2.5 bg-[#212121] text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
+          confirmClassName="px-6 py-2.5 bg-warm-black text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
         />
       </div>
     </div>

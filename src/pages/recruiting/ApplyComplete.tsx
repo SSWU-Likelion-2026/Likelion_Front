@@ -38,7 +38,7 @@ function ApplyComplete() {
         {/* TODO: 제출한 지원서 조회 라우트 */}
         <Link
           to="/mypage/applications"
-          className="rounded-[10px] bg-[#212121] px-7 py-3 text-[15px] font-medium text-white hover:opacity-90"
+          className="rounded-[10px] bg-warm-black px-7 py-3 text-[15px] font-medium text-white hover:opacity-90"
         >
           제출한 지원서 조회
         </Link>

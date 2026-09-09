@@ -121,8 +121,8 @@ function Project() {
                   className={`h-[53px] min-w-[91px] rounded-full px-5 text-[18px] font-medium transition-colors ${
                     selectedGeneration ===
                     generation
-                      ? "bg-[#171F29] text-white"
-                      : "bg-transparent text-[#6C6E72]"
+                      ? "bg-misc-171f29 text-white"
+                      : "bg-transparent text-gray-4"
                   }`}
                 >
                   {generation}기
@@ -140,7 +140,7 @@ function Project() {
                 "/ProjectMaking",
               )
             }
-            className="flex h-[46px] w-[107px] items-center justify-center whitespace-nowrap rounded-[10px] border border-[#D0D6DD] px-[10px] text-[16px] font-medium text-[#808386]"
+            className="flex h-[46px] w-[107px] items-center justify-center whitespace-nowrap rounded-[10px] border border-gray-9 px-[10px] text-[16px] font-medium text-gray-5"
           >
             프로젝트 등록
           </button>
@@ -152,7 +152,7 @@ function Project() {
 
         {loading && (
           <div className="flex min-h-[300px] items-center justify-center">
-            <p className="text-[22px] text-[#808386]">
+            <p className="text-[22px] text-gray-5">
               프로젝트를
               불러오는 중입니다.
             </p>
@@ -192,11 +192,11 @@ function Project() {
                         `/ProjectDetail/${project.id}`,
                       )
                     }
-                    className="w-full cursor-pointer overflow-hidden rounded-[20px] border border-[#E5E5E5] bg-white"
+                    className="w-full cursor-pointer overflow-hidden rounded-[20px] border border-misc-e5e5e5 bg-white"
                   >
                     {/* 이미지 */}
 
-                    <div className="aspect-[384/233] w-full overflow-hidden bg-[#D9D9D9]">
+                    <div className="aspect-[384/233] w-full overflow-hidden bg-misc-d9d9d9">
                       {project.logoUrl && (
                         <img
                           src={
@@ -213,13 +213,13 @@ function Project() {
                     {/* 내용 */}
 
                     <div className="h-[137px] w-full px-5 py-5">
-                      <p className="text-[24px] font-bold text-[#121212]">
+                      <p className="text-[24px] font-bold text-black-1">
                         {
                           project.title
                         }
                       </p>
 
-                      <p className="mt-3 line-clamp-2 text-[16px] font-medium text-[#121212]">
+                      <p className="mt-3 line-clamp-2 text-[16px] font-medium text-black-1">
                         {
                           project.summary
                         }

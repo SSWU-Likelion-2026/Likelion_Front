@@ -738,7 +738,7 @@ export default function ProjectMaking() {
                         />
                     </button>
 
-                    <h1 className="text-[32px] font-semibold text-[#121212]">
+                    <h1 className="text-[32px] font-semibold text-black-1">
                         프로젝트 등록
                     </h1>
                 </div>
@@ -746,7 +746,7 @@ export default function ProjectMaking() {
                 <div className="pm flex flex-col gap-[45px]">
                     {/* 기수 선택 */}
                     <div>
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
+                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
                             기수 선택
                         </h2>
 
@@ -763,8 +763,8 @@ export default function ProjectMaking() {
                                         }
                                         className={`num h-[79px] w-[118px] rounded-[15px] border text-[24px] font-semibold transition-colors ${generation ===
                                             item
-                                            ? "border-[#8557FF] bg-[#8557FF] text-white"
-                                            : "border-[#D0D6DD] bg-white text-[#121212]"
+                                            ? "border-accent-select-alt bg-accent-select-alt text-white"
+                                            : "border-gray-9 bg-white text-black-1"
                                             }`}
                                     >
                                         {item}기
@@ -776,7 +776,7 @@ export default function ProjectMaking() {
 
                     {/* 프로젝트 명 */}
                     <div className="pm_name">
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
+                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
                             프로젝트 명
                         </h2>
 
@@ -793,14 +793,14 @@ export default function ProjectMaking() {
                                     )
                                 }
                                 placeholder="프로젝트 명을 입력해주세요."
-                                className="h-[94px] w-full rounded-[15px] border border-[#8158F6] px-[25px] text-[20px] font-medium text-[#121212] outline-none"
+                                className="h-[94px] w-full rounded-[15px] border border-primary-100 px-[25px] text-[20px] font-medium text-black-1 outline-none"
                             />
                         </div>
                     </div>
 
                     {/* 프로젝트 슬로건 */}
                     <div className="pm_slogan">
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
+                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
                             프로젝트 슬로건
                         </h2>
 
@@ -815,14 +815,14 @@ export default function ProjectMaking() {
                                     )
                                 }
                                 placeholder="프로젝트의 슬로건 (한 줄 설명)을 입력해주세요."
-                                className="h-[94px] w-full rounded-[15px] border border-[#D0D6DD] px-[25px] text-[20px] text-[#121212] outline-none placeholder:text-[#808386] focus:border-[#865BFF]"
+                                className="h-[94px] w-full rounded-[15px] border border-gray-9 px-[25px] text-[20px] text-black-1 outline-none placeholder:text-gray-5 focus:border-accent-select"
                             />
                         </div>
                     </div>
 
                     {/* 프로젝트 기간 */}
                     <div>
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
+                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
                             프로젝트 기간
                         </h2>
 
@@ -837,7 +837,7 @@ export default function ProjectMaking() {
                                                 !prev,
                                         )
                                     }
-                                    className="flex h-[78px] w-full items-center justify-between rounded-[15px] border border-[#D0D6DD] bg-white px-[20px] text-[20px] font-semibold text-[#121212]"
+                                    className="flex h-[78px] w-full items-center justify-between rounded-[15px] border border-gray-9 bg-white px-[20px] text-[20px] font-semibold text-black-1"
                                 >
                                     <span>
                                         {eventType
@@ -865,7 +865,7 @@ export default function ProjectMaking() {
                                 </button>
 
                                 {eventOpen && (
-                                    <div className="absolute left-0 top-[90px] z-20 w-full overflow-hidden rounded-[15px] border border-[#D0D6DD] bg-white font-semibold shadow-sm">
+                                    <div className="absolute left-0 top-[90px] z-20 w-full overflow-hidden rounded-[15px] border border-gray-9 bg-white font-semibold shadow-sm">
                                         {eventOptions.map(
                                             (
                                                 option,
@@ -884,7 +884,7 @@ export default function ProjectMaking() {
                                                             false,
                                                         );
                                                     }}
-                                                    className="block h-[42px] w-full px-[16px] text-left text-[20px] text-[#121212] hover:bg-[#F5F5F5]"
+                                                    className="block h-[42px] w-full px-[16px] text-left text-[20px] text-black-1 hover:bg-surface-muted"
                                                 >
                                                     {
                                                         option.label
@@ -908,10 +908,10 @@ export default function ProjectMaking() {
                                             .value,
                                     )
                                 }
-                                className="h-[78px] w-[303px] rounded-[15px] border border-[#8158F6] px-[20px] text-[20px] text-[#121212] outline-none"
+                                className="h-[78px] w-[303px] rounded-[15px] border border-primary-100 px-[20px] text-[20px] text-black-1 outline-none"
                             />
 
-                            <span className="text-[#D0D6DD]">
+                            <span className="text-gray-9">
                                 —
                             </span>
 
@@ -925,14 +925,14 @@ export default function ProjectMaking() {
                                             .value,
                                     )
                                 }
-                                className="h-[78px] w-[303px] rounded-[15px] border border-[#D0D6DD] px-[20px] text-[20px] text-[#121212] outline-none focus:border-[#865BFF]"
+                                className="h-[78px] w-[303px] rounded-[15px] border border-gray-9 px-[20px] text-[20px] text-black-1 outline-none focus:border-accent-select"
                             />
                         </div>
                     </div>
 
                     {/* 프로젝트 설명 */}
                     <div>
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
+                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
                             프로젝트 설명
                         </h2>
 
@@ -946,13 +946,13 @@ export default function ProjectMaking() {
                                 )
                             }
                             placeholder="프로젝트에 대한 설명을 입력해주세요."
-                            className="h-[434px] w-full resize-none rounded-[15px] border border-[#D0D6DD] px-[25px] py-[35px] text-[24px] text-[#121212] outline-none placeholder:text-[#808386] focus:border-[#865BFF]"
+                            className="h-[434px] w-full resize-none rounded-[15px] border border-gray-9 px-[25px] py-[35px] text-[24px] text-black-1 outline-none placeholder:text-gray-5 focus:border-accent-select"
                         />
                     </div>
 
                     {/* 프로젝트 팀원 */}
                     <div>
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
+                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
                             프로젝트 팀원
                         </h2>
 
@@ -1027,7 +1027,7 @@ export default function ProjectMaking() {
 
                     {/* 프로젝트 로고 */}
                     <div className="logo">
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
+                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
                             프로젝트 로고
                         </h2>
 
@@ -1044,7 +1044,7 @@ export default function ProjectMaking() {
                             }
                         />
 
-                        <div className="flex h-[279px] w-full items-center justify-center rounded-[15px] border border-dashed border-[#B8B9BD] bg-[#F3F4F6]">
+                        <div className="flex h-[279px] w-full items-center justify-center rounded-[15px] border border-dashed border-gray-7 bg-surface-neutral">
                             {logo ? (
                                 <div className="relative h-full w-full overflow-hidden rounded-[15px]">
                                     <img
@@ -1060,7 +1060,7 @@ export default function ProjectMaking() {
                                         onClick={
                                             removeLogo
                                         }
-                                        className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#444] text-[20px] text-white"
+                                        className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-misc-444 text-[20px] text-white"
                                     >
                                         ×
                                     </button>
@@ -1072,7 +1072,7 @@ export default function ProjectMaking() {
                                         onClick={() =>
                                             logoInput.current?.click()
                                         }
-                                        className="mb-[18px] flex items-center justify-center gap-[10px] rounded-[15px] bg-white px-[22px] py-[16px] text-[24px] font-medium text-[#121212] shadow-[0_4px_20px_rgba(135,104,244,0.15)]"
+                                        className="mb-[18px] flex items-center justify-center gap-[10px] rounded-[15px] bg-white px-[22px] py-[16px] text-[24px] font-medium text-black-1 shadow-[0_4px_20px_var(--color-shadow-accent)]"
                                     >
                                         <img
                                             src={
@@ -1085,7 +1085,7 @@ export default function ProjectMaking() {
                                         이미지 업로드
                                     </button>
 
-                                    <p className="text-[24px] text-[#808386]">
+                                    <p className="text-[24px] text-gray-5">
                                         JPG, PNG
                                         (최대 10MB)
                                     </p>
@@ -1096,7 +1096,7 @@ export default function ProjectMaking() {
 
                     {/* 프로젝트 장표 */}
                     <div className="banner">
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
+                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
                             프로젝트 장표
                         </h2>
 
@@ -1116,14 +1116,14 @@ export default function ProjectMaking() {
                             }
                         />
 
-                        <div className="flex h-[346px] w-full items-center justify-center rounded-[15px] border border-dashed border-[#B8B9BD] bg-[#F3F4F6]">
+                        <div className="flex h-[346px] w-full items-center justify-center rounded-[15px] border border-dashed border-gray-7 bg-surface-neutral">
                             <div className="flex flex-col items-center">
                                 <button
                                     type="button"
                                     onClick={() =>
                                         bannerInput.current?.click()
                                     }
-                                    className="mb-[18px] flex items-center justify-center gap-[10px] rounded-[15px] bg-white px-[22px] py-[16px] text-[24px] font-medium text-[#121212] shadow-[0_4px_20px_rgba(135,104,244,0.15)]"
+                                    className="mb-[18px] flex items-center justify-center gap-[10px] rounded-[15px] bg-white px-[22px] py-[16px] text-[24px] font-medium text-black-1 shadow-[0_4px_20px_var(--color-shadow-accent)]"
                                 >
                                     <img
                                         src={
@@ -1136,12 +1136,12 @@ export default function ProjectMaking() {
                                     이미지 업로드
                                 </button>
 
-                                <p className="text-[24px] text-[#808386]">
+                                <p className="text-[24px] text-gray-5">
                                     JPG, PNG
                                     (최대 10MB)
                                 </p>
 
-                                <p className="mt-2 text-[18px] text-[#A0A2A5]">
+                                <p className="mt-2 text-[18px] text-misc-a0a2a5">
                                     최대 10개
                                 </p>
                             </div>
@@ -1158,7 +1158,7 @@ export default function ProjectMaking() {
                                         ) => (
                                             <div
                                                 key={`${image.file.name}-${index}`}
-                                                className="relative h-[180px] min-w-[180px] overflow-hidden rounded-[15px] bg-[#ECECEF]"
+                                                className="relative h-[180px] min-w-[180px] overflow-hidden rounded-[15px] bg-misc-ececef"
                                             >
                                                 <img
                                                     src={
@@ -1196,7 +1196,7 @@ export default function ProjectMaking() {
 
                     {/* 기술 스택 */}
                     <div className="stack">
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-[#121212]">
+                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
                             기술 스택
                         </h2>
 
@@ -1217,7 +1217,7 @@ export default function ProjectMaking() {
                                         key={category}
                                         className="grid grid-cols-[90px_1fr] items-start gap-x-[50px]"
                                     >
-                                        <p className="pt-[7px] text-[20px] font-medium text-[#808386]">
+                                        <p className="pt-[7px] text-[20px] font-medium text-gray-5">
                                             {label}
                                         </p>
 
@@ -1232,8 +1232,8 @@ export default function ProjectMaking() {
                                                         type="button"
                                                         onClick={() => toggleStack(stack.id)}
                                                         className={`rounded-[5px] border px-[10px] py-[6px] text-[20px] font-medium transition-colors ${selected
-                                                                ? "border-[#A789FF] bg-[#F2EDFF] text-[#7950F2]"
-                                                                : "border-[#DBDEE2] bg-[#FAFAFA] text-[#121212]"
+                                                                ? "border-accent-light bg-misc-f2edff text-accent-deep"
+                                                                : "border-border-soft bg-surface-faint text-black-1"
                                                             }`}
                                                     >
                                                         {stack.name}
@@ -1254,7 +1254,7 @@ export default function ProjectMaking() {
                             type="button"
                             onClick={handleSubmit}
                             disabled={submitting}
-                            className="h-[79px] rounded-[15px] bg-[#8158F6] px-[35px] text-[24px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                            className="h-[79px] rounded-[15px] bg-primary-100 px-[35px] text-[24px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             {submitting ? "등록 중..." : "등록하기"}
                         </button>
@@ -1290,7 +1290,7 @@ interface TeamMemberColumnProps {
 }: TeamMemberColumnProps) {
     return (
                 <div>
-                    <p className="mb-[24px] text-[20px] font-medium text-[#121212]">
+                    <p className="mb-[24px] text-[20px] font-medium text-black-1">
                         {title}
                     </p>
 
@@ -1311,9 +1311,9 @@ interface TeamMemberColumnProps {
                                         )
                                     }
                                     placeholder="이름을 입력해주세요"
-                                    className={`mb-[7px] h-[92px] w-full rounded-[15px] border px-[20px] text-[20px] text-[#121212] outline-none placeholder:text-[#808386] ${index === 0
-                                        ? "border-[#865BFF]"
-                                        : "border-[#D0D6DD] focus:border-[#865BFF]"
+                                    className={`mb-[7px] h-[92px] w-full rounded-[15px] border px-[20px] text-[20px] text-black-1 outline-none placeholder:text-gray-5 ${index === 0
+                                        ? "border-accent-select"
+                                        : "border-gray-9 focus:border-accent-select"
                                         }`}
                                 />
                             ),
@@ -1322,7 +1322,7 @@ interface TeamMemberColumnProps {
                         <button
                             type="button"
                             onClick={onAdd}
-                            className="mt-[2px] flex items-center gap-[7px] text-[20px] font-medium text-[#6C6E72]"
+                            className="mt-[2px] flex items-center gap-[7px] text-[20px] font-medium text-gray-4"
                         >
                             <span className="text-[22px] leading-none">
                                 +

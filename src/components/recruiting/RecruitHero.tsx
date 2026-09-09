@@ -56,13 +56,13 @@ export default function RecruitHero({ open, period }: Props) {
               <p className="text-[24px] font-semibold text-primary-100">
                 모집기간
               </p>
-              <p className="text-[24px] font-medium text-[#7D4BF8]">
+              <p className="text-[24px] font-medium text-accent-strong">
                 {period ?? '2000.00.00 - 2000.00.00'}
               </p>
             </div>
             <Link
               to="/recruiting/apply"
-              className="mt-8 flex h-[105px] w-[357px] items-center justify-center gap-4 rounded-full bg-[#8158F6] text-[45px] font-semibold text-white transition-opacity hover:opacity-90"
+              className="mt-8 flex h-[105px] w-[357px] items-center justify-center gap-4 rounded-full bg-primary-100 text-[45px] font-semibold text-white transition-opacity hover:opacity-90"
             >
               지원서 작성
               <img src={applyIcon} alt="" className="h-10 w-10" />
@@ -83,7 +83,7 @@ export default function RecruitHero({ open, period }: Props) {
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleNotify()}
                 placeholder="이메일 주소를 입력해주세요"
-                className="h-[94px] flex-1 rounded-[20px] border border-transparent px-6 text-[22px] font-medium text-[#B8B9BD] shadow-card outline-none placeholder:text-gray-5 [background:linear-gradient(#fff,#fff)_padding-box,linear-gradient(135deg,#7D4BF8,#B0E7D5)_border-box]"
+                className="h-[94px] flex-1 rounded-[20px] border border-transparent px-6 text-[22px] font-medium text-gray-7 shadow-card outline-none placeholder:text-gray-5 [background:linear-gradient(#fff,#fff)_padding-box,linear-gradient(135deg,#7D4BF8,var(--color-accent-100))_border-box]"
               />
               <button
                 onClick={handleNotify}

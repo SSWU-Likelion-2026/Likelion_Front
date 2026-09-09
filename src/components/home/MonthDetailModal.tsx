@@ -18,14 +18,14 @@ const MonthDetailModal = memo(function MonthDetailModal({ open, onClose, title, 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(18,18,18,0.6)]"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-overlay-dim"
       onClick={onClose}
     >
       <div
-        className="relative flex w-[633px] flex-col overflow-hidden rounded-[22px] bg-white shadow-[0px_4px_11px_rgba(0,0,0,0.5)]"
+        className="relative flex w-[633px] flex-col overflow-hidden rounded-[22px] bg-white shadow-[0px_4px_11px_var(--color-shadow-strong)]"
         onClick={stopPropagation}
       >
-        <div className="relative h-[339px] w-full bg-[#f3f4f6]">
+        <div className="relative h-[339px] w-full bg-surface-neutral">
           {image && <img src={image} alt="" className="absolute inset-0 size-full object-cover" />}
           <button
             type="button"
@@ -37,8 +37,8 @@ const MonthDetailModal = memo(function MonthDetailModal({ open, onClose, title, 
           </button>
         </div>
         <div className="flex flex-col gap-[14px] p-[38px]">
-          <p className="m-0 text-[25px] font-semibold text-[#121212]">{title}</p>
-          <p className="m-0 whitespace-pre-line text-[16px] leading-[1.6] text-[#121212]">
+          <p className="m-0 text-[25px] font-semibold text-black-1">{title}</p>
+          <p className="m-0 whitespace-pre-line text-[16px] leading-[1.6] text-black-1">
             {description}
           </p>
         </div>

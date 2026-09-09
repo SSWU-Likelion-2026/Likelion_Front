@@ -21,7 +21,7 @@ const GROUP_SECTIONS: { key: MemberGroup; title: string; subtitle?: string }[] =
 ]
 
 const BANNER_GRADIENT =
-  'radial-gradient(ellipse 150% 100% at 50% 0%, #5D23E3 5%, #673CE1 17%, #7254DF 29%, #8685DC 53%, #9BB6D8 76%, #B0E7D5 100%)'
+  'radial-gradient(ellipse 150% 100% at 50% 0%, #5D23E3 5%, #673CE1 17%, #7254DF 29%, #8685DC 53%, #9BB6D8 76%, var(--color-accent-100) 100%)'
 
 function People() {
   const user = useSyncExternalStore(subscribe, getUser, () => null)
@@ -72,7 +72,7 @@ function People() {
   }
 
   return (
-    <div className="bg-[#212121]">
+    <div className="bg-warm-black">
       <section className="relative h-[506px] overflow-hidden" style={{ backgroundImage: BANNER_GRADIENT }}>
         <p className="absolute left-[110px] top-[225px] m-0 font-montserrat text-[95px] font-semibold text-white">
           People
@@ -89,7 +89,7 @@ function People() {
                 type="button"
                 onClick={() => setTerm(t)}
                 className={`w-[90px] rounded-[15px] px-[15px] py-[12px] text-[18px] font-semibold ${
-                  t === term ? 'bg-[#212121] text-white' : 'rounded-full text-[#797979]'
+                  t === term ? 'bg-warm-black text-white' : 'rounded-full text-text-soft'
                 }`}
               >
                 {t}기
@@ -102,14 +102,14 @@ function People() {
               <button
                 type="button"
                 onClick={() => openModal('create')}
-                className="cursor-pointer border-0 bg-transparent px-[15px] py-[12px] text-[18px] font-medium text-[#797979]"
+                className="cursor-pointer border-0 bg-transparent px-[15px] py-[12px] text-[18px] font-medium text-text-soft"
               >
                 프로필 등록
               </button>
               <button
                 type="button"
                 onClick={() => openModal('edit')}
-                className="cursor-pointer border-0 bg-transparent px-[15px] py-[12px] text-[18px] font-medium text-[#797979]"
+                className="cursor-pointer border-0 bg-transparent px-[15px] py-[12px] text-[18px] font-medium text-text-soft"
               >
                 프로필 수정
               </button>
@@ -122,7 +122,7 @@ function People() {
             type="button"
             onClick={() => setMemberType('STAFF')}
             className={`px-[15px] py-[12px] text-[20px] ${
-              memberType === 'STAFF' ? 'font-semibold text-black' : 'font-medium text-[#797979]'
+              memberType === 'STAFF' ? 'font-semibold text-black' : 'font-medium text-text-soft'
             }`}
           >
             운영진
@@ -131,7 +131,7 @@ function People() {
             type="button"
             onClick={() => setMemberType('BABY_LION')}
             className={`px-[15px] py-[12px] text-[20px] ${
-              memberType === 'BABY_LION' ? 'font-semibold text-black' : 'font-medium text-[#797979]'
+              memberType === 'BABY_LION' ? 'font-semibold text-black' : 'font-medium text-text-soft'
             }`}
           >
             아기사자
@@ -144,7 +144,7 @@ function People() {
               <div className="flex items-center gap-[15px]">
                 <div className="h-[40px] w-[8px] shrink-0 bg-black" />
                 <p className="m-0 text-[30px] font-semibold text-black">{section.title}</p>
-                {section.subtitle && <p className="m-0 text-[18px] font-semibold text-[#808386]">{section.subtitle}</p>}
+                {section.subtitle && <p className="m-0 text-[18px] font-semibold text-gray-5">{section.subtitle}</p>}
               </div>
               <div className="grid grid-cols-3 gap-[24px]">
                 {section.members.map((member) => (

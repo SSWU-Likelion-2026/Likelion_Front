@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/home/Home'
 import Login from './pages/signup/Login'
 import Signup from './pages/signup/Signup'
@@ -21,6 +22,7 @@ import StampDetail from './pages/stamp/StampDetail'
 function App() {
   return (
     <div className="flex min-h-screen flex-col">
+      <ScrollToTop />
       <Header />
       <main className="flex-1">
         <Routes>

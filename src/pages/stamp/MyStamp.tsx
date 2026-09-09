@@ -65,19 +65,19 @@ export default function MyStamp({
           />
 
           <div className="myStampUserInfo">
-            <p className="text-[34px] font-semibold text-[#121212]">
+            <p className="text-[34px] font-semibold text-black-1">
               {userName}
               {userName && "님"}
             </p>
 
-            <p className="mt-[10px] text-[28px] font-medium text-[#121212]">
+            <p className="mt-[10px] text-[28px] font-medium text-black-1">
               총 획득 스탬프
             </p>
           </div>
         </div>
 
         {/* 총 스탬프 개수 */}
-        <p className="myStampCount mr-[40px] text-[50px] font-semibold text-[#121212]">
+        <p className="myStampCount mr-[40px] text-[50px] font-semibold text-black-1">
           {totalStampCount}개
         </p>
       </div>
@@ -95,8 +95,8 @@ export default function MyStamp({
           gap-y-[40px]
           rounded-[30px]
           border
-          border-[#E1E1E1]
-          bg-[#F5F5F7]
+          border-misc-e1e1e1
+          bg-misc-f5f5f7
           px-[20px]
           py-[40px]
 
@@ -165,7 +165,7 @@ export default function MyStamp({
 
               {/* 인증 완료 날짜 */}
               {completed && (
-                <p className="stampDate mt-[10px] text-[20px] font-medium text-[#7C4DFF]">
+                <p className="stampDate mt-[10px] text-[20px] font-medium text-misc-7c4dff">
                   {formatDate(completed.date)}
                 </p>
               )}

@@ -38,14 +38,14 @@ const HOVER_DEBOUNCE_MS = 200
 const ITEM_HEIGHT = 100
 
 const monthClass: Record<MonthColor, string> = {
-  primary: 'bg-primary-100 text-[#fafafa]',
-  neutral: 'bg-[#f5f5f5] border border-[#f0f0f0] text-primary-100',
+  primary: 'bg-primary-100 text-surface-faint',
+  neutral: 'bg-surface-muted border border-surface-border text-primary-100',
 }
 
 const connectorClass: Record<ConnectorColor, string> = {
   primary: 'bg-primary-100',
   mint: 'bg-accent-100',
-  neutral: 'bg-[#f5f5f5] border border-[#f0f0f0]',
+  neutral: 'bg-surface-muted border border-surface-border',
 }
 
 const MONTH_BUTTON_BASE_CLASS =
@@ -201,8 +201,8 @@ function AnnualSchedule() {
   return (
     <section className="flex w-full flex-col items-center gap-[50px] py-[45px]">
       <div className="flex flex-col items-center gap-[15px]">
-        <p className="m-0 py-[10px] text-[18px] font-semibold text-[#121212]">Annual schedule</p>
-        <p className="m-0 text-[32px] font-semibold text-[#121212]">
+        <p className="m-0 py-[10px] text-[18px] font-semibold text-black-1">Annual schedule</p>
+        <p className="m-0 text-[32px] font-semibold text-black-1">
           성신멋사와 함께하는 <span className="text-primary-100">1년 간의 여정</span>
         </p>
       </div>

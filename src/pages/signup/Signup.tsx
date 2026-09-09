@@ -5,7 +5,7 @@ import { sendEmailVerificationCode, signup, verifyEmail } from '../../api/signup
 import { ApiError } from '../../api/instance'
 
 const fieldClass =
-  'h-[59px] w-full rounded-[15px] border border-primary-15 bg-[#FAFAFA] px-4 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'
+  'h-[59px] w-full rounded-[15px] border border-primary-15 bg-surface-faint px-4 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'
 
 function Signup() {
   const navigate = useNavigate()
@@ -144,7 +144,7 @@ function Signup() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-4 h-[62px] w-full rounded-[15px] bg-[#212121] px-[35px] text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="mt-4 h-[62px] w-full rounded-[15px] bg-warm-black px-[35px] text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {submitting ? '가입 중…' : 'Sign up'}
           </button>

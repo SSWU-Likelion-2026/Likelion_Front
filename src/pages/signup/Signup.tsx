@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import logoName from '../../img/signup/logo-name.png'
+import logoName from '../../img/signup/logo-name1.svg'
 import { sendEmailVerificationCode, signup, verifyEmail } from '../../api/signup/auth'
 import { ApiError } from '../../api/instance'
 

@@ -17,6 +17,8 @@ function Signup() {
 
   const [codeSent, setCodeSent] = useState(false)
   const [sendingCode, setSendingCode] = useState(false)
+  const [codeVerified, setCodeVerified] = useState(false)
+  const [verifyingCode, setVerifyingCode] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
@@ -25,6 +27,7 @@ function Signup() {
     if (!email || sendingCode) return
     setError(null)
     setNotice(null)
+    setCodeVerified(false)
     setSendingCode(true)
     try {
       await sendEmailVerificationCode({ email })
@@ -36,6 +39,25 @@ function Signup() {
       )
     } finally {
       setSendingCode(false)
+    }
+  }
+
+  const handleVerifyCode = async () => {
+    if (!code || verifyingCode) return
+    setError(null)
+    setNotice(null)
+    setVerifyingCode(true)
+    try {
+      await verifyEmail({ email, code })
+      setCodeVerified(true)
+      setNotice('이메일 인증이 완료됐어요.')
+    } catch (err) {
+      setCodeVerified(false)
+      setError(
+        err instanceof ApiError ? err.message : '인증번호가 올바르지 않아요.',
+      )
+    } finally {
+      setVerifyingCode(false)
     }
   }
 
@@ -104,15 +126,28 @@ function Signup() {
             </button>
           </div>
 
-          <input
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            placeholder="이메일 인증번호 입력"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            className={fieldClass}
-          />
+          <div className="relative">
+            <input
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              placeholder="이메일 인증번호 입력"
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value)
+                setCodeVerified(false)
+              }}
+              className={`${fieldClass} pr-16`}
+            />
+            <button
+              type="button"
+              onClick={handleVerifyCode}
+              disabled={!code || verifyingCode || codeVerified}
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg border border-gray-9 bg-white px-3 py-1.5 text-xs font-medium text-gray-4 transition-colors hover:text-gray-1 disabled:opacity-50"
+            >
+              {codeVerified ? '확인됨' : verifyingCode ? '확인 중…' : '확인'}
+            </button>
+          </div>
 
           <input
             type="password"

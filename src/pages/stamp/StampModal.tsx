@@ -30,9 +30,9 @@ export default function StampModal({
           rounded-[20px]
           bg-white
 
-          max-[393px]:h-[270px]
-          max-[393px]:w-[calc(100%-80px)]
-          max-[393px]:rounded-[8px]
+          max-[1014px]:h-[270px]
+          max-[1014px]:w-[calc(100%-80px)]
+          max-[1014px]:rounded-[8px]
         "
       >
         <div
@@ -43,7 +43,7 @@ export default function StampModal({
             items-center
             px-[100px]
 
-            max-[393px]:px-[73px]
+            max-[1014px]:px-[73px]
           "
         >
           {/* 체크 아이콘 */}
@@ -54,8 +54,8 @@ export default function StampModal({
               h-[70px]
               w-[70px]
 
-              max-[393px]:h-[50px]
-              max-[393px]:w-[50px]
+              max-[1014px]:h-[50px]
+              max-[1014px]:w-[50px]
             "
           />
 
@@ -68,9 +68,9 @@ export default function StampModal({
               font-semibold
               text-[#121212]
 
-              max-[393px]:mt-[16px]
-              max-[393px]:whitespace-nowrap
-              max-[393px]:text-[16px]
+              max-[1014px]:mt-[16px]
+              max-[1014px]:whitespace-nowrap
+              max-[1014px]:text-[16px]
             "
           >
             인증이 완료되었습니다
@@ -85,10 +85,10 @@ export default function StampModal({
               leading-[1.5]
               text-[#808386]
 
-              max-[393px]:mt-[8px]
-              max-[393px]:whitespace-nowrap
-              max-[393px]:text-[13px]
-              max-[393px]:leading-[15px]
+              max-[1014px]:mt-[8px]
+              max-[1014px]:whitespace-nowrap
+              max-[1014px]:text-[13px]
+              max-[1014px]:leading-[15px]
             "
           >
             스탬프가 지급되었어요.
@@ -110,12 +110,12 @@ export default function StampModal({
               font-semibold
               text-white
 
-              max-[393px]:mt-[15px]
-              max-[393px]:h-[50px]
-              max-[393px]:w-full
-              max-[393px]:min-w-[145px]
-              max-[393px]:rounded-full
-              max-[393px]:text-[20px]
+              max-[1014px]:mt-[15px]
+              max-[1014px]:h-[50px]
+              max-[1014px]:w-full
+              max-[1014px]:min-w-[145px]
+              max-[1014px]:rounded-full
+              max-[1014px]:text-[20px]
             "
           >
             확인

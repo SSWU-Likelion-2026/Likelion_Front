@@ -464,7 +464,7 @@ export default function ProjectDetail() {
             text-[22px]
             text-[#808386]
 
-            max-[393px]:text-[13px]
+            max-[1014px]:text-[13px]
           "
         >
           프로젝트 정보를 불러오는 중입니다.
@@ -497,7 +497,7 @@ export default function ProjectDetail() {
           className="
             text-[20px]
 
-            max-[393px]:text-[14px]
+            max-[1014px]:text-[14px]
           "
         >
           {error ||
@@ -517,10 +517,10 @@ export default function ProjectDetail() {
             px-5
             py-3
 
-            max-[393px]:rounded-[6px]
-            max-[393px]:px-3
-            max-[393px]:py-2
-            max-[393px]:text-[11px]
+            max-[1014px]:rounded-[6px]
+            max-[1014px]:px-3
+            max-[1014px]:py-2
+            max-[1014px]:text-[11px]
           "
         >
           목록으로 돌아가기
@@ -537,9 +537,9 @@ export default function ProjectDetail() {
         px-[120px]
         py-6
 
-        max-[393px]:px-6
-        max-[393px]:pb-[24px]
-        max-[393px]:pt-[18px]
+        max-[1014px]:px-6
+        max-[1014px]:pb-[24px]
+        max-[1014px]:pt-[18px]
       "
     >
       {/* ==================================================
@@ -553,7 +553,7 @@ export default function ProjectDetail() {
           items-center
           justify-between
 
-          max-[393px]:hidden
+          max-[1014px]:hidden
         "
       >
         <button
@@ -631,8 +631,8 @@ export default function ProjectDetail() {
     flex
     gap-10
 
-    max-[393px]:flex-col
-    max-[393px]:gap-0
+    max-[1014px]:flex-col
+    max-[1014px]:gap-0
   "
       >
         {/* ==================================================
@@ -647,7 +647,7 @@ export default function ProjectDetail() {
       w-[384px]
       shrink-0
 
-      max-[393px]:contents
+      max-[1014px]:contents
     "
         >
           {/* 로고 + 제목 */}
@@ -659,9 +659,9 @@ export default function ProjectDetail() {
         items-center
         gap-4
 
-        max-[393px]:order-1
-        max-[393px]:mb-[12px]
-        max-[393px]:gap-[12px]
+        max-[1014px]:order-1
+        max-[1014px]:mb-[12px]
+        max-[1014px]:gap-[12px]
       "
           >
             <div
@@ -673,9 +673,9 @@ export default function ProjectDetail() {
           rounded-[20px]
           bg-[#D9D9D9]
 
-          max-[393px]:h-[45px]
-          max-[393px]:w-[45px]
-          max-[393px]:rounded-[8px]
+          max-[1014px]:h-[45px]
+          max-[1014px]:w-[45px]
+          max-[1014px]:rounded-[8px]
         "
             >
               {project.logoUrl && (
@@ -697,9 +697,9 @@ export default function ProjectDetail() {
           font-medium
           text-[#222]
 
-          max-[393px]:text-[24px]
-          max-[393px]:font-semibold
-          max-[393px]:leading-[20px]
+          max-[1014px]:text-[24px]
+          max-[1014px]:font-semibold
+          max-[1014px]:leading-[20px]
         "
             >
               {project.title}
@@ -715,10 +715,10 @@ export default function ProjectDetail() {
         font-medium
         text-[#121212]
 
-        max-[393px]:order-2
-        max-[393px]:mb-[18px]
-        max-[393px]:text-[18px]
-        max-[393px]:leading-[24px]
+        max-[1014px]:order-2
+        max-[1014px]:mb-[18px]
+        max-[1014px]:text-[18px]
+        max-[1014px]:leading-[24px]
       "
           >
             {project.summary}
@@ -735,12 +735,12 @@ export default function ProjectDetail() {
         px-[25px]
         py-[20px]
 
-        max-[393px]:order-4
-        max-[393px]:mt-[30px]
-        max-[393px]:h-auto
-        max-[393px]:rounded-[15px]
-        max-[393px]:px-[16px]
-        max-[393px]:py-[14px]
+        max-[1014px]:order-4
+        max-[1014px]:mt-[30px]
+        max-[1014px]:h-auto
+        max-[1014px]:rounded-[15px]
+        max-[1014px]:px-[16px]
+        max-[1014px]:py-[14px]
       "
           >
             <p
@@ -748,7 +748,7 @@ export default function ProjectDetail() {
           text-[18px]
           text-[#6C6E72]
 
-          max-[393px]:text-[16px]
+          max-[1014px]:text-[16px]
         "
             >
               해커톤
@@ -760,9 +760,9 @@ export default function ProjectDetail() {
           text-[22px]
           font-medium
 
-          max-[393px]:mb-[10px]
-          max-[393px]:mt-[1px]
-          max-[393px]:text-[18px]
+          max-[1014px]:mb-[10px]
+          max-[1014px]:mt-[1px]
+          max-[1014px]:text-[18px]
         "
             >
               {hackathonName[project.hackathon] ??
@@ -774,8 +774,8 @@ export default function ProjectDetail() {
           text-[18px]
           text-[#6C6E72]
 
-          max-[393px]:mt-[15px]
-          max-[393px]:text-[16px]
+          max-[1014px]:mt-[15px]
+          max-[1014px]:text-[16px]
         "
             >
               프로젝트 기간
@@ -786,8 +786,8 @@ export default function ProjectDetail() {
           text-[22px]
           font-medium
 
-          max-[393px]:mt-[1px]
-          max-[393px]:text-[18px]
+          max-[1014px]:mt-[1px]
+          max-[1014px]:text-[18px]
         "
             >
               {project.startMonth.replace("-", ".")}{" "}
@@ -806,8 +806,8 @@ export default function ProjectDetail() {
       min-w-0
       flex-1
 
-      max-[393px]:order-3
-      max-[393px]:w-full
+      max-[1014px]:order-3
+      max-[1014px]:w-full
     "
         >
           {/* 메인 장표 */}
@@ -821,14 +821,10 @@ export default function ProjectDetail() {
 
         aspect-[792/445]
 
-        max-[1100px]:aspect-auto
-        max-[1100px]:h-[400px]
+        min-[1015px]:max-[1100px]:aspect-auto
+        min-[1015px]:max-[1100px]:h-[400px]
 
-        max-[900px]:h-[350px]
-
-        max-[700px]:h-[300px]
-
-        max-[393px]:h-[214px]
+        max-[1014px]:h-[214px]
       "
           >
             {project.slides.length > 0 ? (
@@ -861,7 +857,7 @@ export default function ProjectDetail() {
               text-[20px]
               text-[#808386]
 
-              max-[393px]:text-[11px]
+              max-[1014px]:text-[11px]
             "
                 >
                   등록된 장표가 없습니다.
@@ -891,13 +887,11 @@ export default function ProjectDetail() {
   rounded-[8px]
   bg-[#212121]
 
-  max-[1200px]:w-[42px]
-  max-[1000px]:w-[36px]
-  max-[800px]:w-[30px]
+  min-[1015px]:max-[1200px]:w-[42px]
 
-  max-[393px]:left-[12px]
-  max-[393px]:w-[23px]
-  max-[393px]:rounded-[5px]
+  max-[1014px]:left-[12px]
+  max-[1014px]:w-[23px]
+  max-[1014px]:rounded-[5px]
 "
                 >
                   <img
@@ -907,8 +901,8 @@ export default function ProjectDetail() {
                 h-[12px]
                 w-[6px]
 
-                max-[393px]:h-[8px]
-                max-[393px]:w-[4px]
+                max-[1014px]:h-[8px]
+                max-[1014px]:w-[4px]
               "
                   />
                 </button>
@@ -931,13 +925,11 @@ export default function ProjectDetail() {
   rounded-[8px]
   bg-[#212121]
 
-  max-[1200px]:w-[42px]
-  max-[1000px]:w-[36px]
-  max-[800px]:w-[30px]
+  min-[1015px]:max-[1200px]:w-[42px]
 
-  max-[393px]:right-[12px]
-  max-[393px]:w-[23px]
-  max-[393px]:rounded-[5px]
+  max-[1014px]:right-[12px]
+  max-[1014px]:w-[23px]
+  max-[1014px]:rounded-[5px]
 "
                 >
                   <img
@@ -947,8 +939,8 @@ export default function ProjectDetail() {
                 h-[12px]
                 w-[6px]
 
-                max-[393px]:h-[8px]
-                max-[393px]:w-[4px]
+                max-[1014px]:h-[8px]
+                max-[1014px]:w-[4px]
               "
                   />
                 </button>
@@ -969,7 +961,7 @@ export default function ProjectDetail() {
           grid-cols-6
           gap-3
 
-          max-[393px]:hidden
+          max-[1014px]:hidden
         "
             >
               {project.slides.map(
@@ -1017,11 +1009,11 @@ export default function ProjectDetail() {
               className="
           hidden
 
-          max-[393px]:mt-[10px]
-          max-[393px]:flex
-          max-[393px]:items-center
-          max-[393px]:justify-center
-          max-[393px]:gap-[5px]
+          max-[1014px]:mt-[10px]
+          max-[1014px]:flex
+          max-[1014px]:items-center
+          max-[1014px]:justify-center
+          max-[1014px]:gap-[5px]
         "
             >
               {project.slides.map(
@@ -1062,9 +1054,9 @@ export default function ProjectDetail() {
           flex
           gap-10
 
-          max-[393px]:mt-[12px]
-          max-[393px]:flex-col
-          max-[393px]:gap-[12px]
+          max-[1014px]:mt-[12px]
+          max-[1014px]:flex-col
+          max-[1014px]:gap-[12px]
         "
       >
         {/* ==================================================
@@ -1077,8 +1069,8 @@ export default function ProjectDetail() {
             shrink-0
             space-y-4
 
-            max-[393px]:w-full
-            max-[393px]:space-y-[12px]
+            max-[1014px]:w-full
+            max-[1014px]:space-y-[12px]
           "
         >
           {/* 프로젝트 팀원 */}
@@ -1090,8 +1082,8 @@ export default function ProjectDetail() {
               border
               border-[#D0D6DD]
               bg-white
-              max-[393px]:bg-[#FAFAFA]  
-              max-[393px]:rounded-[15px]
+              max-[1014px]:bg-[#FAFAFA]  
+              max-[1014px]:rounded-[15px]
             "
           >
             <button
@@ -1109,8 +1101,8 @@ export default function ProjectDetail() {
                 items-center
                 justify-between
                 px-[20px]
-                max-[393px]:h-[84px]
-                max-[393px]:px-[15px]
+                max-[1014px]:h-[84px]
+                max-[1014px]:px-[15px]
               "
             >
               <span
@@ -1119,8 +1111,8 @@ export default function ProjectDetail() {
                   font-semibold
                   text-[#121212]
 
-                  max-[393px]:text-[18px]
-                  max-[393px]:font-medium
+                  max-[1014px]:text-[18px]
+                  max-[1014px]:font-medium
                 "
               >
                 프로젝트 팀원
@@ -1135,8 +1127,8 @@ export default function ProjectDetail() {
                   transition-transform
                   duration-200
 
-                  max-[393px]:h-[15px]
-                  max-[393px]:w-[15px]
+                  max-[1014px]:h-[15px]
+                  max-[1014px]:w-[15px]
 
                   ${teamOpen
                     ? "rotate-90"
@@ -1151,9 +1143,9 @@ export default function ProjectDetail() {
                 className="
                   px-[20px]
                   py-[22px]
-                max-[393px]:mt-[-20px]
-                  max-[393px]:px-[15px]
-                  max-[393px]:py-[14px]
+                max-[1014px]:mt-[-20px]
+                  max-[1014px]:px-[15px]
+                  max-[1014px]:py-[14px]
                 "
               >
                 {Object.entries(
@@ -1164,7 +1156,7 @@ export default function ProjectDetail() {
                     className="
                       space-y-5
 
-                      max-[393px]:space-y-[12px]
+                      max-[1014px]:space-y-[12px]
                     "
                   >
                     {Object.entries(groupedMembers)
@@ -1184,7 +1176,7 @@ export default function ProjectDetail() {
                               text-[16px]
                               text-[#808386]
 
-                              max-[393px]:text-[16px]
+                              max-[1014px]:text-[16px]
                             "
                           >
                             {
@@ -1199,8 +1191,8 @@ export default function ProjectDetail() {
                               font-medium
                               text-[#121212]
 
-                              max-[393px]:mt-[3px]
-                              max-[393px]:text-[16px]
+                              max-[1014px]:mt-[3px]
+                              max-[1014px]:text-[16px]
                             "
                           >
                             {members
@@ -1224,7 +1216,7 @@ export default function ProjectDetail() {
                       text-[18px]
                       text-[#808386]
 
-                      max-[393px]:text-[10px]
+                      max-[1014px]:text-[10px]
                     "
                   >
                     등록된 팀원이 없습니다.
@@ -1244,8 +1236,8 @@ export default function ProjectDetail() {
               border-[#D0D6DD]
               bg-white
 
-              max-[393px]:bg-[#FAFAFA]  
-              max-[393px]:rounded-[15px]
+              max-[1014px]:bg-[#FAFAFA]  
+              max-[1014px]:rounded-[15px]
             "
           >
             <button
@@ -1264,8 +1256,8 @@ export default function ProjectDetail() {
                 justify-between
                 px-[20px]
 
-                max-[393px]:h-[84px]
-                max-[393px]:px-[15px]
+                max-[1014px]:h-[84px]
+                max-[1014px]:px-[15px]
               "
             >
               <span
@@ -1274,8 +1266,8 @@ export default function ProjectDetail() {
                   font-semibold
                   text-[#121212]
 
-                  max-[393px]:text-[18px]
-                  max-[393px]:font-medium
+                  max-[1014px]:text-[18px]
+                  max-[1014px]:font-medium
                 "
               >
                 기술 스택
@@ -1290,8 +1282,8 @@ export default function ProjectDetail() {
                   transition-transform
                   duration-200
 
-                  max-[393px]:h-[15px]
-                  max-[393px]:w-[15px]
+                  max-[1014px]:h-[15px]
+                  max-[1014px]:w-[15px]
 
                   ${stackOpen
                     ? "rotate-90"
@@ -1306,9 +1298,9 @@ export default function ProjectDetail() {
                 className="
                   px-[20px]
                   py-[22px]
-                 max-[393px]:mt-[-20px]
-                  max-[393px]:px-[15px]
-                  max-[393px]:py-[14px]
+                 max-[1014px]:mt-[-20px]
+                  max-[1014px]:px-[15px]
+                  max-[1014px]:py-[14px]
                 "
               >
                 {Object.entries(groupedTechStacks).length > 0 ? (
@@ -1335,7 +1327,7 @@ export default function ProjectDetail() {
       text-[18px]
       text-[#808386]
 
-      max-[393px]:text-[16px]
+      max-[1014px]:text-[16px]
     "
                   >
                     등록된 기술 스택이 없습니다.
@@ -1361,11 +1353,11 @@ export default function ProjectDetail() {
             px-[65px]
             py-[35px]
 
-            max-[393px]:min-h-[220px]
-            max-[393px]:w-full
-            max-[393px]:rounded-[15px]
-            max-[393px]:px-[15px]
-            max-[393px]:py-[17px]
+            max-[1014px]:min-h-[220px]
+            max-[1014px]:w-full
+            max-[1014px]:rounded-[15px]
+            max-[1014px]:px-[15px]
+            max-[1014px]:py-[17px]
           "
         >
           <h2
@@ -1373,7 +1365,7 @@ export default function ProjectDetail() {
               text-[24px]
               font-semibold
 
-              max-[393px]:text-[18px]
+              max-[1014px]:text-[18px]
             "
           >
             Project Overview
@@ -1387,9 +1379,9 @@ export default function ProjectDetail() {
               font-medium
               leading-[1.7]
 
-              max-[393px]:mt-[9px]
-              max-[393px]:text-[14px]
-              max-[393px]:leading-[20px]
+              max-[1014px]:mt-[9px]
+              max-[1014px]:text-[14px]
+              max-[1014px]:leading-[20px]
             "
           >
             {project.description}
@@ -1405,10 +1397,10 @@ export default function ProjectDetail() {
         className="
           hidden
 
-          max-[393px]:mt-[20px]
-          max-[393px]:flex
-          max-[393px]:justify-end
-          max-[393px]:gap-[6px]
+          max-[1014px]:mt-[20px]
+          max-[1014px]:flex
+          max-[1014px]:justify-end
+          max-[1014px]:gap-[6px]
         "
       >
         <button
@@ -1471,7 +1463,7 @@ function SkillRow({
       className="
         mb-5
 
-        max-[393px]:mb-[12px]
+        max-[1014px]:mb-[12px]
       "
     >
       <p
@@ -1480,8 +1472,8 @@ function SkillRow({
           text-[18px]
           text-[#6C6E72]
 
-          max-[393px]:mb-[5px]
-          max-[393px]:text-[16px]
+          max-[1014px]:mb-[5px]
+          max-[1014px]:text-[16px]
         "
       >
         {title}
@@ -1493,7 +1485,7 @@ function SkillRow({
           flex-wrap
           gap-2
 
-          max-[393px]:gap-[5px]
+          max-[1014px]:gap-[5px]
         "
       >
         {items.map(
@@ -1512,10 +1504,10 @@ function SkillRow({
                 font-medium
                 text-black
 
-                max-[393px]:rounded-[5px]
-                max-[393px]:px-[15px]
-                max-[393px]:py-[5px]
-                max-[393px]:text-[16px]
+                max-[1014px]:rounded-[5px]
+                max-[1014px]:px-[15px]
+                max-[1014px]:py-[5px]
+                max-[1014px]:text-[16px]
               "
             >
               {item}

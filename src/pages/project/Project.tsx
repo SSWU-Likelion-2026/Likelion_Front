@@ -186,16 +186,16 @@ function Project() {
               }
               className="
                 flex
-                h-[26px]
-                w-[51px]
+                h-[46px]
+                w-[97px]
                 items-center
                 justify-between
-                rounded-[6px]
+                rounded-[10px]
                 border
                 border-[#D0D6DD]
                 bg-white
                 px-[6px]
-                text-[9px]
+                text-[14px]
                 font-medium
                 text-[#121212]
               "
@@ -208,10 +208,10 @@ function Project() {
                 src={underbtn}
                 alt=""
                 className={`
-                  w-[7px]
+                  w-[10px]
                   transition-transform
                   duration-200
-
+                  mr-[3px]
                   ${
                     isGenerationOpen
                       ? "rotate-180"
@@ -253,7 +253,7 @@ function Project() {
                         items-center
                         px-[8px]
                         text-left
-                        text-[11px]
+                        text-[16px]
                         font-medium
                         text-[#121212]
                         hover:bg-[#F5F5F5]
@@ -293,11 +293,11 @@ function Project() {
               font-medium
               text-[#808386]
 
-              max-[393px]:h-[26px]
-              max-[393px]:w-[57px]
-              max-[393px]:rounded-[6px]
+              max-[393px]:h-[46px]
+              max-[393px]:w-[97px]
+              max-[393px]:rounded-[10px]
               max-[393px]:px-0
-              max-[393px]:text-[8px]
+              max-[393px]:text-[14px]
             "
           >
             프로젝트 등록
@@ -375,9 +375,9 @@ function Project() {
                 grid-cols-3
                 gap-[24px]
                 font-montserrat
-
+                mt-[30px]
                 max-[393px]:grid-cols-1
-                max-[393px]:gap-[16px]
+                max-[393px]:gap-[24px]
               "
             >
               {projects.map(
@@ -399,7 +399,6 @@ function Project() {
                       bg-white
 
                       max-[393px]:h-[304px]
-                      max-[393px]:w-[345px]
                       max-[393px]:rounded-[12px]
                       max-[393px]:shadow-[0_2px_8px_rgba(0,0,0,0.08)]
                     "
@@ -451,10 +450,10 @@ function Project() {
                       <p
                         className="
                           text-[24px]
-                          font-bold
+                          font-semibold
                           text-[#121212]
 
-                          max-[393px]:text-[16px]
+                          max-[393px]:text-[24px]
                           max-[393px]:leading-[20px]
                         "
                       >
@@ -468,10 +467,9 @@ function Project() {
                           text-[16px]
                           font-medium
                           text-[#121212]
-
-                          max-[393px]:mt-[12px]
-                          max-[393px]:text-[10px]
-                          max-[393px]:leading-[14px]
+                          max-[393px]:mt-[10px]
+                          max-[393px]:text-[16px]
+                          max-[393px]:leading-[22px]
                         "
                       >
                         {project.summary}

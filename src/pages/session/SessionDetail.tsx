@@ -15,6 +15,7 @@ import Modal from '../../components/Modal'
 
 // assests
 import ProfileImg from '../../img/session/profile.jpg'
+import backImg from '../../img/session/back.svg'
 
 const partLabelMap: Record<string, string> = {
   'PM': '기획/디자인',
@@ -115,8 +116,11 @@ export default function SessionDetail() {
       <main className="flex-1 flex flex-col justify-center">
 
         <header className='flex flex-col gap-[5px] lg:gap-[35px]'>
-            <p className="text-[14px] lg:text-[18px] text-gray-4">{partLabelMap[detailData?.part ?? ''] ?? detailData?.part} &gt; W{String(weekNumber).padStart(2, '0')}</p>
-            <h1 className="text-[20px] lg:text-[32px] font-semibold text-black">[W{String(weekNumber).padStart(2, '0')}] {detailData?.subTitle}</h1>
+          <button onClick={() => navigate(-1)}>
+            <img src={backImg} alt="뒤로가기" className='w-[32px]' />
+          </button>
+            {/* <p className="text-[14px] lg:text-[18px] text-gray-4">{partLabelMap[detailData?.part ?? ''] ?? detailData?.part} &gt; W{String(weekNumber).padStart(2, '0')}</p> */}
+            {/* <h1 className="text-[20px] lg:text-[32px] font-semibold text-black">[W{String(weekNumber).padStart(2, '0')}] {detailData?.subTitle}</h1> */}
         </header>
 
         {/* 이미지 */}

@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import logoName from '../../img/signup/logo-name.png'
+import logoName from '../../img/signup/logo-name1.svg'
 import { sendEmailVerificationCode, signup, verifyEmail } from '../../api/signup/auth'
 import { ApiError } from '../../api/instance'
 
@@ -66,9 +66,9 @@ function Signup() {
   }
 
   return (
-    <main className="flex min-h-[calc(100svh-57px)] items-center justify-center bg-white px-4 py-12">
-      <div className="w-full max-w-[500px] rounded-3xl border border-gray-9 bg-white px-[30px] pt-[63px] pb-10 shadow-card">
-        <div className="mb-[59px] flex items-center justify-center gap-2">
+    <main className="flex min-h-[calc(100svh-57px)] items-center justify-center bg-white px-4 py-8 md:py-12">
+      <div className="w-full max-w-[500px] rounded-3xl border border-gray-9 bg-white px-6 pt-10 pb-8 shadow-card md:px-[30px] md:pt-[63px] md:pb-10">
+        <div className="mb-8 flex items-center justify-center gap-2 md:mb-[59px]">
           <img src="/logo_1.png" alt="" className="h-8 w-8" />
           <img src={logoName} alt="LIKELION UNIV SSWU" className="h-[14.48px] w-[224.5px]" />
         </div>

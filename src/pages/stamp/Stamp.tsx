@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Banner from "../../components/Banner";
+import EmptyState from "../../components/EmptyState";
 import stamp_nextbtn from "../../img/stamp/stamp_next.svg";
 
 import StampModal from "./StampModal";
@@ -331,19 +332,7 @@ export default function Stamp() {
 
             {!missionLoading &&
               missionError && (
-                <div
-                  className="
-                    py-[100px]
-                    text-center
-                    text-[22px]
-                    text-[#808386]
-
-                    max-[393px]:py-[60px]
-                    max-[393px]:text-[13px]
-                  "
-                >
-                  {missionError}
-                </div>
+                <EmptyState message={missionError} />
               )}
 
             {/* 미션 없음 */}
@@ -351,19 +340,7 @@ export default function Stamp() {
             {!missionLoading &&
               !missionError &&
               missions.length === 0 && (
-                <div
-                  className="
-                    py-[100px]
-                    text-center
-                    text-[22px]
-                    text-[#808386]
-
-                    max-[393px]:py-[60px]
-                    max-[393px]:text-[13px]
-                  "
-                >
-                  스탬프 미션을 불러오지 못했습니다. 
-                </div>
+                <EmptyState message="등록된 스탬프 미션이 없습니다." />
               )}
 
             {/* ======================================
@@ -622,19 +599,7 @@ max-[393px]:w-full
 
             {!myStampLoading &&
               myStampError && (
-                <div
-                  className="
-                    py-[100px]
-                    text-center
-                    text-[22px]
-                    text-[#808386]
-
-                    max-[393px]:py-[60px]
-                    max-[393px]:text-[13px]
-                  "
-                >
-                  {myStampError}
-                </div>
+                <EmptyState message={myStampError} />
               )}
 
             {!myStampLoading &&

@@ -10,6 +10,7 @@ import type { Session as SessionItem } from '../../types/session/session'
 
 // components
 import Banner from '../../components/Banner'
+import EmptyState from '../../components/EmptyState'
 import ToggleGroup from '../../components/ToggleGroup'
 import SessionFolder from '../../components/session/SessionFolder'
 
@@ -61,7 +62,7 @@ function Session() {
   return (
     <div className="flex flex-col">
       <Banner page="Session" />
-      <div className="flex flex-col items-center px-6 lg:px-30 gap-10 rounded-t-[25px] bg-white -mt-6 relative">
+      <div className="flex flex-col items-center px-6 xl:px-[195px] gap-10 rounded-t-[25px] bg-white -mt-6 relative">
 
         {/* 모바일: 트랙 드롭다운 + 기수 드롭다운 */}
         <div className='lg:hidden flex w-full gap-3 mt-12'>
@@ -114,7 +115,7 @@ function Session() {
         </div>
 
         {/* 데스크탑: ToggleGroup + 기수 드롭다운 */}
-        <div className='hidden lg:flex w-full justify-between mt-12'>
+        <div className='hidden lg:flex items-center w-full justify-between mt-9'>
           <ToggleGroup options={parts} value={track} onChange={setTrack} />
           <div ref={genDesktopRef} className="relative self-end">
             <button
@@ -141,15 +142,12 @@ function Session() {
           </div>
         </div>
         
-        {sessionData.length === 0 && (
-          <div className="flex min-h-[300px] w-full items-start justify-center pt-[20px]">
-            <p className="text-center text-[34px] font-semibold leading-[50px] text-black">조회된 세션이 없습니다.</p>
-          </div>
-        )}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-10 pb-12">
+        {sessionData.length === 0 && <EmptyState message="조회된 세션이 없습니다." />}
+        <div className="grid grid-cols-2 xl:grid-cols-3 min-[1440px]:grid-cols-4 gap-4 xl:gap-10 pb-5 lg:pb-12">
           {sessionData.map((item) => (
             <SessionFolder
               key={item.sessionId}
+              part={partMap[track]}
               week={item.weekNumber}
               title={item.title}
               onClick={() => navigate(`/session/${item.weekNumber}?term=${parseInt(generation)}&part=${partMap[track]}`, { state: { sessions: sessionData } })}

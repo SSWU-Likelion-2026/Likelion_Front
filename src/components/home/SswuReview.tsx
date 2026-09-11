@@ -46,6 +46,13 @@ const REVIEWS_PER_PART: Record<PartKey, Review[]> = {
   FE: [
     {
       cohort: '13기 FE',
+      name: '김성연',
+      quote: '" 성멋 짱 "',
+      description:
+        '멋사를 통해 첫 프론트엔드 개발을 배울 수 있어 너무 다행이였다고 생각하곤 합니다! 기초부터 차근 차근 배울 수 있었고, 그만큼 힘들기도 했지만 멋사 1년을 통해 크게 성장할 수 있었던거 같아요.',
+    },
+    {
+      cohort: '13기 FE',
       name: '정지은',
       quote: '“ 성신 멋사 화이팅~~!! ”',
       description:

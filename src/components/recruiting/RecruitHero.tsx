@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Modal from '../Modal'
+import { ApiError } from '../../api/instance'
+import { registerAlert } from '../../api/recruiting/recruit'
 import homeBanner from '../../img/recruiting/home_banner.png'
 import applyIcon from '../../img/recruiting/apply.svg'
 
@@ -15,13 +17,24 @@ type Props = {
 export default function RecruitHero({ open, period }: Props) {
   const [email, setEmail] = useState('')
   const [done, setDone] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleNotify = () => {
-    if (!email.trim()) return
-    // TODO: 모집 알림 신청 API 연동
-    console.log('모집 알림 신청', email)
-    setEmail('')
-    setDone(true)
+  const handleNotify = async () => {
+    if (!email.trim() || submitting) return
+    setSubmitting(true)
+    setError(null)
+    try {
+      await registerAlert(email.trim())
+      setEmail('')
+      setDone(true)
+    } catch (err) {
+      setError(
+        err instanceof ApiError ? err.message : '알림 신청에 실패했어요.',
+      )
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -68,16 +81,23 @@ export default function RecruitHero({ open, period }: Props) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleNotify()}
                 placeholder="이메일 주소를 입력해주세요"
                 className="h-[94px] flex-1 rounded-[20px] border border-transparent px-6 text-[22px] font-medium text-[#B8B9BD] shadow-card outline-none placeholder:text-gray-5 [background:linear-gradient(#fff,#fff)_padding-box,linear-gradient(135deg,#7D4BF8,#B0E7D5)_border-box]"
               />
               <button
                 onClick={handleNotify}
-                className="h-[94px] w-[208px] shrink-0 rounded-[20px] bg-primary-100 text-[22px] font-semibold text-white transition-opacity hover:opacity-90 cursor-pointer"
+                disabled={submitting}
+                className="h-[94px] w-[208px] shrink-0 rounded-[20px] bg-primary-100 text-[22px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
               >
-                알림 신청
+                {submitting ? '신청 중…' : '알림 신청'}
               </button>
             </div>
+            {error && (
+              <p className="text-[15px] text-red-500" role="alert">
+                {error}
+              </p>
+            )}
           </>
         )}
       </div>

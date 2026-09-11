@@ -209,11 +209,11 @@ export default function Stamp() {
           pt-[65px]
           pb-[80px]
 
-          max-[393px]:-mt-[18px]
-          max-[393px]:rounded-t-[20px]
-          max-[393px]:px-6
-          max-[393px]:pt-[38px]
-          max-[393px]:pb-[40px]
+          max-[1014px]:-mt-[18px]
+          max-[1014px]:rounded-t-[20px]
+          max-[1014px]:px-6
+          max-[1014px]:pt-[38px]
+          max-[1014px]:pb-[40px]
         "
       >
         {/* ==========================================
@@ -226,12 +226,12 @@ export default function Stamp() {
     mb-[53px]
     ml-[3px]
 
-    max-[393px]:mb-[42px]
-    max-[393px]:ml-0
+    max-[1014px]:mb-[42px]
+    max-[1014px]:ml-0
   "
         >
           {/* 데스크톱: 공통 ToggleGroup */}
-          <div className="max-[393px]:hidden">
+          <div className="max-[1014px]:hidden">
             <ToggleGroup
               options={[
                 "스탬프 미션",
@@ -253,7 +253,7 @@ export default function Stamp() {
           </div>
 
           {/* 모바일: 기존 디자인 유지 */}
-          <div className="hidden gap-[8px] max-[393px]:flex">
+          <div className="hidden gap-[8px] max-[1014px]:flex">
             <button
               type="button"
               onClick={() =>
@@ -320,8 +320,8 @@ export default function Stamp() {
                   text-[20px]
                   text-[#808386]
 
-                  max-[393px]:py-[60px]
-                  max-[393px]:text-[13px]
+                  max-[1014px]:py-[60px]
+                  max-[1014px]:text-[13px]
                 "
               >
                 스탬프 미션을 불러오는 중입니다.
@@ -356,11 +356,11 @@ export default function Stamp() {
                     grid
                     grid-cols-1
                     gap-[24px]
-                    md:grid-cols-2
-                    xl:grid-cols-3
+                    min-[1015px]:grid-cols-2
+                    min-[1280px]:grid-cols-3
 
-                    max-[393px]:grid-cols-1
-                    max-[393px]:gap-[15px]
+                    max-[1014px]:grid-cols-1
+                    max-[1014px]:gap-[15px]
                   "
                 >
                   {missions.map(
@@ -408,35 +408,35 @@ export default function Stamp() {
                           hover:border-[#956CF6]
                           hover:bg-[#956CF6]
 
-                          sm:px-8
-                          sm:py-8
+                          min-[1015px]:px-8
+                          min-[1015px]:py-8
 
-                          lg:px-[40px]
-                          lg:py-[36px]
+                          min-[1015px]:px-[40px]
+                          min-[1015px]:py-[36px]
 
                           xl:px-[52px]
                           xl:py-[40px]
 
-                          max-[393px]:h-[124px]
-max-[393px]:min-h-[124px]
-max-[393px]:w-full
+                          max-[1014px]:h-[124px]
+max-[1014px]:min-h-[124px]
+max-[1014px]:w-full
 
-                          max-[393px]:flex-row
-                          max-[393px]:items-center
-                          max-[393px]:justify-between
+                          max-[1014px]:flex-row
+                          max-[1014px]:items-center
+                          max-[1014px]:justify-between
 
-                          max-[393px]:rounded-[20px]
+                          max-[1014px]:rounded-[20px]
 
-                          max-[393px]:px-[18px]
-                          max-[393px]:py-[16px]
+                          max-[1014px]:px-[18px]
+                          max-[1014px]:py-[16px]
 
-                          max-[393px]:hover:border-[#7C4DFF]
-                          max-[393px]:hover:bg-[#7C4DFF]
+                          max-[1014px]:hover:border-[#7C4DFF]
+                          max-[1014px]:hover:bg-[#7C4DFF]
 
-                          max-[393px]:active:border-[#7C4DFF]
-                          max-[393px]:active:bg-[#7C4DFF]
+                          max-[1014px]:active:border-[#7C4DFF]
+                          max-[1014px]:active:bg-[#7C4DFF]
 
-                          max-[393px]:shadow-[0_2px_7px_rgba(0,0,0,0.06)]
+                          max-[1014px]:shadow-[0_2px_7px_rgba(0,0,0,0.06)]
                         "
                       >
                         {/* 왼쪽 내용 */}
@@ -445,11 +445,11 @@ max-[393px]:w-full
                           className="
                             min-w-0
 
-                            max-[393px]:flex
-                            max-[393px]:h-full
-                            max-[393px]:flex-1
-                            max-[393px]:flex-col
-                            max-[393px]:justify-center
+                            max-[1014px]:flex
+                            max-[1014px]:h-full
+                            max-[1014px]:flex-1
+                            max-[1014px]:flex-col
+                            max-[1014px]:justify-center
                           "
                         >
                           {/* 미션 제목 */}
@@ -468,12 +468,12 @@ max-[393px]:w-full
 
                               group-hover:text-white
 
-                              sm:text-[24px]
-                              lg:text-[28px]
+                              min-[1015px]:text-[24px]
+                              min-[1015px]:text-[28px]
 
-                              max-[393px]:text-[16px]
-                              max-[393px]:font-medium
-                              max-[393px]:leading-[19px]
+                              max-[1014px]:text-[16px]
+                              max-[1014px]:font-medium
+                              max-[1014px]:leading-[19px]
 
                               group-active:text-white
                             "
@@ -495,12 +495,12 @@ max-[393px]:w-full
 
                               group-hover:text-white
 
-                              sm:text-[20px]
-                              lg:text-[24px]
+                              min-[1015px]:text-[20px]
+                              min-[1015px]:text-[24px]
 
-                              max-[393px]:mt-[8px]
-                              max-[393px]:text-[14px]
-                              max-[393px]:leading-[14px]
+                              max-[1014px]:mt-[8px]
+                              max-[1014px]:text-[14px]
+                              max-[1014px]:leading-[14px]
 
                               group-active:text-white
                             "
@@ -526,8 +526,8 @@ max-[393px]:w-full
 
                                 group-hover:text-white
 
-                                max-[393px]:mt-[10px]
-                                max-[393px]:text-[12px]
+                                max-[1014px]:mt-[10px]
+                                max-[1014px]:text-[12px]
 
                                 group-active:text-white
                               "
@@ -545,11 +545,11 @@ max-[393px]:w-full
                             flex
                             justify-end
 
-                            max-[393px]:ml-[12px]
-                            max-[393px]:mt-0
-                            max-[393px]:shrink-0
-                            max-[393px]:items-center
-                            max-[393px]:justify-center
+                            max-[1014px]:ml-[12px]
+                            max-[1014px]:mt-0
+                            max-[1014px]:shrink-0
+                            max-[1014px]:items-center
+                            max-[1014px]:justify-center
                           "
                         >
                           <img
@@ -562,8 +562,8 @@ max-[393px]:w-full
                               w-[22px]
                               shrink-0
 
-                              max-[393px]:h-[13px]
-                              max-[393px]:w-[9px]
+                              max-[1014px]:h-[13px]
+                              max-[1014px]:w-[9px]
                             "
                           />
                         </div>
@@ -589,8 +589,8 @@ max-[393px]:w-full
                   text-[20px]
                   text-[#808386]
 
-                  max-[393px]:py-[60px]
-                  max-[393px]:text-[13px]
+                  max-[1014px]:py-[60px]
+                  max-[1014px]:text-[13px]
                 "
               >
                 마이 스탬프를 불러오는 중입니다.

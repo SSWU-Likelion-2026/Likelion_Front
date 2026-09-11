@@ -734,14 +734,14 @@ export default function ProjectMaking() {
     };
 
     return (
-        <section className="min-h-screen w-full bg-white px-[120px]">
-            <div className="mx-auto w-full px-[24px] pb-[24px] pt-[26px] md:px-12 md:py-8">
+        <section className="min-h-screen w-full bg-white min-[1015px]:px-[120px]">
+            <div className="mx-auto w-full px-[24px] pb-[24px] pt-[26px] min-[1015px]:px-12 min-[1015px]:py-8">
                 {/* 헤더 */}
-                <div className="pm_header mb-[30px] md:mb-[54px]">
+                <div className="pm_header mb-[30px] min-[1015px]:mb-[54px]">
                     <button
                         type="button"
                         onClick={() => navigate(-1)}
-                        className="mb-[40px] hidden h-6 w-6 items-center justify-center md:flex"
+                        className="mb-[40px] hidden h-6 w-6 items-center justify-center min-[1015px]:flex"
                     >
                         <img
                             src={backbtn}
@@ -750,31 +750,31 @@ export default function ProjectMaking() {
                         />
                     </button>
 
-                    <h1 className="text-[20px] font-semibold text-[#121212] md:text-[32px]">
+                    <h1 className="text-[20px] font-semibold text-[#121212] min-[1015px]:text-[32px]">
                         프로젝트 등록
                     </h1>
                 </div>
 
-                <div className="pm flex flex-col gap-[32px] md:gap-[45px]">
+                <div className="pm flex flex-col gap-[32px] min-[1015px]:gap-[45px]">
                     {/* =========================
                         STEP 1 - 기본 정보
                     ========================== */}
                     <div
-                        className={`${mobileStep === 1 ? "contents" : "hidden"} md:contents`}
+                        className={`${mobileStep === 1 ? "contents" : "hidden"} min-[1015px]:contents`}
                     >
                         {/* 기수 선택 */}
                         <div>
-                            <h2 className="mb-[16px] text-[18px] font-semibold text-[#121212] md:mb-[30px] md:text-[28px]">
+                            <h2 className="mb-[16px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
                                 기수 선택
                             </h2>
 
-                            <div className="th flex gap-[10px] md:gap-[15px]">
+                            <div className="th flex gap-[10px] min-[1015px]:gap-[15px]">
                                 {generations.map((item) => (
                                     <button
                                         key={item}
                                         type="button"
                                         onClick={() => setGeneration(item)}
-                                        className={`num h-[42px] min-w-[60px] rounded-[8px] border px-[14px] text-[16px] font-semibold transition-colors md:h-[79px] md:w-[118px] md:rounded-[15px] md:px-0 md:text-[24px] ${generation === item
+                                        className={`num h-[42px] min-w-[60px] rounded-[8px] border px-[14px] text-[16px] font-semibold transition-colors min-[1015px]:h-[79px] min-[1015px]:w-[118px] min-[1015px]:rounded-[15px] min-[1015px]:px-0 min-[1015px]:text-[24px] ${generation === item
                                             ? "border-[#8557FF] bg-[#8557FF] text-white"
                                             : "border-[#D0D6DD] bg-white text-[#121212]"
                                             }`}
@@ -787,7 +787,7 @@ export default function ProjectMaking() {
 
                         {/* 프로젝트 명 */}
                         <div className="pm_name">
-                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] md:mb-[30px] md:text-[28px]">
+                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
                                 프로젝트 명
                             </h2>
 
@@ -796,13 +796,13 @@ export default function ProjectMaking() {
                                 value={projectName}
                                 onChange={(e) => setProjectName(e.target.value)}
                                 placeholder="프로젝트 명을 입력해주세요."
-                                className="h-[57px] w-full rounded-[10px] border border-[#D0D6DD] px-[16px] text-[14px] font-medium text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[94px] md:rounded-[15px] md:px-[25px] md:text-[20px]"
+                                className="h-[57px] w-full rounded-[10px] border border-[#D0D6DD] px-[16px] text-[14px] font-medium text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[94px] min-[1015px]:rounded-[15px] min-[1015px]:px-[25px] min-[1015px]:text-[20px]"
                             />
                         </div>
 
                         {/* 프로젝트 슬로건 */}
                         <div className="pm_slogan">
-                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] md:mb-[30px] md:text-[28px]">
+                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
                                 프로젝트 슬로건
                             </h2>
 
@@ -811,23 +811,23 @@ export default function ProjectMaking() {
                                 value={slogan}
                                 onChange={(e) => setSlogan(e.target.value)}
                                 placeholder="프로젝트의 슬로건 (한 줄 설명)을 입력해주세요."
-                                className="h-[57px] w-full rounded-[10px] border border-[#D0D6DD] px-[16px] text-[14px] text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[94px] md:rounded-[15px] md:px-[25px] md:text-[20px]"
+                                className="h-[57px] w-full rounded-[10px] border border-[#D0D6DD] px-[16px] text-[14px] text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[94px] min-[1015px]:rounded-[15px] min-[1015px]:px-[25px] min-[1015px]:text-[20px]"
                             />
                         </div>
 
                         {/* 프로젝트 기간 */}
                         <div>
-                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] md:mb-[30px] md:text-[28px]">
+                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
                                 프로젝트 기간
                             </h2>
 
-                            <div className="flex flex-col gap-[10px] md:flex-row md:items-center">
+                            <div className="flex flex-col gap-[10px] min-[1015px]:flex-row min-[1015px]:items-center">
                                 {/* 해커톤 */}
-                                <div className="relative w-full md:w-[185px]">
+                                <div className="relative w-full min-[1015px]:w-[185px]">
                                     <button
                                         type="button"
                                         onClick={() => setEventOpen((prev) => !prev)}
-                                        className="flex h-[56px] w-full items-center justify-between rounded-[10px] border border-[#D0D6DD] bg-white px-[16px] text-[14px] font-semibold text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[78px] md:rounded-[15px] md:px-[20px] md:text-[20px]"
+                                        className="flex h-[56px] w-full items-center justify-between rounded-[10px] border border-[#D0D6DD] bg-white px-[16px] text-[14px] font-semibold text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[78px] min-[1015px]:rounded-[15px] min-[1015px]:px-[20px] min-[1015px]:text-[20px]"
                                     >
                                         <span>
                                             {eventType
@@ -841,13 +841,13 @@ export default function ProjectMaking() {
                                         <img
                                             src={underbtn}
                                             alt=""
-                                            className={`h-[12px] w-[12px] transition-transform md:h-[16px] md:w-[14px] ${eventOpen ? "rotate-180" : ""
+                                            className={`h-[12px] w-[12px] transition-transform min-[1015px]:h-[16px] min-[1015px]:w-[14px] ${eventOpen ? "rotate-180" : ""
                                                 }`}
                                         />
                                     </button>
 
                                     {eventOpen && (
-                                        <div className="absolute left-0 top-[62px] z-20 w-full overflow-hidden rounded-[10px] border border-[#D0D6DD] bg-white font-semibold shadow-sm md:top-[90px] md:rounded-[15px]">
+                                        <div className="absolute left-0 top-[62px] z-20 w-full overflow-hidden rounded-[10px] border border-[#D0D6DD] bg-white font-semibold shadow-sm min-[1015px]:top-[90px] min-[1015px]:rounded-[15px]">
                                             {eventOptions.map((option) => (
                                                 <button
                                                     key={option.value}
@@ -856,7 +856,7 @@ export default function ProjectMaking() {
                                                         setEventType(option.value);
                                                         setEventOpen(false);
                                                     }}
-                                                    className="block h-[42px] w-full px-[16px] text-left text-[14px] text-[#121212] hover:bg-[#F5F5F5] md:text-[20px]"
+                                                    className="block h-[42px] w-full px-[16px] text-left text-[14px] text-[#121212] hover:bg-[#F5F5F5] min-[1015px]:text-[20px]"
                                                 >
                                                     {option.label}
                                                 </button>
@@ -870,7 +870,7 @@ export default function ProjectMaking() {
                                         type="month"
                                         value={startDate}
                                         onChange={(e) => setStartDate(e.target.value)}
-                                        className="h-[56px] min-w-0 flex-1 rounded-[8px] border border-[#D0D6DD] px-[12px] text-[11px] text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[78px] md:w-[303px] md:flex-none md:rounded-[15px] md:px-[20px] md:text-[20px]"
+                                        className="h-[56px] min-w-0 flex-1 rounded-[8px] border border-[#D0D6DD] px-[12px] text-[11px] text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[78px] min-[1015px]:w-[303px] min-[1015px]:flex-none min-[1015px]:rounded-[15px] min-[1015px]:px-[20px] min-[1015px]:text-[20px]"
                                     />
 
                                     <span className="text-[#D0D6DD]">—</span>
@@ -879,7 +879,7 @@ export default function ProjectMaking() {
                                         type="month"
                                         value={endDate}
                                         onChange={(e) => setEndDate(e.target.value)}
-                                        className="h-[56px] min-w-0 flex-1 rounded-[8px] border border-[#D0D6DD] px-[12px] text-[11px] text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[78px] md:w-[303px] md:flex-none md:rounded-[15px] md:px-[20px] md:text-[20px]"
+                                        className="h-[56px] min-w-0 flex-1 rounded-[8px] border border-[#D0D6DD] px-[12px] text-[11px] text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[78px] min-[1015px]:w-[303px] min-[1015px]:flex-none min-[1015px]:rounded-[15px] min-[1015px]:px-[20px] min-[1015px]:text-[20px]"
                                     />
                                 </div>
                             </div>
@@ -887,7 +887,7 @@ export default function ProjectMaking() {
 
                         {/* 프로젝트 설명 */}
                         <div>
-                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] md:mb-[30px] md:text-[28px]">
+                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
                                 프로젝트 설명
                             </h2>
 
@@ -895,7 +895,7 @@ export default function ProjectMaking() {
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="프로젝트에 대한 설명을 입력해주세요."
-                                className="h-[250px] w-full resize-none rounded-[10px] border border-[#D0D6DD] px-[16px] py-[18px] text-[14px] text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[434px] md:rounded-[15px] md:px-[25px] md:py-[35px] md:text-[24px]"
+                                className="h-[250px] w-full resize-none rounded-[10px] border border-[#D0D6DD] px-[16px] py-[18px] text-[14px] text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[434px] min-[1015px]:rounded-[15px] min-[1015px]:px-[25px] min-[1015px]:py-[35px] min-[1015px]:text-[24px]"
                             />
                         </div>
 
@@ -903,7 +903,7 @@ export default function ProjectMaking() {
                         <button
                             type="button"
                             onClick={() => moveMobileStep(2)}
-                            className="mt-[2px] h-[58px] w-full rounded-[10px] bg-[#8158F6] text-[16px] font-semibold text-white md:hidden"
+                            className="mt-[2px] h-[58px] w-full rounded-[10px] bg-[#8158F6] text-[16px] font-semibold text-white min-[1015px]:hidden"
                         >
                             다음
                         </button>
@@ -913,15 +913,15 @@ export default function ProjectMaking() {
                         STEP 2 - 팀원 / 이미지
                     ========================== */}
                     <div
-                        className={`${mobileStep === 2 ? "contents" : "hidden"} md:contents`}
+                        className={`${mobileStep === 2 ? "contents" : "hidden"} min-[1015px]:contents`}
                     >
                         {/* 프로젝트 팀원 */}
                         <div>
-                            <h2 className="mb-[8px] text-[18px] font-semibold text-[#121212] md:mb-[30px] md:text-[28px]">
+                            <h2 className="mb-[8px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
                                 프로젝트 팀원
                             </h2>
 
-                            <div className="grid grid-cols-1 gap-[26px] md:grid-cols-3 md:gap-[25px]">
+                            <div className="grid grid-cols-1 gap-[26px] min-[1015px]:grid-cols-3 min-[1015px]:gap-[25px]">
                                 <TeamMemberColumn
                                     title="기획/디자인"
                                     members={members.planning}
@@ -953,7 +953,7 @@ export default function ProjectMaking() {
 
                         {/* 프로젝트 로고 */}
                         <div className="logo">
-                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] md:mb-[30px] md:text-[28px]">
+                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
                                 프로젝트 로고
                             </h2>
 
@@ -965,9 +965,9 @@ export default function ProjectMaking() {
                                 onChange={(e) => handleLogo(e.target.files?.[0])}
                             />
 
-                            <div className="flex h-[142px] w-full items-center justify-center rounded-[8px] border border-dashed border-[#B8B9BD] bg-[#F3F4F6] md:h-[279px] md:rounded-[15px]">
+                            <div className="flex h-[142px] w-full items-center justify-center rounded-[8px] border border-dashed border-[#B8B9BD] bg-[#F3F4F6] min-[1015px]:h-[279px] min-[1015px]:rounded-[15px]">
                                 {logo ? (
-                                    <div className="relative h-full w-full overflow-hidden rounded-[8px] md:rounded-[15px]">
+                                    <div className="relative h-full w-full overflow-hidden rounded-[8px] min-[1015px]:rounded-[15px]">
                                         <img
                                             src={logo.url}
                                             alt="프로젝트 로고"
@@ -977,7 +977,7 @@ export default function ProjectMaking() {
                                         <button
                                             type="button"
                                             onClick={removeLogo}
-                                            className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#444] text-[16px] text-white md:right-3 md:top-3 md:h-8 md:w-8 md:text-[20px]"
+                                            className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#444] text-[16px] text-white min-[1015px]:right-3 min-[1015px]:top-3 min-[1015px]:h-8 min-[1015px]:w-8 min-[1015px]:text-[20px]"
                                         >
                                             ×
                                         </button>
@@ -987,17 +987,17 @@ export default function ProjectMaking() {
                                         <button
                                             type="button"
                                             onClick={() => logoInput.current?.click()}
-                                            className="mb-[10px] flex items-center justify-center gap-[8px] rounded-[10px] bg-white px-[16px] py-[12px] text-[16px] font-medium text-[#121212] shadow-[0_4px_20px_rgba(135,104,244,0.15)] md:mb-[18px] md:rounded-[15px] md:px-[22px] md:py-[16px] md:text-[24px]"
+                                            className="mb-[10px] flex items-center justify-center gap-[8px] rounded-[10px] bg-white px-[16px] py-[12px] text-[16px] font-medium text-[#121212] shadow-[0_4px_20px_rgba(135,104,244,0.15)] min-[1015px]:mb-[18px] min-[1015px]:rounded-[15px] min-[1015px]:px-[22px] min-[1015px]:py-[16px] min-[1015px]:text-[24px]"
                                         >
                                             <img
                                                 src={downloadbtn}
                                                 alt=""
-                                                className="h-[18px] w-[18px] md:h-[24px] md:w-[24px]"
+                                                className="h-[18px] w-[18px] min-[1015px]:h-[24px] min-[1015px]:w-[24px]"
                                             />
                                             이미지 업로드
                                         </button>
 
-                                        <p className="text-[14px] text-[#808386] md:text-[24px]">
+                                        <p className="text-[14px] text-[#808386] min-[1015px]:text-[24px]">
                                             JPG, PNG (최대 10MB)
                                         </p>
                                     </div>
@@ -1007,7 +1007,7 @@ export default function ProjectMaking() {
 
                         {/* 프로젝트 장표 */}
                         <div className="banner">
-                            <h2 className="my-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] md:mb-[30px] md:text-[28px]">
+                            <h2 className="my-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
                                 프로젝트 장표
                             </h2>
 
@@ -1020,22 +1020,22 @@ export default function ProjectMaking() {
                                 onChange={(e) => handleBanner(e.target.files)}
                             />
 
-                            <div className="flex h-[142px] w-full items-center justify-center rounded-[8px] border border-dashed border-[#B8B9BD] bg-[#F3F4F6] md:h-[346px] md:rounded-[15px]">
+                            <div className="flex h-[142px] w-full items-center justify-center rounded-[8px] border border-dashed border-[#B8B9BD] bg-[#F3F4F6] min-[1015px]:h-[346px] min-[1015px]:rounded-[15px]">
                                 <div className="flex flex-col items-center">
                                     <button
                                         type="button"
                                         onClick={() => bannerInput.current?.click()}
-                                        className="mb-[10px] flex items-center justify-center gap-[8px] rounded-[10px] bg-white px-[16px] py-[12px] text-[16px] font-medium text-[#121212] shadow-[0_4px_20px_rgba(135,104,244,0.15)] md:mb-[18px] md:rounded-[15px] md:px-[22px] md:py-[16px] md:text-[24px]"
+                                        className="mb-[10px] flex items-center justify-center gap-[8px] rounded-[10px] bg-white px-[16px] py-[12px] text-[16px] font-medium text-[#121212] shadow-[0_4px_20px_rgba(135,104,244,0.15)] min-[1015px]:mb-[18px] min-[1015px]:rounded-[15px] min-[1015px]:px-[22px] min-[1015px]:py-[16px] min-[1015px]:text-[24px]"
                                     >
                                         <img
                                             src={downloadbtn}
                                             alt=""
-                                            className="h-[18px] w-[18px] md:h-[24px] md:w-[24px]"
+                                            className="h-[18px] w-[18px] min-[1015px]:h-[24px] min-[1015px]:w-[24px]"
                                         />
                                         이미지 업로드
                                     </button>
 
-                                    <p className="text-[14px] text-[#808386] md:text-[24px]">
+                                    <p className="text-[14px] text-[#808386] min-[1015px]:text-[24px]">
                                         JPG, PNG (최대 10MB)
                                     </p>
 
@@ -1043,11 +1043,11 @@ export default function ProjectMaking() {
                             </div>
 
                             {banners.length > 0 && (
-                                <div className="mt-[14px] flex gap-[10px] overflow-x-auto pb-2 md:mt-[25px] md:gap-[16px]">
+                                <div className="mt-[14px] flex gap-[10px] overflow-x-auto pb-2 min-[1015px]:mt-[25px] min-[1015px]:gap-[16px]">
                                     {banners.map((image, index) => (
                                         <div
                                             key={`${image.file.name}-${index}`}
-                                            className="relative h-[100px] min-w-[100px] overflow-hidden rounded-[6px] bg-[#ECECEF] md:h-[180px] md:min-w-[180px] md:rounded-[15px]"
+                                            className="relative h-[100px] min-w-[100px] overflow-hidden rounded-[6px] bg-[#ECECEF] min-[1015px]:h-[180px] min-[1015px]:min-w-[180px] min-[1015px]:rounded-[15px]"
                                         >
                                             <img
                                                 src={image.url}
@@ -1058,7 +1058,7 @@ export default function ProjectMaking() {
                                             <button
                                                 type="button"
                                                 onClick={() => removeBanner(index)}
-                                                className="absolute right-[5px] top-[5px] flex h-[18px] w-[18px] items-center justify-center md:right-[8px] md:top-[8px] md:h-[24px] md:w-[24px]"
+                                                className="absolute right-[5px] top-[5px] flex h-[18px] w-[18px] items-center justify-center min-[1015px]:right-[8px] min-[1015px]:top-[8px] min-[1015px]:h-[24px] min-[1015px]:w-[24px]"
                                             >
                                                 <img
                                                     src={deletebtn}
@@ -1073,7 +1073,7 @@ export default function ProjectMaking() {
                                         <button
                                             type="button"
                                             onClick={() => bannerInput.current?.click()}
-                                            className="h-[100px] min-w-[100px] rounded-[10px] bg-[#F3F4F6] text-[24px] text-[#808386] md:hidden"
+                                            className="h-[100px] min-w-[100px] rounded-[10px] bg-[#F3F4F6] text-[24px] text-[#808386] min-[1015px]:hidden"
                                         >
                                             +
                                         </button>
@@ -1083,7 +1083,7 @@ export default function ProjectMaking() {
                         </div>
 
                         {/* 모바일 이전 / 다음 */}
-                        <div className="grid grid-cols-[1fr_2fr] gap-[12px] md:hidden">
+                        <div className="grid grid-cols-[1fr_2fr] gap-[12px] min-[1015px]:hidden">
                             <button
                                 type="button"
                                 onClick={() => moveMobileStep(1)}
@@ -1106,14 +1106,14 @@ export default function ProjectMaking() {
                         STEP 3 - 기술 스택
                     ========================== */}
                     <div
-                        className={`${mobileStep === 3 ? "contents" : "hidden"} md:contents`}
+                        className={`${mobileStep === 3 ? "contents" : "hidden"} min-[1015px]:contents`}
                     >
                         <div className="stack">
-                            <h2 className="mb-[28px] text-[18px] font-semibold text-[#121212] md:mb-[30px] md:text-[28px]">
+                            <h2 className="mb-[28px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
                                 기술 스택
                             </h2>
 
-                            <div className="flex flex-col gap-[22px] md:gap-[26px]">
+                            <div className="flex flex-col gap-[22px] min-[1015px]:gap-[26px]">
                                 {[
                                     ["기획", "PLANNING"],
                                     ["디자인", "DESIGN"],
@@ -1128,13 +1128,13 @@ export default function ProjectMaking() {
                                     return (
                                         <div
                                             key={category}
-                                            className="block md:grid md:grid-cols-[90px_1fr] md:items-start md:gap-x-[50px]"
+                                            className="block min-[1015px]:grid min-[1015px]:grid-cols-[90px_1fr] min-[1015px]:items-start min-[1015px]:gap-x-[50px]"
                                         >
-                                            <p className="mb-[9px] text-[16px] font-medium text-[#808386] md:mb-0 md:pt-[7px] md:text-[20px]">
+                                            <p className="mb-[9px] text-[16px] font-medium text-[#808386] min-[1015px]:mb-0 min-[1015px]:pt-[7px] min-[1015px]:text-[20px]">
                                                 {label}
                                             </p>
 
-                                            <div className="flex flex-wrap gap-[11px] md:gap-[8px]">
+                                            <div className="flex flex-wrap gap-[11px] min-[1015px]:gap-[8px]">
                                                 {stacks.map((stack) => {
                                                     const selected =
                                                         selectedStackIds.includes(stack.id);
@@ -1146,7 +1146,7 @@ export default function ProjectMaking() {
                                                             onClick={() =>
                                                                 toggleStack(stack.id)
                                                             }
-                                                            className={`rounded-[5px] border px-[10px] py-[7px] text-[14px] font-medium transition-colors md:rounded-[5px] md:px-[10px] md:py-[6px] md:text-[20px] ${selected
+                                                            className={`rounded-[5px] border px-[10px] py-[7px] text-[14px] font-medium transition-colors min-[1015px]:rounded-[5px] min-[1015px]:px-[10px] min-[1015px]:py-[6px] min-[1015px]:text-[20px] ${selected
                                                                 ? "border-[#A789FF] bg-[#F2EDFF] text-[#7950F2]"
                                                                 : "border-[#DBDEE2] bg-[#FAFAFA] text-[#121212]"
                                                                 }`}
@@ -1167,14 +1167,14 @@ export default function ProjectMaking() {
                             type="button"
                             onClick={handleSubmit}
                             disabled={submitting}
-                            className="mt-[6px] h-[70px] w-full rounded-[10px] bg-[#8158F6] text-[20px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50 md:hidden"
+                            className="mt-[6px] h-[70px] w-full rounded-[10px] bg-[#8158F6] text-[20px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50 min-[1015px]:hidden"
                         >
                             {submitting ? "등록 중..." : "등록하기"}
                         </button>
                     </div>
 
                     {/* 데스크톱 등록 버튼 */}
-                    <div className="hidden justify-end pb-[30px] pt-[10px] md:flex">
+                    <div className="hidden justify-end pb-[30px] pt-[10px] min-[1015px]:flex">
                         <button
                             type="button"
                             onClick={handleSubmit}
@@ -1212,7 +1212,7 @@ function TeamMemberColumn({
 }: TeamMemberColumnProps) {
     return (
         <div>
-            <p className="mb-[12px] text-[16px] font-medium text-[#808386] md:mb-[24px] md:text-[20px] md:text-[#121212]">
+            <p className="mb-[12px] text-[16px] font-medium text-[#808386] min-[1015px]:mb-[24px] min-[1015px]:text-[20px] min-[1015px]:text-[#121212]">
                 {title}
             </p>
 
@@ -1246,11 +1246,11 @@ function TeamMemberColumn({
                 focus:border-[#865BFF]
                 focus:shadow-[0_0_15px_rgba(135,104,244,0.1)]
 
-                md:mb-[7px]
-                md:h-[92px]
-                md:rounded-[15px]
-                md:px-[20px]
-                md:text-[20px]
+                min-[1015px]:mb-[7px]
+                min-[1015px]:h-[92px]
+                min-[1015px]:rounded-[15px]
+                min-[1015px]:px-[20px]
+                min-[1015px]:text-[20px]
             "
                     />
                 ))}
@@ -1258,12 +1258,12 @@ function TeamMemberColumn({
                 <button
                     type="button"
                     onClick={onAdd}
-                    className="mt-[2px] flex items-center justify-center gap-[7px] text-[16px] font-medium text-[#6C6E72] md:justify-start md:text-[20px]"
+                    className="mt-[2px] flex items-center justify-center gap-[7px] text-[16px] font-medium text-[#6C6E72] min-[1015px]:justify-start min-[1015px]:text-[20px]"
                 >
                     <img
                         src={plus}
                         alt=""
-                        className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]"
+                        className="h-[20px] w-[20px] min-[1015px]:h-[22px] min-[1015px]:w-[22px]"
                     />
 
                     새로운 멤버 추가하기

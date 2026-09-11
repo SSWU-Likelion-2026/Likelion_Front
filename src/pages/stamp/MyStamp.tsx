@@ -66,7 +66,7 @@ export default function MyStamp({
           items-center
           justify-between
 
-          max-[393px]:w-full
+          max-[1014px]:w-full
         "
       >
         <div
@@ -75,7 +75,7 @@ export default function MyStamp({
             items-center
             gap-[24px]
 
-            max-[393px]:gap-[14px]
+            max-[1014px]:gap-[14px]
           "
         >
           {/* 프로필 이미지 */}
@@ -88,8 +88,8 @@ export default function MyStamp({
               h-[180px]
               w-[180px]
 
-              max-[393px]:h-[87px]
-              max-[393px]:w-[87px]
+              max-[1014px]:h-[87px]
+              max-[1014px]:w-[87px]
             "
           />
 
@@ -102,7 +102,7 @@ export default function MyStamp({
                 font-semibold
                 text-[#121212]
 
-                max-[393px]:text-[20px]
+                max-[1014px]:text-[20px]
               "
             >
               {userName}
@@ -116,8 +116,8 @@ export default function MyStamp({
                 font-medium
                 text-[#121212]
 
-                max-[393px]:mt-[6px]
-                max-[393px]:text-[16px]
+                max-[1014px]:mt-[6px]
+                max-[1014px]:text-[16px]
               "
             >
               총 획득 스탬프
@@ -131,12 +131,13 @@ export default function MyStamp({
           className="
             myStampCount
             mr-[40px]
+            mt-[38px]
             text-[50px]
             font-semibold
             text-[#121212]
-        mt-[38px]
-            max-[393px]:mr-0
-            max-[393px]:text-[20px]
+
+            max-[1014px]:mr-0
+            max-[1014px]:text-[20px]
           "
         >
           {totalStampCount}개
@@ -164,12 +165,9 @@ export default function MyStamp({
           px-[20px]
           py-[40px]
 
-          sm:grid-cols-2
-          sm:px-[30px]
-
-          md:grid-cols-3
-          md:gap-x-[30px]
-          md:px-[40px]
+          min-[1015px]:grid-cols-3
+          min-[1015px]:gap-x-[30px]
+          min-[1015px]:px-[40px]
 
           xl:grid-cols-4
           xl:gap-x-[50px]
@@ -178,13 +176,13 @@ export default function MyStamp({
           xl:px-[55px]
           xl:py-[48px]
 
-          max-[393px]:mt-[24px]
-          max-[393px]:grid-cols-3
-          max-[393px]:gap-x-[20px]
-          max-[393px]:gap-y-[24px]
-          max-[393px]:rounded-[30px]
-          max-[393px]:px-[14px]
-          max-[393px]:py-[22px]
+          max-[1014px]:mt-[24px]
+          max-[1014px]:grid-cols-3
+          max-[1014px]:gap-x-[20px]
+          max-[1014px]:gap-y-[24px]
+          max-[1014px]:rounded-[30px]
+          max-[1014px]:px-[14px]
+          max-[1014px]:py-[22px]
         "
       >
         {stampNumbers.map((numberImage, index) => {
@@ -198,16 +196,16 @@ export default function MyStamp({
             <div
               key={stampNumber}
               className="
-  stampItem
-  flex
-  w-full
-  min-w-0
-  flex-col
-  items-center
-  justify-start
+                stampItem
+                flex
+                w-full
+                min-w-0
+                flex-col
+                items-center
+                justify-start
 
-  max-[393px]:min-h-[112px]
-"
+                max-[1014px]:min-h-[112px]
+              "
             >
               {/* ==================================
                   숫자 / 인증 도장
@@ -221,8 +219,8 @@ export default function MyStamp({
                   w-[176px]
                   shrink-0
 
-                  max-[393px]:h-[88px]
-                  max-[393px]:w-[88px]
+                  max-[1014px]:h-[88px]
+                  max-[1014px]:w-[88px]
                 "
               >
                 {/* 기본 숫자 */}
@@ -234,8 +232,8 @@ export default function MyStamp({
                     h-[176px]
                     w-[176px]
 
-                    max-[393px]:h-[88px]
-                    max-[393px]:w-[88px]
+                    max-[1014px]:h-[88px]
+                    max-[1014px]:w-[88px]
                   "
                 />
 
@@ -255,8 +253,8 @@ export default function MyStamp({
                       -translate-x-1/2
                       -translate-y-1/2
 
-                      max-[393px]:h-[70px]
-                      max-[393px]:w-[70px]
+                      max-[1014px]:h-[70px]
+                      max-[1014px]:w-[70px]
                     "
                   />
                 )}
@@ -268,23 +266,23 @@ export default function MyStamp({
 
               <div
                 className="
-    mt-[10px]
-    h-[24px]
+                  mt-[10px]
+                  h-[24px]
 
-    max-[393px]:mt-[6px]
-    max-[393px]:h-[18px]
-  "
+                  max-[1014px]:mt-[6px]
+                  max-[1014px]:h-[18px]
+                "
               >
                 {completed && (
                   <p
                     className="
-        stampDate
-        text-[20px]
-        font-medium
-        text-[#7C4DFF]
+                      stampDate
+                      text-[20px]
+                      font-medium
+                      text-[#7C4DFF]
 
-        max-[393px]:text-[14px]
-      "
+                      max-[1014px]:text-[14px]
+                    "
                   >
                     {formatDate(completed.date)}
                   </p>

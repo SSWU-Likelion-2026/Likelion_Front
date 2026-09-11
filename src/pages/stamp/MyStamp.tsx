@@ -55,34 +55,99 @@ export default function MyStamp({
   return (
     <div className="myStampPage w-full">
 
-      {/* 사용자 정보 */}
-      <div className="myStampProfile flex items-center justify-between">
-        <div className="flex items-center gap-[24px]">
+      {/* ======================================
+          사용자 정보
+      ====================================== */}
+
+      <div
+        className="
+          myStampProfile
+          flex
+          items-center
+          justify-between
+
+          max-[1014px]:w-full
+        "
+      >
+        <div
+          className="
+            flex
+            items-center
+            gap-[24px]
+
+            max-[1014px]:gap-[14px]
+          "
+        >
+          {/* 프로필 이미지 */}
+
           <img
             src={mystamp}
             alt="프로필"
-            className="myStampProfileImage h-[180px] w-[180px]"
+            className="
+              myStampProfileImage
+              h-[180px]
+              w-[180px]
+
+              max-[1014px]:h-[87px]
+              max-[1014px]:w-[87px]
+            "
           />
 
+          {/* 이름 + 획득 스탬프 */}
+
           <div className="myStampUserInfo">
-            <p className="text-[34px] font-semibold text-black-1">
+            <p
+              className="
+                text-[34px]
+                font-semibold
+                text-[#121212]
+
+                max-[1014px]:text-[20px]
+              "
+            >
               {userName}
               {userName && "님"}
             </p>
 
-            <p className="mt-[10px] text-[28px] font-medium text-black-1">
+            <p
+              className="
+                mt-[10px]
+                text-[28px]
+                font-medium
+                text-[#121212]
+
+                max-[1014px]:mt-[6px]
+                max-[1014px]:text-[16px]
+              "
+            >
               총 획득 스탬프
             </p>
           </div>
         </div>
 
         {/* 총 스탬프 개수 */}
-        <p className="myStampCount mr-[40px] text-[50px] font-semibold text-black-1">
+
+        <p
+          className="
+            myStampCount
+            mr-[40px]
+            mt-[38px]
+            text-[50px]
+            font-semibold
+            text-[#121212]
+
+            max-[1014px]:mr-0
+            max-[1014px]:text-[20px]
+          "
+        >
           {totalStampCount}개
         </p>
       </div>
 
-      {/* 도장판 */}
+      {/* ======================================
+          도장판
+      ====================================== */}
+
       <div
         className="
           stampBoard
@@ -100,12 +165,9 @@ export default function MyStamp({
           px-[20px]
           py-[40px]
 
-          sm:grid-cols-2
-          sm:px-[30px]
-
-          md:grid-cols-3
-          md:gap-x-[30px]
-          md:px-[40px]
+          min-[1015px]:grid-cols-3
+          min-[1015px]:gap-x-[30px]
+          min-[1015px]:px-[40px]
 
           xl:grid-cols-4
           xl:gap-x-[50px]
@@ -113,6 +175,14 @@ export default function MyStamp({
           xl:rounded-[70px]
           xl:px-[55px]
           xl:py-[48px]
+
+          max-[1014px]:mt-[24px]
+          max-[1014px]:grid-cols-3
+          max-[1014px]:gap-x-[20px]
+          max-[1014px]:gap-y-[24px]
+          max-[1014px]:rounded-[30px]
+          max-[1014px]:px-[14px]
+          max-[1014px]:py-[22px]
         "
       >
         {stampNumbers.map((numberImage, index) => {
@@ -132,43 +202,92 @@ export default function MyStamp({
                 min-w-0
                 flex-col
                 items-center
-                justify-center
+                justify-start
+
+                max-[1014px]:min-h-[112px]
               "
             >
-              {/* 숫자 / 도장 */}
-              <div className="stampImageBox relative h-[176px] w-[176px]">
+              {/* ==================================
+                  숫자 / 인증 도장
+              ================================== */}
+
+              <div
+                className="
+                  stampImageBox
+                  relative
+                  h-[176px]
+                  w-[176px]
+                  shrink-0
+
+                  max-[1014px]:h-[88px]
+                  max-[1014px]:w-[88px]
+                "
+              >
                 {/* 기본 숫자 */}
+
                 <img
                   src={numberImage}
                   alt={`${stampNumber}번 스탬프`}
-                  className="h-[176px] w-[176px]"
+                  className="
+                    h-[176px]
+                    w-[176px]
+
+                    max-[1014px]:h-[88px]
+                    max-[1014px]:w-[88px]
+                  "
                 />
 
                 {/* 인증 완료된 경우 도장 표시 */}
+
                 {completed && (
                   <img
                     src={realstamp}
                     alt="획득한 스탬프"
                     className="
-    realStamp
-    absolute
-    left-1/2
-    top-1/2
-    h-[140px]
-    w-[140px]
-    -translate-x-1/2
-    -translate-y-1/2
-  "
+                      realStamp
+                      absolute
+                      left-1/2
+                      top-1/2
+                      h-[140px]
+                      w-[140px]
+                      -translate-x-1/2
+                      -translate-y-1/2
+
+                      max-[1014px]:h-[70px]
+                      max-[1014px]:w-[70px]
+                    "
                   />
                 )}
               </div>
 
-              {/* 인증 완료 날짜 */}
-              {completed && (
-                <p className="stampDate mt-[10px] text-[20px] font-medium text-misc-7c4dff">
-                  {formatDate(completed.date)}
-                </p>
-              )}
+              {/* ==================================
+                  인증 완료 날짜
+              ================================== */}
+
+              <div
+                className="
+                  mt-[10px]
+                  h-[24px]
+
+                  max-[1014px]:mt-[6px]
+                  max-[1014px]:h-[18px]
+                "
+              >
+                {completed && (
+                  <p
+                    className="
+                      stampDate
+                      text-[20px]
+                      font-medium
+                      text-[#7C4DFF]
+
+                      max-[1014px]:text-[14px]
+                    "
+                  >
+                    {formatDate(completed.date)}
+                  </p>
+                )}
+              </div>
             </div>
           );
         })}

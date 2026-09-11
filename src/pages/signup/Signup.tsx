@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import logoName from '../../img/signup/logo-name.png'
+import logoName from '../../img/signup/logo-name1.svg'
 import { sendEmailVerificationCode, signup, verifyEmail } from '../../api/signup/auth'
 import { ApiError } from '../../api/instance'
 
@@ -17,6 +17,8 @@ function Signup() {
 
   const [codeSent, setCodeSent] = useState(false)
   const [sendingCode, setSendingCode] = useState(false)
+  const [codeVerified, setCodeVerified] = useState(false)
+  const [verifyingCode, setVerifyingCode] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
@@ -25,6 +27,7 @@ function Signup() {
     if (!email || sendingCode) return
     setError(null)
     setNotice(null)
+    setCodeVerified(false)
     setSendingCode(true)
     try {
       await sendEmailVerificationCode({ email })
@@ -36,6 +39,25 @@ function Signup() {
       )
     } finally {
       setSendingCode(false)
+    }
+  }
+
+  const handleVerifyCode = async () => {
+    if (!code || verifyingCode) return
+    setError(null)
+    setNotice(null)
+    setVerifyingCode(true)
+    try {
+      await verifyEmail({ email, code })
+      setCodeVerified(true)
+      setNotice('이메일 인증이 완료됐어요.')
+    } catch (err) {
+      setCodeVerified(false)
+      setError(
+        err instanceof ApiError ? err.message : '인증번호가 올바르지 않아요.',
+      )
+    } finally {
+      setVerifyingCode(false)
     }
   }
 
@@ -66,9 +88,9 @@ function Signup() {
   }
 
   return (
-    <main className="flex min-h-[calc(100svh-57px)] items-center justify-center bg-white px-4 py-12">
-      <div className="w-full max-w-[500px] rounded-3xl border border-gray-9 bg-white px-[30px] pt-[63px] pb-10 shadow-card">
-        <div className="mb-[59px] flex items-center justify-center gap-2">
+    <main className="flex min-h-[calc(100svh-57px)] items-center justify-center bg-white px-4 py-8 md:py-12">
+      <div className="w-full max-w-[500px] rounded-3xl border border-gray-9 bg-white px-6 pt-10 pb-8 shadow-card md:px-[30px] md:pt-[63px] md:pb-10">
+        <div className="mb-8 flex items-center justify-center gap-2 md:mb-[59px]">
           <img src="/logo_1.png" alt="" className="h-8 w-8" />
           <img src={logoName} alt="LIKELION UNIV SSWU" className="h-[14.48px] w-[224.5px]" />
         </div>
@@ -104,15 +126,28 @@ function Signup() {
             </button>
           </div>
 
-          <input
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            placeholder="이메일 인증번호 입력"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            className={fieldClass}
-          />
+          <div className="relative">
+            <input
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              placeholder="이메일 인증번호 입력"
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value)
+                setCodeVerified(false)
+              }}
+              className={`${fieldClass} pr-16`}
+            />
+            <button
+              type="button"
+              onClick={handleVerifyCode}
+              disabled={!code || verifyingCode || codeVerified}
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg border border-gray-9 bg-white px-3 py-1.5 text-xs font-medium text-gray-4 transition-colors hover:text-gray-1 disabled:opacity-50"
+            >
+              {codeVerified ? '확인됨' : verifyingCode ? '확인 중…' : '확인'}
+            </button>
+          </div>
 
           <input
             type="password"

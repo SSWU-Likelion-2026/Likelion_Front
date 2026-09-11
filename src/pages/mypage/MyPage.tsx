@@ -1,6 +1,6 @@
 // react
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 // api
 
@@ -10,6 +10,7 @@ import { getAccessToken } from '../../lib/auth-storage'
 
 // component
 import Banner from '../../components/Banner'
+import EmptyState from '../../components/EmptyState'
 import Button from '../../components/Button'
 import Modal from '../../components/Modal'
 import ToggleGroup from '../../components/ToggleGroup'
@@ -22,7 +23,11 @@ type Tab = '내 프로필' | '지원 현황'
 
 export default function MyPage() {
   const navigate = useNavigate()
-  const [tab, setTab] = useState<Tab>('내 프로필')
+  const [searchParams] = useSearchParams()
+  // ?tab=apply 로 들어오면 지원 현황 탭으로 바로 열림 (지원서 제출 완료 화면 등에서 딥링크용)
+  const [tab, setTab] = useState<Tab>(
+    searchParams.get('tab') === 'apply' ? '지원 현황' : '내 프로필',
+  )
   const [applicationTab, setApplicationTab] = useState<'지원완료' | '임시저장'>('지원완료')
 
   const [profileData, setProfileData] = useState<ProfileGetResponse | null>(null)
@@ -131,7 +136,7 @@ export default function MyPage() {
       <div className="flex flex-col">
         <Banner page="MyPage" />
         <div className="rounded-t-[25px] bg-white -mt-6 flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
-          <p className="text-[32px] font-medium text-gray-6">마이페이지는 로그인 후에 이용할 수 있어요.</p>
+          <EmptyState message="마이페이지는 로그인 후에 이용할 수 있어요." />
         </div>
       </div>
     )

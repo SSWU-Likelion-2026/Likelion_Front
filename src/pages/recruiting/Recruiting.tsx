@@ -39,14 +39,16 @@ function Recruiting() {
 
   if (homeError) {
     return (
-      <p className="py-40 text-center text-[16px] text-gray-4">
+      <p className="py-40 text-center text-[20px] text-black font-semibold md:text-[34px]">
         모집 정보를 불러오지 못했어요.
       </p>
     )
   }
   if (!home) {
     return (
-      <p className="py-40 text-center text-[16px] text-gray-4">불러오는 중…</p>
+      <p className="py-40 text-center text-[20px] text-black font-semibold md:text-[34px]">
+        불러오는 중…
+      </p>
     )
   }
 
@@ -67,7 +69,7 @@ function Recruiting() {
         <div className="px-6 md:px-30">
           <ScheduleSection recruitment={landing.recruitment} />
           <PartSection parts={landing.parts} />
-          <FaqSection parts={landing.parts} faqs={landing.faqs} />
+          <FaqSection />
         </div>
       )}
     </div>

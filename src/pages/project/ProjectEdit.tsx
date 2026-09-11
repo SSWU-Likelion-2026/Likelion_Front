@@ -5,6 +5,7 @@ import backbtn from "../../img/project/backbtn.svg";
 import underbtn from "../../img/project/underbtn.svg";
 import downloadbtn from "../../img/project/download.svg";
 import deletebtn from "../../img/project/deletebtn.svg";
+import plus from "../../img/project/plus.svg";
 
 import {
     getProjectDetail,
@@ -39,19 +40,19 @@ const eventOptions: {
     label: string;
     value: ProjectHackathon;
 }[] = [
-    {
-        label: "아이디어톤",
-        value: "IDEATHON",
-    },
-    {
-        label: "여기톤",
-        value: "HERETHON",
-    },
-    {
-        label: "중앙톤",
-        value: "CENTRALTHON",
-    },
-];
+        {
+            label: "아이디어톤",
+            value: "IDEATHON",
+        },
+        {
+            label: "여기톤",
+            value: "HERETHON",
+        },
+        {
+            label: "중앙톤",
+            value: "CENTRALTHON",
+        },
+    ];
 
 const isProjectHackathon = (
     value: string,
@@ -246,9 +247,22 @@ export default function ProjectEdit() {
     const [members, setMembers] =
         useState<TeamMembers>({
             planning: [""],
-            frontend: [""],
-            backend: [""],
+            frontend: ["", ""],
+            backend: ["", ""],
         });
+
+    // ======================================================
+    // 모바일 단계
+    // 1: 기본 정보 / 2: 팀원·이미지 / 3: 기술 스택
+    // ======================================================
+
+    const [mobileStep, setMobileStep] =
+        useState<1 | 2 | 3>(1);
+
+    const moveMobileStep = (step: 1 | 2 | 3) => {
+        setMobileStep(step);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
 
     // ======================================================
     // 프로젝트 상세 조회 → 수정 폼 초기값
@@ -417,22 +431,25 @@ export default function ProjectEdit() {
 
                     setMembers({
                         planning:
-                            planning.length >
-                                0
+                            planning.length > 0
                                 ? planning
                                 : [""],
 
                         frontend:
-                            frontend.length >
-                                0
+                            frontend.length >= 2
                                 ? frontend
-                                : [""],
+                                : [
+                                    ...frontend,
+                                    ...Array(2 - frontend.length).fill(""),
+                                ],
 
                         backend:
-                            backend.length >
-                                0
+                            backend.length >= 2
                                 ? backend
-                                : [""],
+                                : [
+                                    ...backend,
+                                    ...Array(2 - backend.length).fill(""),
+                                ],
                     });
                 } catch (error) {
                     console.error(
@@ -1011,16 +1028,14 @@ export default function ProjectEdit() {
     // ======================================================
 
     return (
-        <section className="min-h-screen w-full bg-white">
-            <div className="mx-auto w-full px-12 py-8">
+        <section className="min-h-screen w-full bg-white min-[1015px]:px-[120px]">
+            <div className="mx-auto w-full px-[24px] pb-[24px] pt-[26px] min-[1015px]:px-12 min-[1015px]:py-8">
                 {/* 헤더 */}
-                <div className="pm_header mb-[54px]">
+                <div className="pm_header mb-[30px] min-[1015px]:mb-[54px]">
                     <button
                         type="button"
-                        onClick={() =>
-                            navigate(-1)
-                        }
-                        className="mb-[40px] flex h-6 w-6 items-center justify-center"
+                        onClick={() => navigate(-1)}
+                        className="mb-[40px] hidden h-6 w-6 items-center justify-center min-[1015px]:flex"
                     >
                         <img
                             src={backbtn}
@@ -1029,533 +1044,438 @@ export default function ProjectEdit() {
                         />
                     </button>
 
-                    <h1 className="text-[32px] font-semibold text-black-1">
+                    <h1 className="text-[20px] font-semibold text-[#121212] min-[1015px]:text-[32px]">
                         프로젝트 수정
                     </h1>
                 </div>
 
-                <div className="pm flex flex-col gap-[45px]">
-                    {/* 기수 */}
-                    <div>
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
-                            기수 선택
-                        </h2>
+                <div className="pm flex flex-col gap-[32px] min-[1015px]:gap-[45px]">
+                    {/* =========================
+                        STEP 1 - 기본 정보
+                    ========================== */}
+                    <div
+                        className={`${mobileStep === 1 ? "contents" : "hidden"} min-[1015px]:contents`}
+                    >
+                        {/* 기수 선택 */}
+                        <div>
+                            <h2 className="mb-[16px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
+                                기수 선택
+                            </h2>
 
-                        <div className="th flex gap-[15px]">
-                            {generations.map(
-                                (
-                                    item,
-                                ) => (
+                            <div className="th flex gap-[10px] min-[1015px]:gap-[15px]">
+                                {generations.map((item) => (
                                     <button
-                                        key={
-                                            item
-                                        }
+                                        key={item}
                                         type="button"
-                                        onClick={() =>
-                                            setGeneration(
-                                                item,
-                                            )
-                                        }
-                                        className={`num h-[79px] w-[118px] rounded-[15px] border text-[24px] font-semibold transition-colors ${generation ===
-                                            item
-                                            ? "border-accent-select-alt bg-accent-select-alt text-white"
-                                            : "border-gray-9 bg-white text-black-1"
+                                        onClick={() => setGeneration(item)}
+                                        className={`num h-[42px] min-w-[60px] rounded-[8px] border px-[14px] text-[16px] font-semibold transition-colors min-[1015px]:h-[79px] min-[1015px]:w-[118px] min-[1015px]:rounded-[15px] min-[1015px]:px-0 min-[1015px]:text-[24px] ${generation === item
+                                            ? "border-[#8557FF] bg-[#8557FF] text-white"
+                                            : "border-[#D0D6DD] bg-white text-[#121212]"
                                             }`}
                                     >
                                         {item}기
                                     </button>
-                                ),
-                            )}
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* 프로젝트 명 */}
-                    <div className="pm_name">
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
-                            프로젝트 명
-                        </h2>
+                        {/* 프로젝트 명 */}
+                        <div className="pm_name">
+                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
+                                프로젝트 명
+                            </h2>
 
-                        <input
-                            type="text"
-                            value={
-                                projectName
-                            }
-                            onChange={(e) =>
-                                setProjectName(
-                                    e.target.value,
-                                )
-                            }
-                            placeholder="프로젝트 명을 입력해주세요."
-                            className="h-[94px] w-full rounded-[15px] border border-primary-100 px-[25px] text-[20px] font-medium text-black-1 outline-none"
-                        />
-                    </div>
+                            <input
+                                type="text"
+                                value={projectName}
+                                onChange={(e) => setProjectName(e.target.value)}
+                                placeholder="프로젝트 명을 입력해주세요."
+                                className="h-[57px] w-full rounded-[10px] border border-[#D0D6DD] px-[16px] text-[14px] font-medium text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[94px] min-[1015px]:rounded-[15px] min-[1015px]:px-[25px] min-[1015px]:text-[20px]"
+                            />
+                        </div>
 
-                    {/* 슬로건 */}
-                    <div>
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
-                            프로젝트 슬로건
-                        </h2>
+                        {/* 프로젝트 슬로건 */}
+                        <div className="pm_slogan">
+                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
+                                프로젝트 슬로건
+                            </h2>
 
-                        <input
-                            type="text"
-                            value={
-                                slogan
-                            }
-                            onChange={(e) =>
-                                setSlogan(
-                                    e.target.value,
-                                )
-                            }
-                            placeholder="프로젝트의 슬로건 (한 줄 설명)을 입력해주세요."
-                            className="h-[94px] w-full rounded-[15px] border border-gray-9 px-[25px] text-[20px] text-black-1 outline-none placeholder:text-gray-5 focus:border-accent-select"
-                        />
-                    </div>
+                            <input
+                                type="text"
+                                value={slogan}
+                                onChange={(e) => setSlogan(e.target.value)}
+                                placeholder="프로젝트의 슬로건 (한 줄 설명)을 입력해주세요."
+                                className="h-[57px] w-full rounded-[10px] border border-[#D0D6DD] px-[16px] text-[14px] text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[94px] min-[1015px]:rounded-[15px] min-[1015px]:px-[25px] min-[1015px]:text-[20px]"
+                            />
+                        </div>
 
-                    {/* 프로젝트 기간 */}
-                    <div>
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
-                            프로젝트 기간
-                        </h2>
+                        {/* 프로젝트 기간 */}
+                        <div>
+                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
+                                프로젝트 기간
+                            </h2>
 
-                        <div className="flex items-center gap-[10px]">
-                            {/* 해커톤 */}
-                            <div className="relative w-[185px]">
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setEventOpen(
-                                            (
-                                                prev,
-                                            ) =>
-                                                !prev,
-                                        )
-                                    }
-                                    className="flex h-[78px] w-full items-center justify-between rounded-[15px] border border-gray-9 bg-white px-[20px] text-[20px] font-semibold text-black-1"
-                                >
-                                    <span>
-                                        {eventType
-                                            ? eventOptions.find(
-                                                (
-                                                    option,
-                                                ) =>
-                                                    option.value ===
-                                                    eventType,
-                                            )
-                                                ?.label ??
-                                            eventType
-                                            : "해커톤 입력"}
-                                    </span>
+                            <div className="flex flex-col gap-[10px] min-[1015px]:flex-row min-[1015px]:items-center">
+                                {/* 해커톤 */}
+                                <div className="relative w-full min-[1015px]:w-[185px]">
+                                    <button
+                                        type="button"
+                                        onClick={() => setEventOpen((prev) => !prev)}
+                                        className="flex h-[56px] w-full items-center justify-between rounded-[10px] border border-[#D0D6DD] bg-white px-[16px] text-[14px] font-semibold text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[78px] min-[1015px]:rounded-[15px] min-[1015px]:px-[20px] min-[1015px]:text-[20px]"
+                                    >
+                                        <span>
+                                            {eventType
+                                                ? eventOptions.find(
+                                                    (option) =>
+                                                        option.value === eventType,
+                                                )?.label
+                                                : "해커톤 입력"}
+                                        </span>
 
-                                    <img
-                                        src={
-                                            underbtn
-                                        }
-                                        alt=""
-                                        className={`h-[16px] w-[14px] transition-transform ${eventOpen
-                                            ? "rotate-180"
-                                            : ""
-                                            }`}
-                                    />
-                                </button>
+                                        <img
+                                            src={underbtn}
+                                            alt=""
+                                            className={`h-[12px] w-[12px] transition-transform min-[1015px]:h-[16px] min-[1015px]:w-[14px] ${eventOpen ? "rotate-180" : ""
+                                                }`}
+                                        />
+                                    </button>
 
-                                {eventOpen && (
-                                    <div className="absolute left-0 top-[90px] z-20 w-full overflow-hidden rounded-[15px] border border-gray-9 bg-white font-semibold shadow-sm">
-                                        {eventOptions.map(
-                                            (
-                                                option,
-                                            ) => (
+                                    {eventOpen && (
+                                        <div className="absolute left-0 top-[62px] z-20 w-full overflow-hidden rounded-[10px] border border-[#D0D6DD] bg-white font-semibold shadow-sm min-[1015px]:top-[90px] min-[1015px]:rounded-[15px]">
+                                            {eventOptions.map((option) => (
                                                 <button
-                                                    key={
-                                                        option.value
-                                                    }
+                                                    key={option.value}
                                                     type="button"
                                                     onClick={() => {
-                                                        setEventType(
-                                                            option.value,
-                                                        );
-
-                                                        setEventOpen(
-                                                            false,
-                                                        );
+                                                        setEventType(option.value);
+                                                        setEventOpen(false);
                                                     }}
-                                                    className="block h-[42px] w-full px-[16px] text-left text-[20px] text-black-1 hover:bg-surface-muted"
+                                                    className="block h-[42px] w-full px-[16px] text-left text-[14px] text-[#121212] hover:bg-[#F5F5F5] min-[1015px]:text-[20px]"
                                                 >
-                                                    {
-                                                        option.label
-                                                    }
+                                                    {option.label}
                                                 </button>
-                                            ),
-                                        )}
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="flex w-full items-center gap-[10px]">
+                                    <input
+                                        type="month"
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                        className="h-[56px] min-w-0 flex-1 rounded-[8px] border border-[#D0D6DD] px-[12px] text-[11px] text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[78px] min-[1015px]:w-[303px] min-[1015px]:flex-none min-[1015px]:rounded-[15px] min-[1015px]:px-[20px] min-[1015px]:text-[20px]"
+                                    />
+
+                                    <span className="text-[#D0D6DD]">—</span>
+
+                                    <input
+                                        type="month"
+                                        value={endDate}
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                        className="h-[56px] min-w-0 flex-1 rounded-[8px] border border-[#D0D6DD] px-[12px] text-[11px] text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[78px] min-[1015px]:w-[303px] min-[1015px]:flex-none min-[1015px]:rounded-[15px] min-[1015px]:px-[20px] min-[1015px]:text-[20px]"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 프로젝트 설명 */}
+                        <div>
+                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
+                                프로젝트 설명
+                            </h2>
+
+                            <textarea
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="프로젝트에 대한 설명을 입력해주세요."
+                                className="h-[250px] w-full resize-none rounded-[10px] border border-[#D0D6DD] px-[16px] py-[18px] text-[14px] text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] min-[1015px]:h-[434px] min-[1015px]:rounded-[15px] min-[1015px]:px-[25px] min-[1015px]:py-[35px] min-[1015px]:text-[24px]"
+                            />
+                        </div>
+
+                        {/* 모바일 다음 */}
+                        <button
+                            type="button"
+                            onClick={() => moveMobileStep(2)}
+                            className="mt-[2px] h-[58px] w-full rounded-[10px] bg-[#8158F6] text-[16px] font-semibold text-white min-[1015px]:hidden"
+                        >
+                            다음
+                        </button>
+                    </div>
+
+                    {/* =========================
+                        STEP 2 - 팀원 / 이미지
+                    ========================== */}
+                    <div
+                        className={`${mobileStep === 2 ? "contents" : "hidden"} min-[1015px]:contents`}
+                    >
+                        {/* 프로젝트 팀원 */}
+                        <div>
+                            <h2 className="mb-[8px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
+                                프로젝트 팀원
+                            </h2>
+
+                            <div className="grid grid-cols-1 gap-[26px] min-[1015px]:grid-cols-3 min-[1015px]:gap-[25px]">
+                                <TeamMemberColumn
+                                    title="기획/디자인"
+                                    members={members.planning}
+                                    onChange={(index, value) =>
+                                        changeMember("planning", index, value)
+                                    }
+                                    onAdd={() => addMember("planning")}
+                                />
+
+                                <TeamMemberColumn
+                                    title="프론트엔드"
+                                    members={members.frontend}
+                                    onChange={(index, value) =>
+                                        changeMember("frontend", index, value)
+                                    }
+                                    onAdd={() => addMember("frontend")}
+                                />
+
+                                <TeamMemberColumn
+                                    title="백엔드"
+                                    members={members.backend}
+                                    onChange={(index, value) =>
+                                        changeMember("backend", index, value)
+                                    }
+                                    onAdd={() => addMember("backend")}
+                                />
+                            </div>
+                        </div>
+
+                        {/* 프로젝트 로고 */}
+                        <div className="logo">
+                            <h2 className="mt-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
+                                프로젝트 로고
+                            </h2>
+
+                            <input
+                                ref={logoInput}
+                                type="file"
+                                accept=".jpg,.jpeg,.png"
+                                className="hidden"
+                                onChange={(e) => handleLogo(e.target.files?.[0])}
+                            />
+
+                            <div className="flex h-[142px] w-full items-center justify-center rounded-[8px] border border-dashed border-[#B8B9BD] bg-[#F3F4F6] min-[1015px]:h-[279px] min-[1015px]:rounded-[15px]">
+                                {logo ? (
+                                    <div className="relative h-full w-full overflow-hidden rounded-[8px] min-[1015px]:rounded-[15px]">
+                                        <img
+                                            src={logo.url}
+                                            alt="프로젝트 로고"
+                                            className="h-full w-full object-contain"
+                                        />
+
+                                        <button
+                                            type="button"
+                                            onClick={removeLogo}
+                                            className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#444] text-[16px] text-white min-[1015px]:right-3 min-[1015px]:top-3 min-[1015px]:h-8 min-[1015px]:w-8 min-[1015px]:text-[20px]"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center">
+                                        <button
+                                            type="button"
+                                            onClick={() => logoInput.current?.click()}
+                                            className="mb-[10px] flex items-center justify-center gap-[8px] rounded-[10px] bg-white px-[16px] py-[12px] text-[16px] font-medium text-[#121212] shadow-[0_4px_20px_rgba(135,104,244,0.15)] min-[1015px]:mb-[18px] min-[1015px]:rounded-[15px] min-[1015px]:px-[22px] min-[1015px]:py-[16px] min-[1015px]:text-[24px]"
+                                        >
+                                            <img
+                                                src={downloadbtn}
+                                                alt=""
+                                                className="h-[18px] w-[18px] min-[1015px]:h-[24px] min-[1015px]:w-[24px]"
+                                            />
+                                            이미지 업로드
+                                        </button>
+
+                                        <p className="text-[14px] text-[#808386] min-[1015px]:text-[24px]">
+                                            JPG, PNG (최대 10MB)
+                                        </p>
                                     </div>
                                 )}
                             </div>
+                        </div>
+
+                        {/* 프로젝트 장표 */}
+                        <div className="banner">
+                            <h2 className="my-[15px] mb-[14px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
+                                프로젝트 장표
+                            </h2>
 
                             <input
-                                type="month"
-                                value={
-                                    startDate
-                                }
-                                onChange={(e) =>
-                                    setStartDate(
-                                        e.target.value,
-                                    )
-                                }
-                                className="h-[78px] w-[303px] rounded-[15px] border border-primary-100 px-[20px] text-[20px] text-black-1 outline-none"
+                                ref={bannerInput}
+                                type="file"
+                                accept=".jpg,.jpeg,.png"
+                                multiple
+                                className="hidden"
+                                onChange={(e) => handleBanner(e.target.files)}
                             />
 
-                            <span className="text-gray-9">
-                                —
-                            </span>
-
-                            <input
-                                type="month"
-                                value={
-                                    endDate
-                                }
-                                onChange={(e) =>
-                                    setEndDate(
-                                        e.target.value,
-                                    )
-                                }
-                                className="h-[78px] w-[303px] rounded-[15px] border border-gray-9 px-[20px] text-[20px] text-black-1 outline-none focus:border-accent-select"
-                            />
-                        </div>
-                    </div>
-
-                    {/* 설명 */}
-                    <div>
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
-                            프로젝트 설명
-                        </h2>
-
-                        <textarea
-                            value={
-                                description
-                            }
-                            onChange={(e) =>
-                                setDescription(
-                                    e.target.value,
-                                )
-                            }
-                            placeholder="프로젝트에 대한 설명을 입력해주세요."
-                            className="h-[434px] w-full resize-none rounded-[15px] border border-gray-9 px-[25px] py-[35px] text-[24px] text-black-1 outline-none placeholder:text-gray-5 focus:border-accent-select"
-                        />
-                    </div>
-
-                    {/* 팀원 */}
-                    <div>
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
-                            프로젝트 팀원
-                        </h2>
-
-                        <div className="grid grid-cols-3 gap-[25px]">
-                            <TeamMemberColumn
-                                title="기획/디자인"
-                                members={
-                                    members.planning
-                                }
-                                onChange={(
-                                    index,
-                                    value,
-                                ) =>
-                                    changeMember(
-                                        "planning",
-                                        index,
-                                        value,
-                                    )
-                                }
-                                onAdd={() =>
-                                    addMember(
-                                        "planning",
-                                    )
-                                }
-                            />
-
-                            <TeamMemberColumn
-                                title="프론트엔드"
-                                members={
-                                    members.frontend
-                                }
-                                onChange={(
-                                    index,
-                                    value,
-                                ) =>
-                                    changeMember(
-                                        "frontend",
-                                        index,
-                                        value,
-                                    )
-                                }
-                                onAdd={() =>
-                                    addMember(
-                                        "frontend",
-                                    )
-                                }
-                            />
-
-                            <TeamMemberColumn
-                                title="백엔드"
-                                members={
-                                    members.backend
-                                }
-                                onChange={(
-                                    index,
-                                    value,
-                                ) =>
-                                    changeMember(
-                                        "backend",
-                                        index,
-                                        value,
-                                    )
-                                }
-                                onAdd={() =>
-                                    addMember(
-                                        "backend",
-                                    )
-                                }
-                            />
-                        </div>
-                    </div>
-
-                    {/* 로고 */}
-                    <div className="logo">
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
-                            프로젝트 로고
-                        </h2>
-
-                        <input
-                            ref={
-                                logoInput
-                            }
-                            type="file"
-                            accept=".jpg,.jpeg,.png"
-                            className="hidden"
-                            onChange={(e) =>
-                                handleLogo(
-                                    e.target.files?.[0],
-                                )
-                            }
-                        />
-
-                        <div className="flex h-[279px] w-full items-center justify-center rounded-[15px] border border-dashed border-gray-7 bg-surface-neutral">
-                            {logo ? (
-                                <div className="relative h-full w-full overflow-hidden rounded-[15px]">
-                                    <img
-                                        src={
-                                            logo.url
-                                        }
-                                        alt="프로젝트 로고"
-                                        className="h-full w-full object-contain"
-                                    />
-
-                                    <button
-                                        type="button"
-                                        onClick={
-                                            removeLogo
-                                        }
-                                        className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-misc-444 text-[20px] text-white"
-                                    >
-                                        ×
-                                    </button>
-                                </div>
-                            ) : (
+                            <div className="flex h-[142px] w-full items-center justify-center rounded-[8px] border border-dashed border-[#B8B9BD] bg-[#F3F4F6] min-[1015px]:h-[346px] min-[1015px]:rounded-[15px]">
                                 <div className="flex flex-col items-center">
                                     <button
                                         type="button"
-                                        onClick={() =>
-                                            logoInput.current?.click()
-                                        }
-                                        className="mb-[18px] flex items-center justify-center gap-[10px] rounded-[15px] bg-white px-[22px] py-[16px] text-[24px] font-medium text-black-1 shadow-[0_4px_20px_var(--color-shadow-accent)]"
+                                        onClick={() => bannerInput.current?.click()}
+                                        className="mb-[10px] flex items-center justify-center gap-[8px] rounded-[10px] bg-white px-[16px] py-[12px] text-[16px] font-medium text-[#121212] shadow-[0_4px_20px_rgba(135,104,244,0.15)] min-[1015px]:mb-[18px] min-[1015px]:rounded-[15px] min-[1015px]:px-[22px] min-[1015px]:py-[16px] min-[1015px]:text-[24px]"
                                     >
                                         <img
-                                            src={
-                                                downloadbtn
-                                            }
+                                            src={downloadbtn}
                                             alt=""
-                                            className="h-[24px] w-[24px]"
+                                            className="h-[18px] w-[18px] min-[1015px]:h-[24px] min-[1015px]:w-[24px]"
                                         />
-
                                         이미지 업로드
                                     </button>
 
-                                    <p className="text-[24px] text-gray-5">
-                                        JPG, PNG
-                                        (최대 10MB)
+                                    <p className="text-[14px] text-[#808386] min-[1015px]:text-[24px]">
+                                        JPG, PNG (최대 10MB)
                                     </p>
+
                                 </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* 장표 */}
-                    <div className="banner">
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
-                            프로젝트 장표
-                        </h2>
-
-                        <input
-                            ref={
-                                bannerInput
-                            }
-                            type="file"
-                            accept=".jpg,.jpeg,.png"
-                            multiple
-                            className="hidden"
-                            onChange={(e) =>
-                                handleBanner(
-                                    e.target.files,
-                                )
-                            }
-                        />
-
-                        <div className="flex h-[346px] w-full items-center justify-center rounded-[15px] border border-dashed border-gray-7 bg-surface-neutral">
-                            <div className="flex flex-col items-center">
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        bannerInput.current?.click()
-                                    }
-                                    className="mb-[18px] flex items-center justify-center gap-[10px] rounded-[15px] bg-white px-[22px] py-[16px] text-[24px] font-medium text-black-1 shadow-[0_4px_20px_var(--color-shadow-accent)]"
-                                >
-                                    <img
-                                        src={
-                                            downloadbtn
-                                        }
-                                        alt=""
-                                        className="h-[24px] w-[24px]"
-                                    />
-
-                                    이미지 업로드
-                                </button>
-
-                                <p className="text-[24px] text-gray-5">
-                                    JPG, PNG
-                                    (최대 10MB)
-                                </p>
                             </div>
-                        </div>
 
-                        {banners.length >
-                            0 && (
-                                <div className="mt-[25px] flex gap-[16px] overflow-x-auto pb-2">
-                                    {banners.map(
-                                        (
-                                            image,
-                                            index,
-                                        ) => (
-                                            <div
-                                                key={`${image.url}-${index}`}
-                                                className="relative h-[180px] min-w-[180px] overflow-hidden rounded-[15px] bg-misc-ececef"
+                            {banners.length > 0 && (
+                                <div className="mt-[14px] flex gap-[10px] overflow-x-auto pb-2 min-[1015px]:mt-[25px] min-[1015px]:gap-[16px]">
+                                    {banners.map((image, index) => (
+                                        <div
+                                            key={`${image.file?.name ?? image.url}-${index}`}
+                                            className="relative h-[100px] min-w-[100px] overflow-hidden rounded-[6px] bg-[#ECECEF] min-[1015px]:h-[180px] min-[1015px]:min-w-[180px] min-[1015px]:rounded-[15px]"
+                                        >
+                                            <img
+                                                src={image.url}
+                                                alt={`장표 ${index + 1}`}
+                                                className="h-full w-full object-cover"
+                                            />
+
+                                            <button
+                                                type="button"
+                                                onClick={() => removeBanner(index)}
+                                                className="absolute right-[5px] top-[5px] flex h-[18px] w-[18px] items-center justify-center min-[1015px]:right-[8px] min-[1015px]:top-[8px] min-[1015px]:h-[24px] min-[1015px]:w-[24px]"
                                             >
                                                 <img
-                                                    src={
-                                                        image.url
-                                                    }
-                                                    alt={`장표 ${index +
-                                                        1
-                                                        }`}
-                                                    className="h-full w-full object-cover"
+                                                    src={deletebtn}
+                                                    alt="이미지 삭제"
+                                                    className="h-full w-full"
                                                 />
+                                            </button>
+                                        </div>
+                                    ))}
 
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        removeBanner(
-                                                            index,
-                                                        )
-                                                    }
-                                                    className="absolute right-[8px] top-[8px] flex h-[24px] w-[24px] items-center justify-center"
-                                                >
-                                                    <img
-                                                        src={
-                                                            deletebtn
-                                                        }
-                                                        alt="이미지 삭제"
-                                                        className="h-full w-full"
-                                                    />
-                                                </button>
-                                            </div>
-                                        ),
+                                    {banners.length < 10 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => bannerInput.current?.click()}
+                                            className="h-[100px] min-w-[100px] rounded-[10px] bg-[#F3F4F6] text-[24px] text-[#808386] min-[1015px]:hidden"
+                                        >
+                                            +
+                                        </button>
                                     )}
                                 </div>
                             )}
-                    </div>
+                        </div>
 
-                    {/* 기술 스택 */}
-                    <div className="stack">
-                        <h2 className="mb-[30px] text-[28px] font-semibold text-black-1">
-                            기술 스택
-                        </h2>
+                        {/* 모바일 이전 / 다음 */}
+                        <div className="grid grid-cols-[1fr_2fr] gap-[12px] min-[1015px]:hidden">
+                            <button
+                                type="button"
+                                onClick={() => moveMobileStep(1)}
+                                className="h-[70px] rounded-[10px] border border-[#D0D6DD] bg-white text-[20px] font-semibold text-[#121212]"
+                            >
+                                이전
+                            </button>
 
-                        <div className="flex flex-col gap-[26px]">
-                            {[
-                                ["기획", "PLANNING"],
-                                ["디자인", "DESIGN"],
-                                ["프론트엔드", "FRONTEND"],
-                                ["백엔드", "BACKEND"],
-                                ["AI", "AI"],
-                            ].map(([label, category]) => {
-                                const stacks = techStacks.filter(
-                                    (stack) =>
-                                        stack.category === category,
-                                );
-
-                                return (
-                                    <div
-                                        key={category}
-                                        className="grid grid-cols-[90px_1fr] items-start gap-x-[50px]"
-                                    >
-                                        <p className="pt-[7px] text-[20px] font-medium text-gray-5">
-                                            {label}
-                                        </p>
-
-                                        <div className="flex flex-wrap gap-[8px]">
-                                            {stacks.map((stack) => {
-                                                const selected =
-                                                    selectedStackIds.includes(
-                                                        stack.id,
-                                                    );
-
-                                                return (
-                                                    <button
-                                                        key={stack.id}
-                                                        type="button"
-                                                        onClick={() =>
-                                                            toggleStack(
-                                                                stack.id,
-                                                            )
-                                                        }
-                                                        className={`rounded-[5px] border px-[10px] py-[6px] text-[20px] font-medium transition-colors ${selected
-                                                            ? "border-accent-light bg-misc-f2edff text-accent-deep"
-                                                            : "border-border-soft bg-surface-faint text-black-1"
-                                                            }`}
-                                                    >
-                                                        {stack.name}
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                            <button
+                                type="button"
+                                onClick={() => moveMobileStep(3)}
+                                className="h-[70px] rounded-[10px] bg-[#8158F6] text-[20px] font-semibold text-white"
+                            >
+                                다음
+                            </button>
                         </div>
                     </div>
 
-                    {/* 수정 */}
-                    <div className="flex justify-end pb-[30px] pt-[10px]">
+                    {/* =========================
+                        STEP 3 - 기술 스택
+                    ========================== */}
+                    <div
+                        className={`${mobileStep === 3 ? "contents" : "hidden"} min-[1015px]:contents`}
+                    >
+                        <div className="stack">
+                            <h2 className="mb-[28px] text-[18px] font-semibold text-[#121212] min-[1015px]:mb-[30px] min-[1015px]:text-[28px]">
+                                기술 스택
+                            </h2>
+
+                            <div className="flex flex-col gap-[22px] min-[1015px]:gap-[26px]">
+                                {[
+                                    ["기획", "PLANNING"],
+                                    ["디자인", "DESIGN"],
+                                    ["프론트엔드", "FRONTEND"],
+                                    ["백엔드", "BACKEND"],
+                                    ["AI", "AI"],
+                                ].map(([label, category]) => {
+                                    const stacks = techStacks.filter(
+                                        (stack) => stack.category === category,
+                                    );
+
+                                    return (
+                                        <div
+                                            key={category}
+                                            className="block min-[1015px]:grid min-[1015px]:grid-cols-[90px_1fr] min-[1015px]:items-start min-[1015px]:gap-x-[50px]"
+                                        >
+                                            <p className="mb-[9px] text-[16px] font-medium text-[#808386] min-[1015px]:mb-0 min-[1015px]:pt-[7px] min-[1015px]:text-[20px]">
+                                                {label}
+                                            </p>
+
+                                            <div className="flex flex-wrap gap-[11px] min-[1015px]:gap-[8px]">
+                                                {stacks.map((stack) => {
+                                                    const selected =
+                                                        selectedStackIds.includes(stack.id);
+
+                                                    return (
+                                                        <button
+                                                            key={stack.id}
+                                                            type="button"
+                                                            onClick={() =>
+                                                                toggleStack(stack.id)
+                                                            }
+                                                            className={`rounded-[5px] border px-[10px] py-[7px] text-[14px] font-medium transition-colors min-[1015px]:rounded-[5px] min-[1015px]:px-[10px] min-[1015px]:py-[6px] min-[1015px]:text-[20px] ${selected
+                                                                ? "border-[#A789FF] bg-[#F2EDFF] text-[#7950F2]"
+                                                                : "border-[#DBDEE2] bg-[#FAFAFA] text-[#121212]"
+                                                                }`}
+                                                        >
+                                                            {stack.name}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* 모바일 등록하기 */}
                         <button
                             type="button"
-                            onClick={
-                                handleSubmit
-                            }
-                            disabled={
-                                submitting
-                            }
-                            className="h-[79px] rounded-[15px] bg-primary-100 px-[35px] text-[24px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                            onClick={handleSubmit}
+                            disabled={submitting}
+                            className="mt-[6px] h-[70px] w-full rounded-[10px] bg-[#8158F6] text-[20px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50 min-[1015px]:hidden"
                         >
-                            {submitting
-                                ? "수정 중..."
-                                : "수정하기"}
+                            {submitting ? "수정 중..." : "수정하기"}
+                        </button>
+                    </div>
+
+                    {/* 데스크톱 등록 버튼 */}
+                    <div className="hidden justify-end pb-[30px] pt-[10px] min-[1015px]:flex">
+                        <button
+                            type="button"
+                            onClick={handleSubmit}
+                            disabled={submitting}
+                            className="h-[79px] rounded-[15px] bg-[#8158F6] px-[35px] text-[24px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            {submitting ? "수정 중..." : "수정하기"}
                         </button>
                     </div>
                 </div>
@@ -1564,20 +1484,17 @@ export default function ProjectEdit() {
     );
 }
 
-// ======================================================
-// Team Member Column
-// ======================================================
+// ==============================
+// 팀원 입력 Column
+// ==============================
 
 interface TeamMemberColumnProps {
     title: string;
-
     members: string[];
-
     onChange: (
         index: number,
         value: string,
     ) => void;
-
     onAdd: () => void;
 }
 
@@ -1589,53 +1506,63 @@ function TeamMemberColumn({
 }: TeamMemberColumnProps) {
     return (
         <div>
-            <p className="mb-[24px] text-[20px] font-medium text-black-1">
+            <p className="mb-[12px] text-[16px] font-medium text-[#808386] min-[1015px]:mb-[24px] min-[1015px]:text-[20px] min-[1015px]:text-[#121212]">
                 {title}
             </p>
 
             <div className="flex flex-col gap-[10px]">
-                {members.map(
-                    (
-                        member,
-                        index,
-                    ) => (
-                        <input
-                            key={
-                                index
-                            }
-                            type="text"
-                            value={
-                                member
-                            }
-                            onChange={(e) =>
-                                onChange(
-                                    index,
-                                    e.target.value,
-                                )
-                            }
-                            placeholder="이름을 입력해주세요"
-                            className={`mb-[7px] h-[92px] w-full rounded-[15px] border px-[20px] text-[20px] text-black-1 outline-none placeholder:text-gray-5 ${index === 0
-                                ? "border-accent-select"
-                                : "border-gray-9 focus:border-accent-select"
-                                }`}
-                        />
-                    ),
-                )}
+                {members.map((member, index) => (
+                    <input
+                        key={index}
+                        type="text"
+                        value={member}
+                        onChange={(e) =>
+                            onChange(
+                                index,
+                                e.target.value,
+                            )
+                        }
+                        placeholder="이름을 입력해주세요"
+                        className="
+                h-[56px]
+                w-full
+                rounded-[10px]
+                border
+                border-[#D0D6DD]
+                px-[16px]
+                text-[14px]
+                text-[#121212]
+                outline-none
+                placeholder:text-[#808386]
+                transition-[border-color,box-shadow]
+                duration-200
+
+                focus:border-[#865BFF]
+                focus:shadow-[0_0_15px_rgba(135,104,244,0.1)]
+
+                min-[1015px]:mb-[7px]
+                min-[1015px]:h-[92px]
+                min-[1015px]:rounded-[15px]
+                min-[1015px]:px-[20px]
+                min-[1015px]:text-[20px]
+            "
+                    />
+                ))}
 
                 <button
                     type="button"
-                    onClick={
-                        onAdd
-                    }
-                    className="mt-[2px] flex items-center gap-[7px] text-[20px] font-medium text-gray-4"
+                    onClick={onAdd}
+                    className="mt-[2px] flex items-center justify-center gap-[7px] text-[16px] font-medium text-[#6C6E72] min-[1015px]:justify-start min-[1015px]:text-[20px]"
                 >
-                    <span className="text-[22px] leading-none">
-                        +
-                    </span>
+                    <img
+                        src={plus}
+                        alt=""
+                        className="h-[20px] w-[20px] min-[1015px]:h-[22px] min-[1015px]:w-[22px]"
+                    />
 
                     새로운 멤버 추가하기
                 </button>
             </div>
         </div>
     );
-};
+}

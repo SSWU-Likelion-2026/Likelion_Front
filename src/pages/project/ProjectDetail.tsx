@@ -74,8 +74,6 @@ const categoryName: Record<
 export default function ProjectDetail() {
   const navigate =
     useNavigate();
-  const [teamOpen, setTeamOpen] = useState(false);
-  const [stackOpen, setStackOpen] = useState(false);
 
   const {
     projectId,
@@ -106,6 +104,16 @@ export default function ProjectDetail() {
     error,
     setError,
   ] = useState("");
+
+  const [
+    teamOpen,
+    setTeamOpen,
+  ] = useState(false);
+
+  const [
+    stackOpen,
+    setStackOpen,
+  ] = useState(false);
 
   // ======================================================
   // 프로젝트 상세 조회
@@ -138,9 +146,9 @@ export default function ProjectDetail() {
               numericProjectId,
             );
 
-          // 장표 순서를 sequenceNum 기준으로 정렬
           const sortedProject = {
             ...data,
+
             slides: [
               ...data.slides,
             ].sort(
@@ -203,12 +211,18 @@ export default function ProjectDetail() {
   // ======================================================
   // 팀원 그룹
   // ======================================================
-
+  const partOrder = [
+    "기획",
+    "디자인",
+    "프론트엔드",
+    "백엔드",
+  ];
   const groupedMembers =
     useMemo(() => {
       if (!project) {
         return {};
       }
+
 
       return project.members.reduce<
         Record<
@@ -246,7 +260,13 @@ export default function ProjectDetail() {
   // ======================================================
   // 기술스택 그룹
   // ======================================================
-
+  const categoryOrder = [
+    "기획",
+    "디자인",
+    "프론트엔드",
+    "백엔드",
+    "AI",
+  ];
   const groupedTechStacks =
     useMemo(() => {
       if (!project) {
@@ -332,8 +352,7 @@ export default function ProjectDetail() {
               .length -
             1
             ? 0
-            : prev +
-            1,
+            : prev + 1,
       );
     };
 
@@ -431,10 +450,24 @@ export default function ProjectDetail() {
 
   if (loading) {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-white">
-        <p className="text-[22px] text-gray-5">
-          프로젝트 정보를
-          불러오는 중입니다.
+      <section
+        className="
+          flex
+          min-h-screen
+          items-center
+          justify-center
+          bg-white
+        "
+      >
+        <p
+          className="
+            text-[22px]
+            text-[#808386]
+
+            max-[1014px]:text-[13px]
+          "
+        >
+          프로젝트 정보를 불러오는 중입니다.
         </p>
       </section>
     );
@@ -449,8 +482,24 @@ export default function ProjectDetail() {
     !project
   ) {
     return (
-      <section className="flex min-h-screen flex-col items-center justify-center gap-5 bg-white">
-        <p className="text-[20px]">
+      <section
+        className="
+          flex
+          min-h-screen
+          flex-col
+          items-center
+          justify-center
+          gap-5
+          bg-white
+        "
+      >
+        <p
+          className="
+            text-[20px]
+
+            max-[1014px]:text-[14px]
+          "
+        >
           {error ||
             "프로젝트가 존재하지 않습니다."}
         </p>
@@ -462,7 +511,17 @@ export default function ProjectDetail() {
               "/Project",
             )
           }
-          className="rounded-[10px] border px-5 py-3"
+          className="
+            rounded-[10px]
+            border
+            px-5
+            py-3
+
+            max-[1014px]:rounded-[6px]
+            max-[1014px]:px-3
+            max-[1014px]:py-2
+            max-[1014px]:text-[11px]
+          "
         >
           목록으로 돌아가기
         </button>
@@ -471,31 +530,56 @@ export default function ProjectDetail() {
   }
 
   return (
-    <section className="min-h-screen bg-white px-[120px] py-6">
+    <section
+      className="
+        min-h-screen
+        bg-white
+        px-[120px]
+        py-6
 
-      {/* ==========================================
-          상단 버튼
-      ========================================== */}
+        max-[1014px]:px-6
+        max-[1014px]:pb-[24px]
+        max-[1014px]:pt-[18px]
+      "
+    >
+      {/* ==================================================
+          데스크톱 상단 버튼
+      ================================================== */}
 
-      <div className="mb-[40px] flex items-center justify-between">
+      <div
+        className="
+          mb-[40px]
+          flex
+          items-center
+          justify-between
+
+          max-[1014px]:hidden
+        "
+      >
         <button
           type="button"
           onClick={() =>
             navigate(-1)
           }
-          className="flex h-6 w-6 items-center justify-center"
+          className="
+            flex
+            h-6
+            w-6
+            items-center
+            justify-center
+          "
         >
           <img
             src={backbtn}
             alt="뒤로가기"
-            className="h-[16px] w-[8px]"
+            className="
+              h-[16px]
+              w-[8px]
+            "
           />
         </button>
 
         <div className="flex gap-3">
-
-          {/* 수정 */}
-
           <button
             type="button"
             onClick={() =>
@@ -503,266 +587,638 @@ export default function ProjectDetail() {
                 `/ProjectEdit/${project.projectId}`,
               )
             }
-            className="h-[46px] rounded-[10px] border border-gray-9 px-[10px] text-[16px] font-medium text-gray-5"
+            className="
+              h-[46px]
+              rounded-[10px]
+              border
+              border-[#D0D6DD]
+              px-[10px]
+              text-[16px]
+              font-medium
+              text-[#808386]
+            "
           >
             프로젝트 수정
           </button>
-
-          {/* 삭제 */}
 
           <button
             type="button"
             onClick={
               handleDelete
             }
-            className="h-[46px] rounded-[10px] border border-gray-9 px-[10px] text-[16px] font-medium text-gray-5"
+            className="
+              h-[46px]
+              rounded-[10px]
+              border
+              border-[#D0D6DD]
+              px-[10px]
+              text-[16px]
+              font-medium
+              text-[#808386]
+            "
           >
             프로젝트 삭제
           </button>
         </div>
       </div>
 
-      {/* ==========================================
-          상단 프로젝트 정보
-      ========================================== */}
+      {/* ==================================================
+    프로젝트 상단
+================================================== */}
 
-      <div className="flex gap-10">
+      <div
+        className="
+    flex
+    gap-10
 
-        {/* 왼쪽 정보 */}
+    max-[1014px]:flex-col
+    max-[1014px]:gap-0
+  "
+      >
+        {/* ==================================================
+      왼쪽 정보
 
-        <div className="w-[384px] shrink-0">
+      모바일에서는 contents로 풀어서
+      순서를 각각 변경함
+  ================================================== */}
 
+        <div
+          className="
+      w-[384px]
+      shrink-0
+
+      max-[1014px]:contents
+    "
+        >
           {/* 로고 + 제목 */}
 
-          <div className="mb-[15px] flex items-center gap-4">
-            <div className="h-[93px] w-[93px] overflow-hidden rounded-[20px] bg-misc-d9d9d9">
+          <div
+            className="
+        mb-[15px]
+        flex
+        items-center
+        gap-4
+
+        max-[1014px]:order-1
+        max-[1014px]:mb-[12px]
+        max-[1014px]:gap-[12px]
+      "
+          >
+            <div
+              className="
+          h-[93px]
+          w-[93px]
+          shrink-0
+          overflow-hidden
+          rounded-[20px]
+          bg-[#D9D9D9]
+
+          max-[1014px]:h-[45px]
+          max-[1014px]:w-[45px]
+          max-[1014px]:rounded-[8px]
+        "
+            >
               {project.logoUrl && (
                 <img
-                  src={
-                    project.logoUrl
-                  }
-                  alt={
-                    project.title
-                  }
-                  className="h-full w-full object-cover"
+                  src={project.logoUrl}
+                  alt={project.title}
+                  className="
+              h-full
+              w-full
+              object-cover
+            "
                 />
               )}
             </div>
 
-            <h1 className="text-[50px] font-medium text-misc-222">
-              {
-                project.title
-              }
+            <h1
+              className="
+          text-[50px]
+          font-medium
+          text-[#222]
+
+          max-[1014px]:text-[24px]
+          max-[1014px]:font-semibold
+          max-[1014px]:leading-[20px]
+        "
+            >
+              {project.title}
             </h1>
           </div>
 
-          {/* 슬로건 */}
+          {/* 프로젝트 한줄 소개 */}
 
-          <p className="mb-[30px] text-[20px] font-medium text-black-1">
-            {
-              project.summary
-            }
+          <p
+            className="
+        mb-[30px]
+        text-[20px]
+        font-medium
+        text-[#121212]
+
+        max-[1014px]:order-2
+        max-[1014px]:mb-[18px]
+        max-[1014px]:text-[18px]
+        max-[1014px]:leading-[24px]
+      "
+          >
+            {project.summary}
           </p>
 
-          {/* 해커톤 / 기간 */}
+          {/* 해커톤 / 프로젝트 기간 */}
 
-          <div className="h-[179px] rounded-[12px] border border-misc-dadde1 px-[25px] py-[20px]">
-            <p className="text-[18px] text-gray-4">
+          <div
+            className="
+        h-[179px]
+        rounded-[12px]
+        border
+        border-[#DADDE1]
+        px-[25px]
+        py-[20px]
+
+        max-[1014px]:order-4
+        max-[1014px]:mt-[30px]
+        max-[1014px]:h-auto
+        max-[1014px]:rounded-[15px]
+        max-[1014px]:px-[16px]
+        max-[1014px]:py-[14px]
+      "
+          >
+            <p
+              className="
+          text-[18px]
+          text-[#6C6E72]
+
+          max-[1014px]:text-[16px]
+        "
+            >
               해커톤
             </p>
 
-            <p className="mb-3 text-[22px] font-medium">
-              {hackathonName[
-                project.hackathon
-              ] ??
+            <p
+              className="
+          mb-3
+          text-[22px]
+          font-medium
+
+          max-[1014px]:mb-[10px]
+          max-[1014px]:mt-[1px]
+          max-[1014px]:text-[18px]
+        "
+            >
+              {hackathonName[project.hackathon] ??
                 project.hackathon}
             </p>
 
-            <p className="text-[18px] text-gray-4">
+            <p
+              className="
+          text-[18px]
+          text-[#6C6E72]
+
+          max-[1014px]:mt-[15px]
+          max-[1014px]:text-[16px]
+        "
+            >
               프로젝트 기간
             </p>
 
-            <p className="text-[22px] font-medium">
-              {project.startMonth.replace(
-                "-",
-                ".",
-              )}{" "}
+            <p
+              className="
+          text-[22px]
+          font-medium
+
+          max-[1014px]:mt-[1px]
+          max-[1014px]:text-[18px]
+        "
+            >
+              {project.startMonth.replace("-", ".")}{" "}
               -{" "}
-              {project.endMonth.replace(
-                "-",
-                ".",
-              )}
+              {project.endMonth.replace("-", ".")}
             </p>
           </div>
         </div>
 
-        {/* ==========================================
-            장표
-        ========================================== */}
+        {/* ==================================================
+      오른쪽 장표
+  ================================================== */}
 
-        <div className="flex-1">
+        <div
+          className="
+      min-w-0
+      flex-1
 
+      max-[1014px]:order-3
+      max-[1014px]:w-full
+    "
+        >
           {/* 메인 장표 */}
 
-          <div className="relative h-[529px] w-full overflow-hidden bg-gray-8">
-            {project.slides
-              .length >
-              0 ? (
+          <div
+            className="
+        relative
+        w-full
+        overflow-hidden
+        bg-[#CCCED0]
+
+        aspect-[792/445]
+
+        min-[1015px]:max-[1100px]:aspect-auto
+        min-[1015px]:max-[1100px]:h-[400px]
+
+        max-[1014px]:h-[214px]
+      "
+          >
+            {project.slides.length > 0 ? (
               <img
                 src={
                   project.slides[
                     currentSlide
                   ]?.imageUrl
                 }
-                alt={`프로젝트 장표 ${currentSlide +
-                  1
+                alt={`프로젝트 장표 ${currentSlide + 1
                   }`}
-                className="h-full w-full object-contain"
+                className="
+            h-full
+            w-full
+            object-contain
+            max-[1100px]:object-cover
+          "
               />
             ) : (
-              <div className="flex h-full items-center justify-center">
-                <p className="text-[20px] text-gray-5">
-                  등록된 장표가
-                  없습니다.
+              <div
+                className="
+            flex
+            h-full
+            items-center
+            justify-center
+          "
+              >
+                <p
+                  className="
+              text-[20px]
+              text-[#808386]
+
+              max-[1014px]:text-[11px]
+            "
+                >
+                  등록된 장표가 없습니다.
                 </p>
               </div>
             )}
 
             {/* 좌우 버튼 */}
 
-            {project.slides
-              .length >
-              1 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={
-                      handlePreviousSlide
-                    }
-                    className="absolute left-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[8px] bg-warm-black"
-                  >
-                    <img
-                      src={
-                        leftbtn
-                      }
-                      alt="이전"
-                      className="h-[12px] w-[6px]"
-                    />
-                  </button>
+            {project.slides.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={
+                    handlePreviousSlide
+                  }
+                  className="
+  absolute
+  left-4
+  top-1/2
+  flex
+  aspect-square
+  w-[48px]
+  -translate-y-1/2
+  items-center
+  justify-center
+  rounded-[8px]
+  bg-[#212121]
 
-                  <button
-                    type="button"
-                    onClick={
-                      handleNextSlide
-                    }
-                    className="absolute right-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[8px] bg-warm-black"
-                  >
-                    <img
-                      src={
-                        rightbtn
-                      }
-                      alt="다음"
-                      className="h-[12px] w-[6px]"
-                    />
-                  </button>
-                </>
-              )}
+  min-[1015px]:max-[1200px]:w-[42px]
+
+  max-[1014px]:left-[12px]
+  max-[1014px]:w-[23px]
+  max-[1014px]:rounded-[5px]
+"
+                >
+                  <img
+                    src={leftbtn}
+                    alt="이전"
+                    className="
+                h-[12px]
+                w-[6px]
+
+                max-[1014px]:h-[8px]
+                max-[1014px]:w-[4px]
+              "
+                  />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={
+                    handleNextSlide
+                  }
+                  className="
+  absolute
+  right-4
+  top-1/2
+  flex
+  aspect-square
+  w-[48px]
+  -translate-y-1/2
+  items-center
+  justify-center
+  rounded-[8px]
+  bg-[#212121]
+
+  min-[1015px]:max-[1200px]:w-[42px]
+
+  max-[1014px]:right-[12px]
+  max-[1014px]:w-[23px]
+  max-[1014px]:rounded-[5px]
+"
+                >
+                  <img
+                    src={rightbtn}
+                    alt="다음"
+                    className="
+                h-[12px]
+                w-[6px]
+
+                max-[1014px]:h-[8px]
+                max-[1014px]:w-[4px]
+              "
+                  />
+                </button>
+              </>
+            )}
           </div>
 
-          {/* 썸네일 */}
+          {/* ==================================================
+        데스크톱 장표 썸네일
+    ================================================== */}
 
-          {project.slides
-            .length >
-            0 && (
-              <div className="mt-3 grid grid-cols-6 gap-3">
-                {project.slides.map(
-                  (
-                    slide,
-                    index,
-                  ) => (
-                    <button
-                      key={
-                        slide.slideId
-                      }
-                      type="button"
-                      onClick={() =>
-                        setCurrentSlide(
-                          index,
-                        )
-                      }
-                      className={`h-[80px] overflow-hidden border-2 ${currentSlide ===
-                        index
-                        ? "border-primary-100"
+          {project.slides.length > 0 && (
+            <div
+              className="
+          mt-3
+          grid
+          w-full
+          grid-cols-6
+          gap-3
+
+          max-[1014px]:hidden
+        "
+            >
+              {project.slides.map(
+                (slide, index) => (
+                  <button
+                    key={slide.slideId}
+                    type="button"
+                    onClick={() =>
+                      setCurrentSlide(index)
+                    }
+                    className={`
+                aspect-[16/9]
+                w-full
+                overflow-hidden
+                border-2
+
+                ${currentSlide === index
+                        ? "border-none"
                         : "border-transparent"
+                      }
+              `}
+                  >
+                    <img
+                      src={slide.imageUrl}
+                      alt={`장표 ${index + 1
                         }`}
-                    >
-                      <img
-                        src={
-                          slide.imageUrl
-                        }
-                        alt={`장표 ${index +
-                          1
-                          }`}
-                        className="h-full w-full object-cover"
-                      />
-                    </button>
-                  ),
-                )}
-              </div>
-            )}
+                      className="
+                  h-full
+                  w-full
+                  object-cover
+                "
+                    />
+                  </button>
+                ),
+              )}
+            </div>
+          )}
+
+          {/* ==================================================
+        모바일 슬라이드 점
+    ================================================== */}
+
+          {project.slides.length > 1 && (
+            <div
+              className="
+          hidden
+
+          max-[1014px]:mt-[10px]
+          max-[1014px]:flex
+          max-[1014px]:items-center
+          max-[1014px]:justify-center
+          max-[1014px]:gap-[5px]
+        "
+            >
+              {project.slides.map(
+                (slide, index) => (
+                  <button
+                    key={slide.slideId}
+                    type="button"
+                    aria-label={`${index + 1
+                      }번째 장표`}
+                    onClick={() =>
+                      setCurrentSlide(index)
+                    }
+                    className={`
+                h-[4px]
+                w-[4px]
+                rounded-full
+
+                ${currentSlide === index
+                        ? "bg-[#575B61]"
+                        : "bg-[#D5D9DE]"
+                      }
+              `}
+                  />
+                ),
+              )}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ==========================================
+      {/* ==================================================
           하단
-      ========================================== */}
+      ================================================== */}
 
-      <div className="mt-10 flex gap-10">
+      <div
+        className="
+          mt-10
+          flex
+          gap-10
 
-        {/* 왼쪽 */}
-        <div className="w-[384px] shrink-0 space-y-4">
+          max-[1014px]:mt-[12px]
+          max-[1014px]:flex-col
+          max-[1014px]:gap-[12px]
+        "
+      >
+        {/* ==================================================
+            왼쪽 - 팀원 / 기술스택
+        ================================================== */}
 
+        <div
+          className="
+            w-[384px]
+            shrink-0
+            space-y-4
+
+            max-[1014px]:w-full
+            max-[1014px]:space-y-[12px]
+          "
+        >
           {/* 프로젝트 팀원 */}
-          <div className="overflow-hidden rounded-[12px] border border-gray-9 bg-white">
+
+          <div
+            className="
+              overflow-hidden
+              rounded-[12px]
+              border
+              border-[#D0D6DD]
+              bg-white
+              max-[1014px]:bg-[#FAFAFA]  
+              max-[1014px]:rounded-[15px]
+            "
+          >
             <button
               type="button"
-              onClick={() => setTeamOpen((prev) => !prev)}
-              className="flex h-[78px] w-full items-center justify-between px-[20px]"
+              onClick={() =>
+                setTeamOpen(
+                  (prev) =>
+                    !prev,
+                )
+              }
+              className="
+                flex
+                h-[78px]
+                w-full
+                items-center
+                justify-between
+                px-[20px]
+                max-[1014px]:h-[84px]
+                max-[1014px]:px-[15px]
+              "
             >
-              <span className="text-[20px] font-semibold text-black-1">
+              <span
+                className="
+                  text-[20px]
+                  font-semibold
+                  text-[#121212]
+
+                  max-[1014px]:text-[18px]
+                  max-[1014px]:font-medium
+                "
+              >
                 프로젝트 팀원
               </span>
 
               <img
                 src={togglebtn}
                 alt="프로젝트 팀원 펼치기"
-                className={`h-[14px] w-[14px] transition-transform duration-200 ${teamOpen ? "rotate-90" : ""
-                  }`}
+                className={`
+                  h-[14px]
+                  w-[14px]
+                  transition-transform
+                  duration-200
+
+                  max-[1014px]:h-[15px]
+                  max-[1014px]:w-[15px]
+
+                  ${teamOpen
+                    ? "rotate-90"
+                    : ""
+                  }
+                `}
               />
             </button>
 
             {teamOpen && (
-              <div className="border-t border-misc-e5e7eb px-[20px] py-[22px]">
-                {Object.entries(groupedMembers).length > 0 ? (
-                  <div className="space-y-5">
-                    {Object.entries(groupedMembers).map(
-                      ([part, members]) => (
-                        <div key={part}>
-                          <p className="text-[16px] text-gray-5">
-                            {part}
+              <div
+                className="
+                  px-[20px]
+                  py-[22px]
+                max-[1014px]:mt-[-20px]
+                  max-[1014px]:px-[15px]
+                  max-[1014px]:py-[14px]
+                "
+              >
+                {Object.entries(
+                  groupedMembers,
+                ).length >
+                  0 ? (
+                  <div
+                    className="
+                      space-y-5
+
+                      max-[1014px]:space-y-[12px]
+                    "
+                  >
+                    {Object.entries(groupedMembers)
+                      .sort(
+                        ([a], [b]) =>
+                          partOrder.indexOf(a) -
+                          partOrder.indexOf(b),
+                      )
+                      .map(([part, members]) => (
+                        <div
+                          key={
+                            part
+                          }
+                        >
+                          <p
+                            className="
+                              text-[16px]
+                              text-[#808386]
+
+                              max-[1014px]:text-[16px]
+                            "
+                          >
+                            {
+                              part
+                            }
                           </p>
 
-                          <p className="mt-[6px] text-[20px] font-medium text-black-1">
+                          <p
+                            className="
+                              mt-[6px]
+                              text-[20px]
+                              font-medium
+                              text-[#121212]
+
+                              max-[1014px]:mt-[3px]
+                              max-[1014px]:text-[16px]
+                            "
+                          >
                             {members
-                              .map((member) => member.name)
-                              .join(" ")}
+                              .map(
+                                (
+                                  member,
+                                ) =>
+                                  member.name,
+                              )
+                              .join(
+                                " ",
+                              )}
                           </p>
                         </div>
                       ),
-                    )}
+                      )}
                   </div>
                 ) : (
-                  <p className="text-[18px] text-gray-5">
+                  <p
+                    className="
+                      text-[18px]
+                      text-[#808386]
+
+                      max-[1014px]:text-[10px]
+                    "
+                  >
                     등록된 팀원이 없습니다.
                   </p>
                 )}
@@ -771,38 +1227,109 @@ export default function ProjectDetail() {
           </div>
 
           {/* 기술 스택 */}
-          <div className="overflow-hidden rounded-[12px] border border-gray-9 bg-white">
+
+          <div
+            className="
+              overflow-hidden
+              rounded-[12px]
+              border
+              border-[#D0D6DD]
+              bg-white
+
+              max-[1014px]:bg-[#FAFAFA]  
+              max-[1014px]:rounded-[15px]
+            "
+          >
             <button
               type="button"
-              onClick={() => setStackOpen((prev) => !prev)}
-              className="flex h-[78px] w-full items-center justify-between px-[20px]"
+              onClick={() =>
+                setStackOpen(
+                  (prev) =>
+                    !prev,
+                )
+              }
+              className="
+                flex
+                h-[78px]
+                w-full
+                items-center
+                justify-between
+                px-[20px]
+
+                max-[1014px]:h-[84px]
+                max-[1014px]:px-[15px]
+              "
             >
-              <span className="text-[20px] font-semibold text-black-1">
+              <span
+                className="
+                  text-[20px]
+                  font-semibold
+                  text-[#121212]
+
+                  max-[1014px]:text-[18px]
+                  max-[1014px]:font-medium
+                "
+              >
                 기술 스택
               </span>
 
               <img
                 src={togglebtn}
                 alt="기술 스택 펼치기"
-                className={`h-[14px] w-[14px] transition-transform duration-200 ${stackOpen ? "rotate-90" : ""
-                  }`}
+                className={`
+                  h-[14px]
+                  w-[14px]
+                  transition-transform
+                  duration-200
+
+                  max-[1014px]:h-[15px]
+                  max-[1014px]:w-[15px]
+
+                  ${stackOpen
+                    ? "rotate-90"
+                    : ""
+                  }
+                `}
               />
             </button>
 
             {stackOpen && (
-              <div className="border-t border-misc-e5e7eb px-[20px] py-[22px]">
+              <div
+                className="
+                  px-[20px]
+                  py-[22px]
+                 max-[1014px]:mt-[-20px]
+                  max-[1014px]:px-[15px]
+                  max-[1014px]:py-[14px]
+                "
+              >
                 {Object.entries(groupedTechStacks).length > 0 ? (
-                  Object.entries(groupedTechStacks).map(
-                    ([category, stacks]) => (
-                      <SkillRow
-                        key={category}
-                        title={category}
-                        items={stacks.map((stack) => stack.name)}
-                      />
-                    ),
-                  )
+                  <div className="space-y-[11px]">
+                    {Object.entries(groupedTechStacks)
+                      .sort(
+                        ([a], [b]) =>
+                          categoryOrder.indexOf(a) -
+                          categoryOrder.indexOf(b),
+                      )
+                      .map(([category, stacks]) => (
+                        <SkillRow
+                          key={category}
+                          title={category}
+                          items={stacks.map(
+                            (stack) => stack.name,
+                          )}
+                        />
+                      ))}
+                  </div>
                 ) : (
-                  <p className="text-[18px] text-gray-5">
+                  <p
+                    className="
+      text-[18px]
+      text-[#808386]
+
+      max-[1014px]:text-[16px]
+    "
+                  >
                     등록된 기술 스택이 없습니다.
                   </p>
                 )}
@@ -811,23 +1338,110 @@ export default function ProjectDetail() {
           </div>
         </div>
 
-        {/* ==========================================
-            프로젝트 설명
-        ========================================== */}
+        {/* ==================================================
+            Project Overview
+        ================================================== */}
 
-        {/* ==========================================
-    프로젝트 설명
-========================================== */}
+        <div
+          className="
+            min-h-[calc(100vh-180px)]
+            flex-1
+            rounded-[15px]
+            border
+            border-[#D0D6DD]
+            bg-[#FAFAFA]
+            px-[65px]
+            py-[35px]
 
-        <div className="min-h-[calc(100vh-180px)] flex-1 rounded-[15px] border border-gray-9 bg-surface-faint px-[65px] py-[35px]">
-          <h2 className="text-[24px] font-semibold">
+            max-[1014px]:min-h-[220px]
+            max-[1014px]:w-full
+            max-[1014px]:rounded-[15px]
+            max-[1014px]:px-[15px]
+            max-[1014px]:py-[17px]
+          "
+        >
+          <h2
+            className="
+              text-[24px]
+              font-semibold
+
+              max-[1014px]:text-[18px]
+            "
+          >
             Project Overview
           </h2>
 
-          <p className="mt-[25px] whitespace-pre-wrap text-[18px] font-medium leading-[1.7]">
+          <p
+            className="
+              mt-[25px]
+              whitespace-pre-wrap
+              text-[18px]
+              font-medium
+              leading-[1.7]
+
+              max-[1014px]:mt-[9px]
+              max-[1014px]:text-[14px]
+              max-[1014px]:leading-[20px]
+            "
+          >
             {project.description}
           </p>
         </div>
+      </div>
+
+      {/* ==================================================
+          모바일 수정 / 삭제 버튼
+      ================================================== */}
+
+      <div
+        className="
+          hidden
+
+          max-[1014px]:mt-[20px]
+          max-[1014px]:flex
+          max-[1014px]:justify-end
+          max-[1014px]:gap-[6px]
+        "
+      >
+        <button
+          type="button"
+          onClick={() =>
+            navigate(
+              `/ProjectEdit/${project.projectId}`,
+            )
+          }
+          className="
+            h-[46px]
+            rounded-[10px]
+            border
+            border-[#D0D6DD]
+            px-[11px]
+            text-[14px]
+            font-medium
+            text-[#808386]
+          "
+        >
+          프로젝트 수정
+        </button>
+
+        <button
+          type="button"
+          onClick={
+            handleDelete
+          }
+          className="
+            h-[46px]
+            rounded-[10px]
+            border
+            border-[#D0D6DD]
+            px-[11px]
+            text-[14px]
+            font-medium
+            text-[#808386]
+          "
+        >
+          프로젝트 삭제
+        </button>
       </div>
     </section>
   );
@@ -845,12 +1459,35 @@ function SkillRow({
   items: string[];
 }) {
   return (
-    <div className="mb-5">
-      <p className="mb-2 text-[18px] text-gray-4">
+    <div
+      className="
+        mb-5
+
+        max-[1014px]:mb-[12px]
+      "
+    >
+      <p
+        className="
+          mb-2
+          text-[18px]
+          text-[#6C6E72]
+
+          max-[1014px]:mb-[5px]
+          max-[1014px]:text-[16px]
+        "
+      >
         {title}
       </p>
 
-      <div className="flex flex-wrap gap-2">
+      <div
+        className="
+          flex
+          flex-wrap
+          gap-2
+
+          max-[1014px]:gap-[5px]
+        "
+      >
         {items.map(
           (
             item,
@@ -858,7 +1495,20 @@ function SkillRow({
           ) => (
             <span
               key={`${item}-${index}`}
-              className="rounded-[5px] bg-border-soft px-[12px] py-[8px] text-[16px] font-medium text-black"
+              className="
+                rounded-[5px]
+                bg-[#DBDEE2]
+                px-[12px]
+                py-[8px]
+                text-[16px]
+                font-medium
+                text-black
+
+                max-[1014px]:rounded-[5px]
+                max-[1014px]:px-[15px]
+                max-[1014px]:py-[5px]
+                max-[1014px]:text-[16px]
+              "
             >
               {item}
             </span>

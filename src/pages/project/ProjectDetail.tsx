@@ -623,92 +623,86 @@ export default function ProjectDetail() {
       </div>
 
       {/* ==================================================
-          프로젝트 상단
-      ================================================== */}
+    프로젝트 상단
+================================================== */}
 
       <div
         className="
-          flex
-          gap-10
+    flex
+    gap-10
 
-          max-[393px]:flex-col
-          max-[393px]:gap-0
-        "
+    max-[393px]:flex-col
+    max-[393px]:gap-0
+  "
       >
         {/* ==================================================
-            왼쪽 정보
+      왼쪽 정보
 
-            모바일에서는 contents로 풀어서
-            순서를 각각 변경함
-        ================================================== */}
+      모바일에서는 contents로 풀어서
+      순서를 각각 변경함
+  ================================================== */}
 
         <div
           className="
-            w-[384px]
-            shrink-0
+      w-[384px]
+      shrink-0
 
-            max-[393px]:contents
-          "
+      max-[393px]:contents
+    "
         >
           {/* 로고 + 제목 */}
 
           <div
             className="
-              mb-[15px]
-              flex
-              items-center
-              gap-4
+        mb-[15px]
+        flex
+        items-center
+        gap-4
 
-              max-[393px]:order-1
-              max-[393px]:mb-[12px]
-              max-[393px]:gap-[12px]
-            "
+        max-[393px]:order-1
+        max-[393px]:mb-[12px]
+        max-[393px]:gap-[12px]
+      "
           >
             <div
               className="
-                h-[93px]
-                w-[93px]
-                shrink-0
-                overflow-hidden
-                rounded-[20px]
-                bg-[#D9D9D9]
+          h-[93px]
+          w-[93px]
+          shrink-0
+          overflow-hidden
+          rounded-[20px]
+          bg-[#D9D9D9]
 
-                max-[393px]:h-[45px]
-                max-[393px]:w-[45px]
-                max-[393px]:rounded-[8px]
-              "
+          max-[393px]:h-[45px]
+          max-[393px]:w-[45px]
+          max-[393px]:rounded-[8px]
+        "
             >
               {project.logoUrl && (
                 <img
-                  src={
-                    project.logoUrl
-                  }
-                  alt={
-                    project.title
-                  }
+                  src={project.logoUrl}
+                  alt={project.title}
                   className="
-                    h-full
-                    w-full
-                    object-cover
-                  "
+              h-full
+              w-full
+              object-cover
+            "
                 />
               )}
             </div>
 
             <h1
               className="
-                text-[50px]
-                font-medium
-                text-[#222]
+          text-[50px]
+          font-medium
+          text-[#222]
 
-                max-[393px]:text-[24px]
-                max-[393px]:font-semibold
-                max-[393px]:leading-[20px]
-              "
+          max-[393px]:text-[24px]
+          max-[393px]:font-semibold
+          max-[393px]:leading-[20px]
+        "
             >
-              {
-                project.title
-              }
+              {project.title}
             </h1>
           </div>
 
@@ -716,163 +710,159 @@ export default function ProjectDetail() {
 
           <p
             className="
-              mb-[30px]
-              text-[20px]
-              font-medium
-              text-[#121212]
+        mb-[30px]
+        text-[20px]
+        font-medium
+        text-[#121212]
 
-              max-[393px]:order-2
-              max-[393px]:mb-[18px]
-              max-[393px]:text-[18px]
-              max-[393px]:leading-[24px]
-            "
+        max-[393px]:order-2
+        max-[393px]:mb-[18px]
+        max-[393px]:text-[18px]
+        max-[393px]:leading-[24px]
+      "
           >
-            {
-              project.summary
-            }
+            {project.summary}
           </p>
 
           {/* 해커톤 / 프로젝트 기간 */}
 
           <div
             className="
-              h-[179px]
-              rounded-[12px]
-              border
-              border-[#DADDE1]
-              px-[25px]
-              py-[20px]
+        h-[179px]
+        rounded-[12px]
+        border
+        border-[#DADDE1]
+        px-[25px]
+        py-[20px]
 
-              max-[393px]:order-4
-              max-[393px]:mt-[14px]
-              max-[393px]:h-auto
-              max-[393px]:rounded-[15px]
-              max-[393px]:px-[16px]
-              max-[393px]:py-[14px]
-            "
+        max-[393px]:order-4
+        max-[393px]:mt-[30px]
+        max-[393px]:h-auto
+        max-[393px]:rounded-[15px]
+        max-[393px]:px-[16px]
+        max-[393px]:py-[14px]
+      "
           >
             <p
               className="
-                text-[18px]
-                text-[#6C6E72]
+          text-[18px]
+          text-[#6C6E72]
 
-                max-[393px]:text-[16px]
-              "
+          max-[393px]:text-[16px]
+        "
             >
               해커톤
             </p>
 
             <p
               className="
-                mb-3
-                text-[22px]
-                font-medium
+          mb-3
+          text-[22px]
+          font-medium
 
-                max-[393px]:mb-[10px]
-                max-[393px]:mt-[1px]
-                max-[393px]:text-[18px]
-              "
+          max-[393px]:mb-[10px]
+          max-[393px]:mt-[1px]
+          max-[393px]:text-[18px]
+        "
             >
-              {hackathonName[
-                project.hackathon
-              ] ??
+              {hackathonName[project.hackathon] ??
                 project.hackathon}
             </p>
 
             <p
               className="
-                text-[18px]
-                text-[#6C6E72]
+          text-[18px]
+          text-[#6C6E72]
 
-                max-[393px]:text-[16px]
-                max-[393px]:mt-[15px]
-              "
+          max-[393px]:mt-[15px]
+          max-[393px]:text-[16px]
+        "
             >
               프로젝트 기간
             </p>
 
             <p
               className="
-                text-[22px]
-                font-medium
+          text-[22px]
+          font-medium
 
-                max-[393px]:mt-[1px]
-                max-[393px]:text-[18px]
-              "
+          max-[393px]:mt-[1px]
+          max-[393px]:text-[18px]
+        "
             >
-              {project.startMonth.replace(
-                "-",
-                ".",
-              )}{" "}
+              {project.startMonth.replace("-", ".")}{" "}
               -{" "}
-              {project.endMonth.replace(
-                "-",
-                ".",
-              )}
+              {project.endMonth.replace("-", ".")}
             </p>
           </div>
         </div>
 
         {/* ==================================================
-            장표
-        ================================================== */}
+      오른쪽 장표
+  ================================================== */}
 
         <div
           className="
-            flex-1
+      min-w-0
+      flex-1
 
-            max-[393px]:order-3
-            max-[393px]:w-full
-          "
+      max-[393px]:order-3
+      max-[393px]:w-full
+    "
         >
           {/* 메인 장표 */}
 
           <div
             className="
-              relative
-              h-[529px]
-              w-full
-              overflow-hidden
-              bg-[#CCCED0]
+        relative
+        w-full
+        overflow-hidden
+        bg-[#CCCED0]
 
-              max-[393px]:h-[214px]
-              max-[393px]:rounded-[1px]
-            "
+        aspect-[792/445]
+
+        max-[1100px]:aspect-auto
+        max-[1100px]:h-[400px]
+
+        max-[900px]:h-[350px]
+
+        max-[700px]:h-[300px]
+
+        max-[393px]:h-[214px]
+      "
           >
-            {project.slides
-              .length >
-              0 ? (
+            {project.slides.length > 0 ? (
               <img
                 src={
                   project.slides[
                     currentSlide
                   ]?.imageUrl
                 }
-                alt={`프로젝트 장표 ${currentSlide +
-                  1
+                alt={`프로젝트 장표 ${currentSlide + 1
                   }`}
                 className="
-                  h-full
-                  w-full
-                  object-contain
-                "
+            h-full
+            w-full
+            object-contain
+            max-[1100px]:object-cover
+          "
               />
             ) : (
               <div
                 className="
-                  flex
-                  h-full
-                  items-center
-                  justify-center
-                "
+            flex
+            h-full
+            items-center
+            justify-center
+          "
               >
                 <p
                   className="
-                    text-[20px]
-                    text-[#808386]
+              text-[20px]
+              text-[#808386]
 
-                    max-[393px]:text-[11px]
-                  "
+              max-[393px]:text-[11px]
+            "
                 >
                   등록된 장표가 없습니다.
                 </p>
@@ -881,206 +871,184 @@ export default function ProjectDetail() {
 
             {/* 좌우 버튼 */}
 
-            {project.slides
-              .length >
-              1 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={
-                      handlePreviousSlide
-                    }
+            {project.slides.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={
+                    handlePreviousSlide
+                  }
+                  className="
+  absolute
+  left-4
+  top-1/2
+  flex
+  aspect-square
+  w-[48px]
+  -translate-y-1/2
+  items-center
+  justify-center
+  rounded-[8px]
+  bg-[#212121]
+
+  max-[1200px]:w-[42px]
+  max-[1000px]:w-[36px]
+  max-[800px]:w-[30px]
+
+  max-[393px]:left-[12px]
+  max-[393px]:w-[23px]
+  max-[393px]:rounded-[5px]
+"
+                >
+                  <img
+                    src={leftbtn}
+                    alt="이전"
                     className="
-                    absolute
-                    left-4
-                    top-1/2
-                    flex
-                    h-12
-                    w-12
-                    -translate-y-1/2
-                    items-center
-                    justify-center
-                    rounded-[8px]
-                    bg-[#212121]
+                h-[12px]
+                w-[6px]
 
-                    max-[393px]:left-[12px]
-                    max-[393px]:h-[23px]
-                    max-[393px]:w-[23px]
-                    max-[393px]:rounded-[5px]
-                  "
-                  >
-                    <img
-                      src={
-                        leftbtn
-                      }
-                      alt="이전"
-                      className="
-                      h-[12px]
-                      w-[6px]
+                max-[393px]:h-[8px]
+                max-[393px]:w-[4px]
+              "
+                  />
+                </button>
 
-                      max-[393px]:h-[8px]
-                      max-[393px]:w-[4px]
-                    "
-                    />
-                  </button>
+                <button
+                  type="button"
+                  onClick={
+                    handleNextSlide
+                  }
+                  className="
+  absolute
+  right-4
+  top-1/2
+  flex
+  aspect-square
+  w-[48px]
+  -translate-y-1/2
+  items-center
+  justify-center
+  rounded-[8px]
+  bg-[#212121]
 
-                  <button
-                    type="button"
-                    onClick={
-                      handleNextSlide
-                    }
+  max-[1200px]:w-[42px]
+  max-[1000px]:w-[36px]
+  max-[800px]:w-[30px]
+
+  max-[393px]:right-[12px]
+  max-[393px]:w-[23px]
+  max-[393px]:rounded-[5px]
+"
+                >
+                  <img
+                    src={rightbtn}
+                    alt="다음"
                     className="
-                    absolute
-                    right-4
-                    top-1/2
-                    flex
-                    h-12
-                    w-12
-                    -translate-y-1/2
-                    items-center
-                    justify-center
-                    rounded-[8px]
-                    bg-[#212121]
+                h-[12px]
+                w-[6px]
 
-                    max-[393px]:right-[12px]
-                    max-[393px]:h-[23px]
-                    max-[393px]:w-[23px]
-                    max-[393px]:rounded-[5px]
-                  "
-                  >
-                    <img
-                      src={
-                        rightbtn
-                      }
-                      alt="다음"
-                      className="
-                      h-[12px]
-                      w-[6px]
-
-                      max-[393px]:h-[8px]
-                      max-[393px]:w-[4px]
-                    "
-                    />
-                  </button>
-                </>
-              )}
+                max-[393px]:h-[8px]
+                max-[393px]:w-[4px]
+              "
+                  />
+                </button>
+              </>
+            )}
           </div>
 
           {/* ==================================================
-              데스크톱 썸네일
-          ================================================== */}
+        데스크톱 장표 썸네일
+    ================================================== */}
 
-          {project.slides
-            .length >
-            0 && (
-              <div
-                className="
-                mt-3
-                grid
-                grid-cols-6
-                gap-3
+          {project.slides.length > 0 && (
+            <div
+              className="
+          mt-3
+          grid
+          w-full
+          grid-cols-6
+          gap-3
 
-                max-[393px]:hidden
-              "
-              >
-                {project.slides.map(
-                  (
-                    slide,
-                    index,
-                  ) => (
-                    <button
-                      key={
-                        slide.slideId
+          max-[393px]:hidden
+        "
+            >
+              {project.slides.map(
+                (slide, index) => (
+                  <button
+                    key={slide.slideId}
+                    type="button"
+                    onClick={() =>
+                      setCurrentSlide(index)
+                    }
+                    className={`
+                aspect-[16/9]
+                w-full
+                overflow-hidden
+                border-2
+
+                ${currentSlide === index
+                        ? "border-none"
+                        : "border-transparent"
                       }
-                      type="button"
-                      onClick={() =>
-                        setCurrentSlide(
-                          index,
-                        )
-                      }
-                      className={`
-                      h-[80px]
-                      overflow-hidden
-                      border-2
-
-                      ${currentSlide ===
-                          index
-                          ? "border-[#8158F6]"
-                          : "border-transparent"
-                        }
-                    `}
-                    >
-                      <img
-                        src={
-                          slide.imageUrl
-                        }
-                        alt={`장표 ${index +
-                          1
-                          }`}
-                        className="
-                        h-full
-                        w-full
-                        object-cover
-                      "
-                      />
-                    </button>
-                  ),
-                )}
-              </div>
-            )}
+              `}
+                  >
+                    <img
+                      src={slide.imageUrl}
+                      alt={`장표 ${index + 1
+                        }`}
+                      className="
+                  h-full
+                  w-full
+                  object-cover
+                "
+                    />
+                  </button>
+                ),
+              )}
+            </div>
+          )}
 
           {/* ==================================================
-              모바일 슬라이드 점
-          ================================================== */}
+        모바일 슬라이드 점
+    ================================================== */}
 
-          {project.slides
-            .length >
-            1 && (
-              <div
-                className="
-                hidden
+          {project.slides.length > 1 && (
+            <div
+              className="
+          hidden
 
-                max-[393px]:mt-[10px]
-                max-[393px]:flex
-                max-[393px]:items-center
-                max-[393px]:justify-center
-                max-[393px]:gap-[5px]
-              "
-              >
-                {project.slides.map(
-                  (
-                    slide,
-                    index,
-                  ) => (
-                    <button
-                      key={
-                        slide.slideId
+          max-[393px]:mt-[10px]
+          max-[393px]:flex
+          max-[393px]:items-center
+          max-[393px]:justify-center
+          max-[393px]:gap-[5px]
+        "
+            >
+              {project.slides.map(
+                (slide, index) => (
+                  <button
+                    key={slide.slideId}
+                    type="button"
+                    aria-label={`${index + 1
+                      }번째 장표`}
+                    onClick={() =>
+                      setCurrentSlide(index)
+                    }
+                    className={`
+                h-[4px]
+                w-[4px]
+                rounded-full
+
+                ${currentSlide === index
+                        ? "bg-[#575B61]"
+                        : "bg-[#D5D9DE]"
                       }
-                      type="button"
-                      aria-label={`${index +
-                        1
-                        }번째 장표`}
-                      onClick={() =>
-                        setCurrentSlide(
-                          index,
-                        )
-                      }
-                      className={`
-                      h-[4px]
-                      w-[4px]
-                      rounded-full
-
-                      ${currentSlide ===
-                          index
-                          ? "bg-[#575B61]"
-                          : "bg-[#D5D9DE]"
-                        }
-                    `}
-                    />
-                  ),
-                )}
-              </div>
-            )}
+              `}
+                  />
+                ),
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -1141,8 +1109,7 @@ export default function ProjectDetail() {
                 items-center
                 justify-between
                 px-[20px]
-                max-[393px]:ba
-                max-[393px]:h-[px]
+                max-[393px]:h-[84px]
                 max-[393px]:px-[15px]
               "
             >
@@ -1169,7 +1136,7 @@ export default function ProjectDetail() {
                   duration-200
 
                   max-[393px]:h-[15px]
-                  max-[393px]:w-[15x]
+                  max-[393px]:w-[15px]
 
                   ${teamOpen
                     ? "rotate-90"

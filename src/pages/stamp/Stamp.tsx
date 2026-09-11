@@ -16,6 +16,7 @@ import type {
   StampMission,
   MyStampResult,
 } from "../../types/stamp/stamp";
+import ToggleGroup from "../../components/ToggleGroup";
 
 type StampMenu = "mission" | "myStamp";
 
@@ -215,104 +216,91 @@ export default function Stamp() {
         "
       >
         {/* ==========================================
-            상단 메뉴
-        ========================================== */}
+    상단 메뉴
+========================================== */}
 
         <div
           className="
-            stampMenu
-            mb-[53px]
-            ml-[3px]
-            flex
-            gap-[30px]
-            sm:gap-[50px]
+    stampMenu
+    mb-[53px]
+    ml-[3px]
 
-            max-[393px]:mb-[42px]
-            max-[393px]:ml-0
-            max-[393px]:gap-[8px]
-          "
+    max-[393px]:mb-[42px]
+    max-[393px]:ml-0
+  "
         >
-          {/* 스탬프 미션 */}
-
-          <button
-            type="button"
-            onClick={() =>
-              setSelectedMenu("mission")
-            }
-            className={`
-              text-[24px]
-              font-semibold
-              sm:text-[28px]
-              lg:text-[32px]
-
-              max-[393px]:flex
-              max-[393px]:h-[36px]
-              max-[393px]:items-center
-              max-[393px]:justify-center
-              max-[393px]:rounded-full
-              max-[393px]:px-[18px]
-              max-[393px]:text-[16px]
-              max-[393px]:font-medium
-
-              ${selectedMenu === "mission"
-                ? `
-                    text-[#121212]
-
-                    max-[393px]:bg-[#171F29]
-                    max-[393px]:text-white
-                  `
-                : `
-                    text-[#B6B6B6]
-
-                    max-[393px]:bg-transparent
-                    max-[393px]:text-[#808386]
-                  `
+          {/* 데스크톱: 공통 ToggleGroup */}
+          <div className="max-[393px]:hidden">
+            <ToggleGroup
+              options={[
+                "스탬프 미션",
+                "마이 스탬프",
+              ]}
+              value={
+                selectedMenu === "mission"
+                  ? "스탬프 미션"
+                  : "마이 스탬프"
               }
-            `}
-          >
-            스탬프 미션
-          </button>
-
-          {/* 마이 스탬프 */}
-
-          <button
-            type="button"
-            onClick={() =>
-              setSelectedMenu("myStamp")
-            }
-            className={`
-              text-[24px]
-              font-semibold
-              sm:text-[28px]
-              lg:text-[32px]
-
-              max-[393px]:flex
-              max-[393px]:h-[36px]
-              max-[393px]:items-center
-              max-[393px]:justify-center
-              max-[393px]:rounded-full
-              max-[393px]:px-[18px]
-              max-[393px]:text-[16px]
-              max-[393px]:font-medium
-
-              ${selectedMenu === "myStamp"
-                ? `
-                    text-[#121212]
-
-                    max-[393px]:bg-[#171F29]
-                    max-[393px]:text-white
-                  `
-                : `
-                    text-[#BFBFBF]
-
-                    max-[393px]:bg-transparent
-                    max-[393px]:text-[#808386]
-                  `
+              onChange={(value) =>
+                setSelectedMenu(
+                  value === "스탬프 미션"
+                    ? "mission"
+                    : "myStamp",
+                )
               }
-            `}
-          >
-            마이 스탬프
-          </button>
+            />
+          </div>
+
+          {/* 모바일: 기존 디자인 유지 */}
+          <div className="hidden gap-[8px] max-[393px]:flex">
+            <button
+              type="button"
+              onClick={() =>
+                setSelectedMenu("mission")
+              }
+              className={`
+        flex
+        h-[36px]
+        items-center
+        justify-center
+        rounded-full
+        px-[20px]
+        text-[16px]
+        font-medium
+
+        ${selectedMenu === "mission"
+                  ? "bg-[#171F29] text-white"
+                  : "bg-transparent text-[#808386]"
+                }
+      `}
+            >
+              스탬프 미션
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                setSelectedMenu("myStamp")
+              }
+              className={`
+        flex
+        h-[36px]
+        items-center
+        justify-center
+        rounded-full
+        px-[18px]
+        text-[16px]
+        font-medium
+
+        ${selectedMenu === "myStamp"
+                  ? "bg-[#171F29] text-white"
+                  : "bg-transparent text-[#808386]"
+                }
+      `}
+            >
+              마이 스탬프
+            </button>
+          </div>
         </div>
 
         {/* ==========================================
@@ -328,7 +316,7 @@ export default function Stamp() {
                 className="
                   py-[100px]
                   text-center
-                  text-[22px]
+                  text-[20px]
                   text-[#808386]
 
                   max-[393px]:py-[60px]
@@ -374,7 +362,7 @@ export default function Stamp() {
                     max-[393px]:text-[13px]
                   "
                 >
-                  등록된 스탬프 미션이 없습니다.
+                  스탬프 미션을 불러오지 못했습니다. 
                 </div>
               )}
 
@@ -621,7 +609,7 @@ max-[393px]:w-full
                 className="
                   py-[100px]
                   text-center
-                  text-[22px]
+                  text-[20px]
                   text-[#808386]
 
                   max-[393px]:py-[60px]

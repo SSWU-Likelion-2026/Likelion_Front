@@ -6,11 +6,13 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import Banner from "../../components/Banner";
+import ToggleGroup from "../../components/ToggleGroup";
 
 import underbtn from "../../img/project/underbtn.svg";
 
 import {
   getProjects,
+  getProjectDetail,
 } from "../../api/project/project";
 
 import type {
@@ -35,6 +37,10 @@ function Project() {
     isGenerationOpen,
     setIsGenerationOpen,
   ] = useState(false);
+  const [
+    projectThumbnails,
+    setProjectThumbnails,
+  ] = useState<Record<number, string>>({});
 
   const [
     projects,
@@ -69,6 +75,50 @@ function Project() {
         });
 
         setProjects(result.content);
+
+        // 각 프로젝트의 첫 번째 장표를 썸네일로 사용
+        const thumbnailEntries = await Promise.all(
+          result.content.map(
+            async (project) => {
+              try {
+                const detail =
+                  await getProjectDetail(
+                    project.id,
+                  );
+
+                const sortedSlides = [
+                  ...detail.slides,
+                ].sort(
+                  (a, b) =>
+                    a.sequenceNum -
+                    b.sequenceNum,
+                );
+
+                return [
+                  project.id,
+                  sortedSlides[0]
+                    ?.imageUrl ?? "",
+                ] as const;
+              } catch (error) {
+                console.error(
+                  `프로젝트 ${project.id} 썸네일 조회 실패:`,
+                  error,
+                );
+
+                return [
+                  project.id,
+                  "",
+                ] as const;
+              }
+            },
+          ),
+        );
+
+        setProjectThumbnails(
+          Object.fromEntries(
+            thumbnailEntries,
+          ),
+        );
       } catch (error) {
         console.error(
           "프로젝트 목록 조회 실패:",
@@ -80,6 +130,7 @@ function Project() {
         );
 
         setProjects([]);
+        setProjectThumbnails({});
       } finally {
         setLoading(false);
       }
@@ -134,42 +185,19 @@ function Project() {
             max-[393px]:mb-4
           "
         >
-          {/* ======================================
-              데스크톱 기수 버튼
-          ====================================== */}
-
-          <div className="flex items-center gap-3 max-[393px]:hidden">
-            {generations.map(
-              (generation) => (
-                <button
-                  key={generation}
-                  type="button"
-                  onClick={() =>
-                    setSelectedGeneration(
-                      generation,
-                    )
-                  }
-                  className={`
-                    h-[53px]
-                    min-w-[91px]
-                    rounded-full
-                    px-5
-                    text-[18px]
-                    font-medium
-                    transition-colors
-
-                    ${
-                      selectedGeneration ===
-                      generation
-                        ? "bg-[#171F29] text-white"
-                        : "bg-transparent text-[#6C6E72]"
-                    }
-                  `}
-                >
-                  {generation}기
-                </button>
-              ),
-            )}
+          {/* 데스크톱 기수 ToggleGroup */}
+          <div className="max-[393px]:hidden">
+            <ToggleGroup
+              options={generations.map(
+                (generation) => `${generation}기`,
+              )}
+              value={`${selectedGeneration}기`}
+              onChange={(value) =>
+                setSelectedGeneration(
+                  Number(value.replace("기", "")),
+                )
+              }
+            />
           </div>
 
           {/* ======================================
@@ -208,14 +236,13 @@ function Project() {
                 src={underbtn}
                 alt=""
                 className={`
+                  mr-[3px]
                   w-[10px]
                   transition-transform
                   duration-200
-                  mr-[3px]
-                  ${
-                    isGenerationOpen
-                      ? "rotate-180"
-                      : ""
+                  ${isGenerationOpen
+                    ? "rotate-180"
+                    : ""
                   }
                 `}
               />
@@ -279,26 +306,26 @@ function Project() {
               )
             }
             className="
-              flex
-              h-[46px]
-              w-[107px]
-              items-center
-              justify-center
-              whitespace-nowrap
-              rounded-[10px]
-              border
-              border-[#D0D6DD]
-              px-[10px]
-              text-[16px]
-              font-medium
-              text-[#808386]
+    flex
+    h-[46px]
+    w-[107px]
+    items-center
+    justify-center
+    whitespace-nowrap
+    rounded-[10px]
+    border
+    border-[#D0D6DD]
+    px-[10px]
+    text-[16px]
+    font-medium
+    text-[#808386]
 
-              max-[393px]:h-[46px]
-              max-[393px]:w-[97px]
-              max-[393px]:rounded-[10px]
-              max-[393px]:px-0
-              max-[393px]:text-[14px]
-            "
+    max-[393px]:h-[46px]
+    max-[393px]:w-[97px]
+    max-[393px]:rounded-[10px]
+    max-[393px]:px-0
+    max-[393px]:text-[14px]
+  "
           >
             프로젝트 등록
           </button>
@@ -370,12 +397,13 @@ function Project() {
           projects.length > 0 && (
             <div
               className="
+                mt-[30px]
                 grid
                 w-full
                 grid-cols-3
                 gap-[24px]
                 font-montserrat
-                mt-[30px]
+
                 max-[393px]:grid-cols-1
                 max-[393px]:gap-[24px]
               "
@@ -416,19 +444,19 @@ function Project() {
                         max-[393px]:aspect-auto
                       "
                     >
-                      {project.logoUrl && (
+                      {projectThumbnails[project.id] && (
                         <img
                           src={
-                            project.logoUrl
+                            projectThumbnails[
+                            project.id
+                            ]
                           }
-                          alt={
-                            project.title
-                          }
+                          alt={`${project.title} 썸네일`}
                           className="
-                            h-full
-                            w-full
-                            object-cover
-                          "
+      h-full
+      w-full
+      object-cover
+    "
                         />
                       )}
                     </div>
@@ -467,6 +495,7 @@ function Project() {
                           text-[16px]
                           font-medium
                           text-[#121212]
+
                           max-[393px]:mt-[10px]
                           max-[393px]:text-[16px]
                           max-[393px]:leading-[22px]

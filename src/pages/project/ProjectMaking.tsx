@@ -734,7 +734,7 @@ export default function ProjectMaking() {
     };
 
     return (
-        <section className="min-h-screen w-full bg-white">
+        <section className="min-h-screen w-full bg-white px-[120px]">
             <div className="mx-auto w-full px-[24px] pb-[24px] pt-[26px] md:px-12 md:py-8">
                 {/* 헤더 */}
                 <div className="pm_header mb-[30px] md:mb-[54px]">
@@ -796,7 +796,7 @@ export default function ProjectMaking() {
                                 value={projectName}
                                 onChange={(e) => setProjectName(e.target.value)}
                                 placeholder="프로젝트 명을 입력해주세요."
-                                className="h-[57px] w-full rounded-[10px] border border-[#8158F6] px-[16px] text-[14px] font-medium text-[#121212] outline-none placeholder:text-[#808386] md:h-[94px] md:rounded-[15px] md:px-[25px] md:text-[20px]"
+                                className="h-[57px] w-full rounded-[10px] border border-[#D0D6DD] px-[16px] text-[14px] font-medium text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[94px] md:rounded-[15px] md:px-[25px] md:text-[20px]"
                             />
                         </div>
 
@@ -811,7 +811,7 @@ export default function ProjectMaking() {
                                 value={slogan}
                                 onChange={(e) => setSlogan(e.target.value)}
                                 placeholder="프로젝트의 슬로건 (한 줄 설명)을 입력해주세요."
-                                className="h-[57px] w-full rounded-[10px] border border-[#D0D6DD] px-[16px] text-[14px] text-[#121212] outline-none placeholder:text-[#808386] focus:border-[#865BFF] md:h-[94px] md:rounded-[15px] md:px-[25px] md:text-[20px]"
+                                className="h-[57px] w-full rounded-[10px] border border-[#D0D6DD] px-[16px] text-[14px] text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[94px] md:rounded-[15px] md:px-[25px] md:text-[20px]"
                             />
                         </div>
 
@@ -827,7 +827,7 @@ export default function ProjectMaking() {
                                     <button
                                         type="button"
                                         onClick={() => setEventOpen((prev) => !prev)}
-                                        className="flex h-[56px] w-full items-center justify-between rounded-[10px] border border-[#D0D6DD] bg-white px-[16px] text-[14px] font-semibold text-[#121212] md:h-[78px] md:rounded-[15px] md:px-[20px] md:text-[20px]"
+                                        className="flex h-[56px] w-full items-center justify-between rounded-[10px] border border-[#D0D6DD] bg-white px-[16px] text-[14px] font-semibold text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[78px] md:rounded-[15px] md:px-[20px] md:text-[20px]"
                                     >
                                         <span>
                                             {eventType
@@ -870,7 +870,7 @@ export default function ProjectMaking() {
                                         type="month"
                                         value={startDate}
                                         onChange={(e) => setStartDate(e.target.value)}
-                                        className="h-[56px] min-w-0 flex-1 rounded-[8px] border border-[#8158F6] px-[12px] text-[11px] text-[#121212] outline-none md:h-[78px] md:w-[303px] md:flex-none md:rounded-[15px] md:px-[20px] md:text-[20px]"
+                                        className="h-[56px] min-w-0 flex-1 rounded-[8px] border border-[#D0D6DD] px-[12px] text-[11px] text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[78px] md:w-[303px] md:flex-none md:rounded-[15px] md:px-[20px] md:text-[20px]"
                                     />
 
                                     <span className="text-[#D0D6DD]">—</span>
@@ -879,7 +879,7 @@ export default function ProjectMaking() {
                                         type="month"
                                         value={endDate}
                                         onChange={(e) => setEndDate(e.target.value)}
-                                        className="h-[56px] min-w-0 flex-1 rounded-[8px] border border-[#D0D6DD] px-[12px] text-[11px] text-[#121212] outline-none focus:border-[#865BFF] md:h-[78px] md:w-[303px] md:flex-none md:rounded-[15px] md:px-[20px] md:text-[20px]"
+                                        className="h-[56px] min-w-0 flex-1 rounded-[8px] border border-[#D0D6DD] px-[12px] text-[11px] text-[#121212] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[78px] md:w-[303px] md:flex-none md:rounded-[15px] md:px-[20px] md:text-[20px]"
                                     />
                                 </div>
                             </div>
@@ -895,7 +895,7 @@ export default function ProjectMaking() {
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="프로젝트에 대한 설명을 입력해주세요."
-                                className="h-[250px] w-full resize-none rounded-[10px] border border-[#D0D6DD] px-[16px] py-[18px] text-[14px] text-[#121212] outline-none placeholder:text-[#808386] focus:border-[#865BFF] md:h-[434px] md:rounded-[15px] md:px-[25px] md:py-[35px] md:text-[24px]"
+                                className="h-[250px] w-full resize-none rounded-[10px] border border-[#D0D6DD] px-[16px] py-[18px] text-[14px] text-[#121212] outline-none placeholder:text-[#808386] transition-[border-color,box-shadow] duration-200 focus:border-[#865BFF] focus:shadow-[0_0_15px_rgba(135,104,244,0.1)] md:h-[434px] md:rounded-[15px] md:px-[25px] md:py-[35px] md:text-[24px]"
                             />
                         </div>
 

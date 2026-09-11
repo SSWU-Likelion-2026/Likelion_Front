@@ -137,8 +137,8 @@ export default function FaqSection() {
               </button>
 
               {open && (
-                <div className="mt-5 border-t border-[#D0D6DD] pt-5 md:mt-[38px] md:pt-[38px]">
-                  <p className="text-[13px] leading-relaxed text-[#D0D6DD] md:text-[24px]">
+                <div className="mt-5 border-t border-[#D0D6DD] pt-5 md:mt-[30px] md:pt-[30px]">
+                  <p className="text-[13px] leading-relaxed text-gray-4 md:text-[24px]">
                     {item.answer}
                   </p>
                 </div>

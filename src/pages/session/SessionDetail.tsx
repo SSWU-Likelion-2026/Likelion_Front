@@ -116,7 +116,7 @@ export default function SessionDetail() {
       <main className="flex-1 flex flex-col justify-center">
 
         <header className='flex flex-col gap-[5px] lg:gap-[35px]'>
-          <button  onClick={() => navigate(-1)}>
+          <button onClick={() => navigate(`/session?track=${partLabelMap[part]}&generation=${term}기`)}>
             <img src={backImg} alt="뒤로가기" className='w-[32px] pt-[5px]' />
           </button>
             {/* <p className="text-[14px] lg:text-[18px] text-gray-4">{partLabelMap[detailData?.part ?? ''] ?? detailData?.part} &gt; W{String(weekNumber).padStart(2, '0')}</p> */}

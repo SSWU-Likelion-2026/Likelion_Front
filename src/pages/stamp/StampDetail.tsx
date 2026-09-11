@@ -431,11 +431,11 @@ export default function StampDetail() {
             pt-[65px]
             pb-[80px]
 
-            max-[393px]:mt-0
-            max-[393px]:rounded-none
-            max-[393px]:px-6
-            max-[393px]:pt-[40px]
-            max-[393px]:pb-[40px]
+            max-[1014px]:mt-0
+            max-[1014px]:rounded-none
+            max-[1014px]:px-6
+            max-[1014px]:pt-[40px]
+            max-[1014px]:pb-[40px]
           "
         >
           <div
@@ -445,8 +445,8 @@ export default function StampDetail() {
               text-[22px]
               text-[#808386]
 
-              max-[393px]:py-[60px]
-              max-[393px]:text-[13px]
+              max-[1014px]:py-[60px]
+              max-[1014px]:text-[13px]
             "
           >
             미션 정보를 불러오는 중입니다.
@@ -476,11 +476,11 @@ export default function StampDetail() {
           pt-[65px]
           pb-[80px]
 
-          max-[393px]:mt-0
-          max-[393px]:rounded-none
-          max-[393px]:px-6
-          max-[393px]:pt-[36px]
-          max-[393px]:pb-[40px]
+          max-[1014px]:mt-0
+          max-[1014px]:rounded-none
+          max-[1014px]:px-6
+          max-[1014px]:pt-[36px]
+          max-[1014px]:pb-[40px]
         "
       >
         <div className="stampDetailInner mx-auto w-full max-w-[1280px]">
@@ -496,8 +496,8 @@ export default function StampDetail() {
               font-semibold
               text-[#121212]
 
-              max-[393px]:text-[20px]
-              max-[393px]:leading-[24px]
+              max-[1014px]:text-[20px]
+              max-[1014px]:leading-[24px]
             "
           >
             미션 인증
@@ -512,7 +512,7 @@ export default function StampDetail() {
               missionInfo
               mt-[60px]
 
-              max-[393px]:mt-[38px]
+              max-[1014px]:mt-[38px]
             "
           >
             <h2
@@ -522,9 +522,9 @@ export default function StampDetail() {
                 font-semibold
                 text-[#121212]
 
-                max-[393px]:text-[16px]
-                max-[393px]:font-medium
-                max-[393px]:leading-[20px]
+                max-[1014px]:text-[16px]
+                max-[1014px]:font-medium
+                max-[1014px]:leading-[20px]
               "
             >
               {mission.title}
@@ -537,8 +537,8 @@ export default function StampDetail() {
                 text-[22px]
                 text-[#6C6E72]
 
-                max-[393px]:mt-[6px]
-                max-[393px]:text-[14px]
+                max-[1014px]:mt-[6px]
+                max-[1014px]:text-[14px]
               "
             >
               {formatMissionDate(
@@ -555,9 +555,9 @@ export default function StampDetail() {
                   leading-[1.6]
                   text-[#6C6E72]
 
-                  max-[393px]:mt-[10px]
-                  max-[393px]:text-[14px]
-                  max-[393px]:leading-[17px]
+                  max-[1014px]:mt-[10px]
+                  max-[1014px]:text-[14px]
+                  max-[1014px]:leading-[17px]
                 "
               >
                 {
@@ -576,7 +576,7 @@ export default function StampDetail() {
               imageUploadSection
               mt-[46px]
 
-              max-[393px]:mt-[34px]
+              max-[1014px]:mt-[34px]
             "
           >
             <label
@@ -598,8 +598,8 @@ export default function StampDetail() {
     border-[#B8B9BD]
     bg-[#F3F4F6]
 
-    max-[393px]:min-h-[143px]
-    max-[393px]:rounded-[12px]
+    max-[1014px]:min-h-[143px]
+    max-[1014px]:rounded-[12px]
   "
             >
               {previewUrl ? (
@@ -612,7 +612,7 @@ export default function StampDetail() {
         w-full
         object-cover
 
-        max-[393px]:min-h-[143px]
+        max-[1014px]:min-h-[143px]
       "
                 />
               ) : (
@@ -634,12 +634,12 @@ export default function StampDetail() {
           text-[#121212]
           shadow-[0_4px_20px_rgba(135,104,244,0.15)]
 
-          max-[393px]:mb-[12px]
-          max-[393px]:gap-[7px]
-          max-[393px]:rounded-[9px]
-          max-[393px]:px-[14px]
-          max-[393px]:py-[10px]
-          max-[393px]:text-[13px]
+          max-[1014px]:mb-[12px]
+          max-[1014px]:gap-[7px]
+          max-[1014px]:rounded-[9px]
+          max-[1014px]:px-[14px]
+          max-[1014px]:py-[10px]
+          max-[1014px]:text-[13px]
         "
                   >
                     <img
@@ -649,8 +649,8 @@ export default function StampDetail() {
             h-[24px]
             w-[24px]
 
-            max-[393px]:h-[18px]
-            max-[393px]:w-[18px]
+            max-[1014px]:h-[18px]
+            max-[1014px]:w-[18px]
           "
                     />
 
@@ -663,7 +663,7 @@ export default function StampDetail() {
           text-[24px]
           text-[#808386]
 
-          max-[393px]:text-[11px]
+          max-[1014px]:text-[11px]
         "
                   >
                     JPG, PNG (최대 10MB)
@@ -696,8 +696,8 @@ export default function StampDetail() {
         -translate-y-1/2
         text-[20px]
         text-[#D2D4D8]
-        max-[393px]:left-[16px]
-        max-[393px]:text-[12px]
+        max-[1014px]:left-[16px]
+        max-[1014px]:text-[12px]
       "
               >
                 날짜를 입력해주세요.
@@ -723,10 +723,10 @@ export default function StampDetail() {
       outline-none
       focus:border-[#956CF6]
 
-      max-[393px]:h-[57px]
-      max-[393px]:rounded-[8px]
-      max-[393px]:px-[16px]
-      max-[393px]:text-[14px]
+      max-[1014px]:h-[57px]
+      max-[1014px]:rounded-[8px]
+      max-[1014px]:px-[16px]
+      max-[1014px]:text-[14px]
 
       ${authDate
                   ? "text-[#121212]"
@@ -745,7 +745,7 @@ export default function StampDetail() {
               descriptionSection
               mt-[30px]
 
-              max-[393px]:mt-[30px]
+              max-[1014px]:mt-[30px]
             "
           >
             <div className="descriptionBox relative">
@@ -788,14 +788,14 @@ export default function StampDetail() {
                   placeholder:text-[#D2D4D8]
                   focus:border-[#956CF6]
 
-                  max-[393px]:min-h-[207px]
-                  max-[393px]:rounded-[10px]
-                  max-[393px]:px-[16px]
-                  max-[393px]:py-[16px]
-                  max-[393px]:pr-[45px]
-                  max-[393px]:pb-[35px]
-                  max-[393px]:text-[14px]
-                  max-[393px]:leading-[18px]
+                  max-[1014px]:min-h-[207px]
+                  max-[1014px]:rounded-[10px]
+                  max-[1014px]:px-[16px]
+                  max-[1014px]:py-[16px]
+                  max-[1014px]:pr-[45px]
+                  max-[1014px]:pb-[35px]
+                  max-[1014px]:text-[14px]
+                  max-[1014px]:leading-[18px]
                 "
               />
 
@@ -808,9 +808,9 @@ export default function StampDetail() {
                   text-[14px]
                   text-[#C7C9CD]
 
-                  max-[393px]:right-[14px]
-                  max-[393px]:bottom-[12px]
-                  max-[393px]:text-[12px]
+                  max-[1014px]:right-[14px]
+                  max-[1014px]:bottom-[12px]
+                  max-[1014px]:text-[12px]
                 "
               >
                 {description.length}
@@ -831,9 +831,9 @@ export default function StampDetail() {
               justify-end
               gap-[12px]
 
-              max-[393px]:mt-[24px]
-              max-[393px]:w-full
-              max-[393px]:gap-[10px]
+              max-[1014px]:mt-[24px]
+              max-[1014px]:w-full
+              max-[1014px]:gap-[10px]
             "
           >
             {/* 취소 */}
@@ -862,13 +862,13 @@ export default function StampDetail() {
                 disabled:cursor-not-allowed
                 disabled:opacity-50
 
-                max-[393px]:h-[70px]
-                max-[393px]:w-[109px]
-                max-[393px]:shrink-0
-                max-[393px]:rounded-[10px]
-                max-[393px]:px-0
-                max-[393px]:py-0
-                max-[393px]:text-[20px]
+                max-[1014px]:h-[70px]
+                max-[1014px]:w-[109px]
+                max-[1014px]:shrink-0
+                max-[1014px]:rounded-[10px]
+                max-[1014px]:px-0
+                max-[1014px]:py-0
+                max-[1014px]:text-[20px]
               "
             >
               취소
@@ -899,14 +899,14 @@ export default function StampDetail() {
                 disabled:cursor-not-allowed
                 disabled:bg-[#B8B9BD]
 
-                max-[393px]:h-[70px]
-                max-[393px]:flex-1
-                max-[393px]:rounded-[8px]
-                max-[393px]:bg-[#7C4DFF]
-                max-[393px]:px-0
-                max-[393px]:py-0
-                max-[393px]:text-[20px]
-                max-[393px]:hover:bg-[#7C4DFF]
+                max-[1014px]:h-[70px]
+                max-[1014px]:flex-1
+                max-[1014px]:rounded-[8px]
+                max-[1014px]:bg-[#7C4DFF]
+                max-[1014px]:px-0
+                max-[1014px]:py-0
+                max-[1014px]:text-[20px]
+                max-[1014px]:hover:bg-[#7C4DFF]
               "
             >
               {mission.isCompleted

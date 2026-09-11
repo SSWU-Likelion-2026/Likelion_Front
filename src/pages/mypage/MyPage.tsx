@@ -1,6 +1,6 @@
 // react
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 // api
 
@@ -23,7 +23,11 @@ type Tab = '내 프로필' | '지원 현황'
 
 export default function MyPage() {
   const navigate = useNavigate()
-  const [tab, setTab] = useState<Tab>('내 프로필')
+  const [searchParams] = useSearchParams()
+  // ?tab=apply 로 들어오면 지원 현황 탭으로 바로 열림 (지원서 제출 완료 화면 등에서 딥링크용)
+  const [tab, setTab] = useState<Tab>(
+    searchParams.get('tab') === 'apply' ? '지원 현황' : '내 프로필',
+  )
   const [applicationTab, setApplicationTab] = useState<'지원완료' | '임시저장'>('지원완료')
 
   const [profileData, setProfileData] = useState<ProfileGetResponse | null>(null)

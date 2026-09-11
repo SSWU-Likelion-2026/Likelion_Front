@@ -10,6 +10,7 @@ import type { Session as SessionItem } from '../../types/session/session'
 
 // components
 import Banner from '../../components/Banner'
+import EmptyState from '../../components/EmptyState'
 import ToggleGroup from '../../components/ToggleGroup'
 import SessionFolder from '../../components/session/SessionFolder'
 
@@ -141,11 +142,7 @@ function Session() {
           </div>
         </div>
         
-        {sessionData.length === 0 && (
-          <div className="flex min-h-[300px] w-full items-start justify-center pt-[20px]">
-            <p className="text-center text-[34px] font-semibold leading-[50px] text-black">조회된 세션이 없습니다.</p>
-          </div>
-        )}
+        {sessionData.length === 0 && <EmptyState message="조회된 세션이 없습니다." />}
         <div className="grid grid-cols-2 xl:grid-cols-3 min-[1440px]:grid-cols-4 gap-4 xl:gap-10 pb-5 lg:pb-12">
           {sessionData.map((item) => (
             <SessionFolder

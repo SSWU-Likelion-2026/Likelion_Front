@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Banner from "../../components/Banner";
+import EmptyState from "../../components/EmptyState";
 import stamp_nextbtn from "../../img/stamp/stamp_next.svg";
 
 import StampModal from "./StampModal";
@@ -215,9 +216,7 @@ export default function Stamp() {
             {!missionLoading &&
               !missionError &&
               missions.length === 0 && (
-                <div className="py-[100px] text-center text-[22px] text-[#808386]">
-                  등록된 스탬프 미션이 없습니다.
-                </div>
+                <EmptyState message="등록된 스탬프 미션이 없습니다." />
               )}
 
             {!missionLoading &&

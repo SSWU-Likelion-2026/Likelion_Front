@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import EmptyState from '../../components/EmptyState'
 import { getUser, subscribe } from '../../lib/auth-storage'
 import {
   getMyProfile,
@@ -154,7 +155,7 @@ function People() {
             </div>
           ))}
           {members !== null && sections.length === 0 && (
-            <p className="m-0 py-[60px] text-center text-[18px] text-gray-6">등록된 부원이 없어요.</p>
+            <EmptyState message="등록된 부원이 없어요." />
           )}
         </div>
       </section>

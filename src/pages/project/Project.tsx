@@ -6,6 +6,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import Banner from "../../components/Banner";
+import EmptyState from "../../components/EmptyState";
 
 import {
   getProjects,
@@ -239,12 +240,7 @@ function Project() {
           !error &&
           projects.length ===
             0 && (
-            <div className="flex min-h-[300px] w-full items-start justify-center pt-[20px]">
-              <p className="text-center text-[34px] font-semibold leading-[50px] text-black">
-                조회된 프로젝트가
-                없습니다.
-              </p>
-            </div>
+            <EmptyState message="조회된 프로젝트가 없습니다." />
           )}
       </div>
     </section>

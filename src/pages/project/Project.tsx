@@ -93,7 +93,7 @@ function Project() {
     <section className="min-h-screen w-full bg-white">
       <Banner page="Project" />
 
-      <div className="relative -mt-6 w-full rounded-t-[25px] bg-white px-[120px] py-8">
+      <div className="relative -mt-6 w-full rounded-t-[25px] bg-white px-[120px] pb-8 pt-9">
 
         {/* ==========================================
             상단 메뉴

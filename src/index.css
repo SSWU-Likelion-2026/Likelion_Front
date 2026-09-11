@@ -87,10 +87,25 @@
 
 /* zoom: calc(100vw/1440px) 방식은 100vw가 세로 스크롤바 폭까지 포함해 계산되는 특성 때문에
    세로 스크롤바가 생기면 실제 보이는 영역보다 살짝 넓게 렌더링되어 가로 스크롤이 생긴다.
-   전역으로 가로 스크롤만 숨겨서 이 오차를 흡수한다. */
+   전역으로 가로 스크롤만 숨겨서 이 오차를 흡수한다.
+   overflow-x: hidden이 아닌 clip을 쓰는 이유: hidden은 새 스크롤 컨테이너를 만들어서
+   iOS Safari에서 그 하위의 overflow-x:auto 캐러셀(모바일 카드 스와이프 등)이
+   터치로 스크롤되지 않는 버그가 있다 (WebKit bug 226732). clip은 같은 시각적 효과를 내면서
+   이 문제가 없다. */
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* 모바일 레이아웃(lg 미만, 1024px)은 피그마 모바일 목업(393px 캔버스) 좌표를 그대로 쓴다.
+   mx-auto + max-width로 393px 고정폭을 중앙정렬하면 393px보다 넓은 폰에서 양옆에 빈 여백이
+   생기므로, 데스크탑(zoom: calc(100vw/1440px))과 동일하게 zoom으로 뷰포트 폭에 맞춰 채운다.
+   (주소창이 콘텐츠를 가리는 버그는 zoom 제거 후에도 재현돼 이 zoom과는 무관한 것으로 확인됐다.) */
+@media (max-width: 1023px) {
+  .mobile-zoom-canvas {
+    width: 393px;
+    zoom: calc(100vw / 393px);
+  }
 }
 
 * {

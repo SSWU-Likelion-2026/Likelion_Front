@@ -48,7 +48,7 @@ const NotifySignupModal = memo(function NotifySignupModal({ open, onClose }: Not
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
           onClick={handleClose}
         >
-          <div className="relative w-[400px] rounded-[20px] bg-white px-7 py-6" onClick={stopPropagation}>
+          <div className="relative w-[315px] rounded-[20px] bg-white px-7 py-6 lg:w-[400px]" onClick={stopPropagation}>
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-[20px] font-semibold">모집 알림 신청</h2>
               <Button onClick={handleClose} className="!p-0 h-5 w-5">

@@ -234,41 +234,118 @@ function ProjectReviews() {
     [navigate],
   )
 
+  const mobileScrollRef = useRef<HTMLDivElement>(null)
+  const mobileIndexRef = useRef(0)
+  const [mobileActiveDot, setMobileActiveDot] = useState(0)
+  const handleMobileScroll = useCallback(() => {
+    const el = mobileScrollRef.current
+    if (!el || length === 0) return
+    const cardStep = el.scrollWidth / length
+    const index = Math.min(length - 1, Math.round(el.scrollLeft / cardStep))
+    mobileIndexRef.current = index
+    setMobileActiveDot(index)
+  }, [length])
+
+  // 데스크탑과 동일하게 4초마다 다음 카드로 자동 넘김 (마지막 카드 다음엔 첫 카드로 순환)
+  useEffect(() => {
+    if (length <= 1) return
+    const id = setInterval(() => {
+      const el = mobileScrollRef.current
+      if (!el) return
+      const cardStep = el.scrollWidth / length
+      const next = (mobileIndexRef.current + 1) % length
+      mobileIndexRef.current = next
+      el.scrollTo({ left: next * cardStep, behavior: 'smooth' })
+    }, AUTOPLAY_INTERVAL_MS)
+    return () => clearInterval(id)
+  }, [length])
+
   if (projects === null) return null
 
   return (
-    <section className="flex flex-col items-center gap-[75px] py-[65px]">
-      <div className="flex w-[1200px] flex-col items-center gap-[15px]">
-        <p className="m-0 py-[10px] text-[18px] font-semibold text-black">Project Preview</p>
-        <p className="m-0 text-center text-[32px] font-semibold text-black">
-          매 기수 <ProjectCountLabel />
-        </p>
-      </div>
+    <>
+      {/* 데스크탑: 중앙 카드가 커지는 드래그 캐러셀 */}
+      <section className="hidden flex-col items-center gap-[75px] py-[65px] lg:flex">
+        <div className="flex w-[1200px] flex-col items-center gap-[15px]">
+          <p className="m-0 py-[10px] text-[18px] font-semibold text-black">Project Preview</p>
+          <p className="m-0 text-center text-[32px] font-semibold text-black">
+            매 기수 <ProjectCountLabel />
+          </p>
+        </div>
 
-      <div ref={containerRef} className="h-[440px] w-full overflow-hidden">
-        {containerWidth > 0 && (
-          <motion.div
-            className={TRACK_CLASS}
-            style={{ x, gap: CARD_GAP }}
-            drag="x"
-            dragElastic={0.15}
-            dragMomentum={false}
-            onDragEnd={handleDragEnd}
-          >
-            {loopedItems.map((project, i) => (
-              <ProjectSlide
-                key={i}
-                project={project}
-                index={i}
-                x={x}
-                containerWidth={containerWidth}
-                onSelect={handleSelectProject}
+        <div ref={containerRef} className="h-[440px] w-full overflow-hidden">
+          {containerWidth > 0 && (
+            <motion.div
+              className={TRACK_CLASS}
+              style={{ x, gap: CARD_GAP }}
+              drag="x"
+              dragElastic={0.15}
+              dragMomentum={false}
+              onDragEnd={handleDragEnd}
+            >
+              {loopedItems.map((project, i) => (
+                <ProjectSlide
+                  key={i}
+                  project={project}
+                  index={i}
+                  x={x}
+                  containerWidth={containerWidth}
+                  onSelect={handleSelectProject}
+                />
+              ))}
+            </motion.div>
+          )}
+        </div>
+      </section>
+
+      {/* 모바일: 가로 스와이프 캐러셀 (확대 연출 없이 카드 그대로) */}
+      <section className="flex flex-col items-center gap-[35px] pb-[190px] pt-[150px] lg:hidden">
+        <div className="flex flex-col items-center gap-[15px] px-6 text-center">
+          <p className="m-0 py-[10px] text-[14px] font-semibold text-black">Project Preview</p>
+          <p className="m-0 text-[18px] font-semibold text-black">
+            매 기수 <ProjectCountLabel />
+          </p>
+        </div>
+
+        <div
+          ref={mobileScrollRef}
+          onScroll={handleMobileScroll}
+          className="flex w-full snap-x snap-mandatory gap-[25px] overflow-x-auto px-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {base.map((project) => (
+            <button
+              key={project.projectId}
+              type="button"
+              onClick={() => handleSelectProject(project.projectId)}
+              className="relative h-[196px] w-[345px] shrink-0 snap-center overflow-hidden rounded-[10px] border-0 bg-surface-neutral p-0 text-left cursor-pointer"
+            >
+              {project.thumbnailUrl && (
+                <img src={project.thumbnailUrl} alt="" className="absolute inset-0 size-full object-cover" />
+              )}
+              <div className="absolute inset-0 rounded-[10px] bg-gradient-to-b from-transparent to-warm-black" />
+              <div className="absolute bottom-0 left-0 flex w-full items-end gap-2 p-[20px]">
+                <div className="flex min-w-0 flex-1 flex-col text-white">
+                  <p className="m-0 truncate text-[16px] font-semibold leading-[1.5]">{project.title}</p>
+                  <p className="m-0 truncate text-[13px] leading-[1.6]">{project.summary}</p>
+                </div>
+                <img src={arrowIcon} alt="" className="size-[28px] shrink-0" />
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {length > 1 && (
+          <div className="flex items-center justify-center gap-[10px]">
+            {base.map((project, i) => (
+              <span
+                key={project.projectId}
+                className={`size-2 rounded-full ${i === mobileActiveDot ? 'bg-gray-2' : 'bg-gray-9'}`}
               />
             ))}
-          </motion.div>
+          </div>
         )}
-      </div>
-    </section>
+      </section>
+    </>
   )
 }
 

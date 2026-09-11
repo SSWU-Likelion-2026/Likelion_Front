@@ -22,23 +22,23 @@ const MonthDetailModal = memo(function MonthDetailModal({ open, onClose, title, 
       onClick={onClose}
     >
       <div
-        className="relative flex w-[633px] flex-col overflow-hidden rounded-[22px] bg-white shadow-[0px_4px_11px_var(--color-shadow-strong)]"
+        className="relative flex w-[345px] flex-col overflow-hidden rounded-[22px] bg-white shadow-[0px_4px_11px_var(--color-shadow-strong)] lg:w-[633px]"
         onClick={stopPropagation}
       >
-        <div className="relative h-[339px] w-full bg-surface-neutral">
+        <div className="relative h-[194px] w-full bg-surface-neutral lg:h-[339px]">
           {image && <img src={image} alt="" className="absolute inset-0 size-full object-cover" />}
           <button
             type="button"
             onClick={onClose}
             aria-label="닫기"
-            className="absolute right-[40px] top-[39px] flex size-[36px] cursor-pointer items-center justify-center rounded-full border-0 bg-white p-0"
+            className="absolute right-6 top-[39px] flex size-7 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0 lg:right-[40px] lg:size-9 lg:bg-white"
           >
-            <img src={closeIcon} alt="" className="size-[20px]" />
+            <img src={closeIcon} alt="" className="size-full lg:size-5" />
           </button>
         </div>
-        <div className="flex flex-col gap-[14px] p-[38px]">
-          <p className="m-0 text-[25px] font-semibold text-black-1">{title}</p>
-          <p className="m-0 whitespace-pre-line text-[16px] leading-[1.6] text-black-1">
+        <div className="flex flex-col gap-[13px] p-6 lg:gap-[14px] lg:p-[38px]">
+          <p className="m-0 text-[18px] font-semibold text-black-1 lg:text-[25px]">{title}</p>
+          <p className="m-0 whitespace-pre-line text-[14px] leading-[1.6] text-black-1 lg:text-[16px]">
             {description}
           </p>
         </div>

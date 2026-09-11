@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { login, loginWithGoogle } from '../../api/signup/auth'
 import { ApiError } from '../../api/instance'
 import { renderGoogleButton } from '../../lib/google-auth'
-import logoName from '../../img/signup/logo-name.png'
+import logoName from '../../img/signup/logo-name1.svg'
 
 const fieldClass =
   'h-[59px] w-full rounded-[15px] border border-primary-15 bg-[#FAFAFA] px-4 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'

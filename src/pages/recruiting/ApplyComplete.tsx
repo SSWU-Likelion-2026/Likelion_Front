@@ -28,14 +28,12 @@ function ApplyComplete() {
       <p className="text-[15px] text-gray-4">지원해 주셔서 감사합니다.</p>
 
       <div className="mt-4 flex items-center gap-3">
-        {/* TODO: 마이페이지 라우트 (Mypage API 담당자) */}
         <Link
           to="/mypage"
           className="rounded-[10px] border border-gray-9 px-7 py-3 text-[15px] text-gray-3 hover:bg-gray-10"
         >
           마이페이지로 이동
         </Link>
-        {/* TODO: 제출한 지원서 조회 라우트 */}
         <Link
           to="/mypage/applications"
           className="rounded-[10px] bg-[#212121] px-7 py-3 text-[15px] font-medium text-white hover:opacity-90"

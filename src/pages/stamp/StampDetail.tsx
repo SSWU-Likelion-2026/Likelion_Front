@@ -23,7 +23,6 @@ import type {
   StampMission,
 } from "../../types/stamp/stamp";
 
-
 const formatMissionDate = (
   startAt: string,
   endAt: string,
@@ -39,6 +38,7 @@ const formatMissionDate = (
   }
 
   const startYear = start.getFullYear();
+
   const startMonth = String(
     start.getMonth() + 1,
   ).padStart(2, "0");
@@ -48,6 +48,7 @@ const formatMissionDate = (
   ).padStart(2, "0");
 
   const endYear = end.getFullYear();
+
   const endMonth = String(
     end.getMonth() + 1,
   ).padStart(2, "0");
@@ -63,48 +64,82 @@ const formatMissionDate = (
   return `${startYear}.${startMonth}.${startDate}~${endYear}.${endMonth}.${endDate}`;
 };
 
-
 export default function StampDetail() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const { missionId } = useParams();
 
-  const missionNumber = Number(missionId);
+  const missionNumber =
+    Number(missionId);
 
   const locationMission =
     location.state?.mission as
     | StampMission
     | undefined;
 
-  const [mission, setMission] =
-    useState<StampMission | null>(
-      locationMission ?? null,
-    );
+  const [
+    mission,
+    setMission,
+  ] = useState<StampMission | null>(
+    locationMission ?? null,
+  );
 
-  const [missionLoading, setMissionLoading] =
-    useState(!locationMission);
+  const [
+    missionLoading,
+    setMissionLoading,
+  ] = useState(
+    !locationMission,
+  );
 
-  const [image, setImage] =
-    useState<File | null>(null);
+  const [
+    image,
+    setImage,
+  ] = useState<File | null>(
+    null,
+  );
+  const [
+    previewUrl,
+    setPreviewUrl,
+  ] = useState<string>("");
 
-  const [authDate, setAuthDate] =
-    useState("");
+  const [
+    authDate,
+    setAuthDate,
+  ] = useState("");
 
-  const [description, setDescription] =
-    useState("");
+  const [
+    description,
+    setDescription,
+  ] = useState("");
 
-  const [isSubmitting, setIsSubmitting] =
-    useState(false);
-
+  const [
+    isSubmitting,
+    setIsSubmitting,
+  ] = useState(false);
 
   /**
-   * location.state가 없는 경우
-   * ex) /stamp/1 주소에서 새로고침
-   *
-   * 전체 미션 목록을 받아서
-   * 현재 missionId에 해당하는 미션을 찾는다.
+  * =========================
+  * 이미지 미리보기 URL 정리
+  * =========================
+  */
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(
+          previewUrl,
+        );
+      }
+    };
+  }, [previewUrl]);
+
+  /**
+   * =========================
+   * 미션 정보 조회
+   * =========================
    */
+
   useEffect(() => {
     if (mission) {
       return;
@@ -114,57 +149,77 @@ export default function StampDetail() {
       !missionNumber ||
       Number.isNaN(missionNumber)
     ) {
-      alert("잘못된 미션입니다.");
-      navigate("/stamp", {
-        replace: true,
-      });
+      alert(
+        "잘못된 미션입니다.",
+      );
+
+      navigate(
+        "/stamp",
+        {
+          replace: true,
+        },
+      );
 
       return;
     }
 
-    const fetchMission = async () => {
-      try {
-        setMissionLoading(true);
-
-        const response =
-          await getStampMissions();
-
-        const foundMission =
-          response.result.find(
-            (item) =>
-              item.missionId === missionNumber,
+    const fetchMission =
+      async () => {
+        try {
+          setMissionLoading(
+            true,
           );
 
-        if (!foundMission) {
+          const response =
+            await getStampMissions();
+
+          const foundMission =
+            response.result.find(
+              (item) =>
+                item.missionId ===
+                missionNumber,
+            );
+
+          if (!foundMission) {
+            alert(
+              "해당 미션을 찾을 수 없습니다.",
+            );
+
+            navigate(
+              "/stamp",
+              {
+                replace: true,
+              },
+            );
+
+            return;
+          }
+
+          setMission(
+            foundMission,
+          );
+        } catch (error) {
+          console.error(
+            "미션 조회 실패:",
+            error,
+          );
+
           alert(
-            "해당 미션을 찾을 수 없습니다.",
+            "미션 정보를 불러오지 못했습니다.",
           );
 
-          navigate("/stamp", {
-            replace: true,
-          });
-
-          return;
+          navigate(
+            "/stamp",
+            {
+              replace: true,
+            },
+          );
+        } finally {
+          setMissionLoading(
+            false,
+          );
         }
-
-        setMission(foundMission);
-      } catch (error) {
-        console.error(
-          "미션 조회 실패:",
-          error,
-        );
-
-        alert(
-          "미션 정보를 불러오지 못했습니다.",
-        );
-
-        navigate("/stamp", {
-          replace: true,
-        });
-      } finally {
-        setMissionLoading(false);
-      }
-    };
+      };
 
     fetchMission();
   }, [
@@ -172,11 +227,12 @@ export default function StampDetail() {
     missionNumber,
     navigate,
   ]);
+  /**
+   * =========================
+   * 인증 이미지 선택
+   * =========================
+   */
 
-
- /**
- * 인증 이미지 선택
- */
   const handleImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -201,125 +257,198 @@ export default function StampDetail() {
     }
 
     setImage(file);
+
+    const imageUrl =
+      URL.createObjectURL(file);
+
+    setPreviewUrl(imageUrl);
   };
 
-
   /**
+   * =========================
    * 스탬프 인증
+   * =========================
    */
-  const handleSubmit = async () => {
-    if (
-      !missionNumber ||
-      Number.isNaN(missionNumber)
-    ) {
-      alert("잘못된 미션입니다.");
-      return;
-    }
 
-    if (!image) {
-      alert("인증 이미지를 업로드해주세요.");
-      return;
-    }
-
-    if (!authDate) {
-      alert("날짜를 입력해주세요.");
-      return;
-    }
-
-    if (!description.trim()) {
-      alert("미션 후기를 입력해주세요.");
-      return;
-    }
-
-    if (mission?.isCompleted) {
-      alert(
-        "이미 완료한 미션입니다.",
-      );
-
-      return;
-    }
-
-    try {
-      setIsSubmitting(true);
-
-      await authenticateStampMission(
-        missionNumber,
-        {
-          image,
-          authDate,
-          content: description.trim(),
-        },
-      );
-
-      navigate("/stamp", {
-        state: {
-          showStampModal: true,
-        },
-      });
-    } catch (error) {
-      console.error(
-        "스탬프 인증 실패:",
-        error,
-      );
-
-      if (axios.isAxiosError(error)) {
-        const code =
-          error.response?.data?.code;
-
-        const message =
-          error.response?.data?.message;
-
-        switch (code) {
-          case "STAMP-4001":
-            alert(
-              "이미 완료한 미션입니다.",
-            );
-            break;
-
-          case "STAMP-4002":
-            alert(
-              "미션 참여 가능 기간이 아닙니다.",
-            );
-            break;
-
-          case "MISSION-404":
-            alert(
-              "해당 미션을 찾을 수 없습니다.",
-            );
-            break;
-
-          case "AUTH-401":
-            alert(
-              "로그인이 필요합니다.",
-            );
-            break;
-
-          default:
-            alert(
-              message ||
-              "스탬프 인증에 실패했습니다.",
-            );
-        }
+  const handleSubmit =
+    async () => {
+      if (
+        !missionNumber ||
+        Number.isNaN(
+          missionNumber,
+        )
+      ) {
+        alert(
+          "잘못된 미션입니다.",
+        );
 
         return;
       }
 
-      alert(
-        "스탬프 인증에 실패했습니다.",
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+      if (!image) {
+        alert(
+          "인증 이미지를 업로드해주세요.",
+        );
 
+        return;
+      }
+
+      if (!authDate) {
+        alert(
+          "날짜를 입력해주세요.",
+        );
+
+        return;
+      }
+
+      if (
+        !description.trim()
+      ) {
+        alert(
+          "미션 후기를 입력해주세요.",
+        );
+
+        return;
+      }
+
+      if (
+        mission?.isCompleted
+      ) {
+        alert(
+          "이미 완료한 미션입니다.",
+        );
+
+        return;
+      }
+
+      try {
+        setIsSubmitting(
+          true,
+        );
+
+        await authenticateStampMission(
+          missionNumber,
+          {
+            image,
+            authDate,
+            content:
+              description.trim(),
+          },
+        );
+
+        navigate(
+          "/stamp",
+          {
+            state: {
+              showStampModal:
+                true,
+            },
+          },
+        );
+      } catch (error) {
+        console.error(
+          "스탬프 인증 실패:",
+          error,
+        );
+
+        if (
+          axios.isAxiosError(
+            error,
+          )
+        ) {
+          const code =
+            error.response
+              ?.data?.code;
+
+          const message =
+            error.response
+              ?.data?.message;
+
+          switch (code) {
+            case "STAMP-4001":
+              alert(
+                "이미 완료한 미션입니다.",
+              );
+              break;
+
+            case "STAMP-4002":
+              alert(
+                "미션 참여 가능 기간이 아닙니다.",
+              );
+              break;
+
+            case "MISSION-404":
+              alert(
+                "해당 미션을 찾을 수 없습니다.",
+              );
+              break;
+
+            case "AUTH-401":
+              alert(
+                "로그인이 필요합니다.",
+              );
+              break;
+
+            default:
+              alert(
+                message ||
+                "스탬프 인증에 실패했습니다.",
+              );
+          }
+
+          return;
+        }
+
+        alert(
+          "스탬프 인증에 실패했습니다.",
+        );
+      } finally {
+        setIsSubmitting(
+          false,
+        );
+      }
+    };
+
+  /**
+   * =========================
+   * 로딩
+   * =========================
+   */
 
   if (missionLoading) {
     return (
       <div className="stampDetailPage min-h-screen bg-white">
         <Banner page="Stamp" />
 
-        <main className="relative -mt-6 min-h-screen rounded-t-[25px] bg-white px-[120px] pt-[65px] pb-[80px]">
-          <div className="py-[100px] text-center text-[22px] text-[#808386]">
+        <main
+          className="
+            relative
+            -mt-6
+            min-h-screen
+            rounded-t-[25px]
+            bg-white
+            px-[120px]
+            pt-[65px]
+            pb-[80px]
+
+            max-[393px]:mt-0
+            max-[393px]:rounded-none
+            max-[393px]:px-6
+            max-[393px]:pt-[40px]
+            max-[393px]:pb-[40px]
+          "
+        >
+          <div
+            className="
+              py-[100px]
+              text-center
+              text-[22px]
+              text-[#808386]
+
+              max-[393px]:py-[60px]
+              max-[393px]:text-[13px]
+            "
+          >
             미션 정보를 불러오는 중입니다.
           </div>
         </main>
@@ -327,11 +456,9 @@ export default function StampDetail() {
     );
   }
 
-
   if (!mission) {
     return null;
   }
-
 
   return (
     <div className="stampDetailPage min-h-screen bg-white">
@@ -348,23 +475,72 @@ export default function StampDetail() {
           px-[120px]
           pt-[65px]
           pb-[80px]
+
+          max-[393px]:mt-0
+          max-[393px]:rounded-none
+          max-[393px]:px-6
+          max-[393px]:pt-[36px]
+          max-[393px]:pb-[40px]
         "
       >
         <div className="stampDetailInner mx-auto w-full max-w-[1280px]">
 
-          {/* 페이지 제목 */}
-          <h1 className="stampDetailTitle text-[34px] font-semibold text-[#121212]">
+          {/* ======================================
+              페이지 제목
+          ====================================== */}
+
+          <h1
+            className="
+              stampDetailTitle
+              text-[34px]
+              font-semibold
+              text-[#121212]
+
+              max-[393px]:text-[20px]
+              max-[393px]:leading-[24px]
+            "
+          >
             미션 인증
           </h1>
 
+          {/* ======================================
+              미션 정보
+          ====================================== */}
 
-          {/* 미션 정보 */}
-          <section className="missionInfo mt-[60px]">
-            <h2 className="missionName text-[28px] font-semibold text-[#121212]">
+          <section
+            className="
+              missionInfo
+              mt-[60px]
+
+              max-[393px]:mt-[38px]
+            "
+          >
+            <h2
+              className="
+                missionName
+                text-[28px]
+                font-semibold
+                text-[#121212]
+
+                max-[393px]:text-[16px]
+                max-[393px]:font-medium
+                max-[393px]:leading-[20px]
+              "
+            >
               {mission.title}
             </h2>
 
-            <p className="missionDate mt-[8px] text-[22px] text-[#ADAFB2]">
+            <p
+              className="
+                missionDate
+                mt-[8px]
+                text-[22px]
+                text-[#6C6E72]
+
+                max-[393px]:mt-[6px]
+                max-[393px]:text-[14px]
+              "
+            >
               {formatMissionDate(
                 mission.startAt,
                 mission.endAt,
@@ -372,127 +548,230 @@ export default function StampDetail() {
             </p>
 
             {mission.description && (
-              <p className="mt-[20px] text-[20px] leading-[1.6] text-[#808386]">
-                {mission.description}
+              <p
+                className="
+                  mt-[20px]
+                  text-[20px]
+                  leading-[1.6]
+                  text-[#6C6E72]
+
+                  max-[393px]:mt-[10px]
+                  max-[393px]:text-[14px]
+                  max-[393px]:leading-[17px]
+                "
+              >
+                {
+                  mission.description
+                }
               </p>
             )}
           </section>
 
+          {/* ======================================
+              이미지 업로드
+          ====================================== */}
 
-          {/* 이미지 업로드 */}
-          <section className="imageUploadSection mt-[46px]">
+          <section
+            className="
+              imageUploadSection
+              mt-[46px]
+
+              max-[393px]:mt-[34px]
+            "
+          >
             <label
               htmlFor="stampImage"
               className="
-                imageUploadBox
-                flex
-                min-h-[364px]
-                w-full
-                cursor-pointer
-                flex-col
-                items-center
-                justify-center
-                rounded-[15px]
-                border
-                border-dashed
-                border-[#B8B9BD]
-                bg-[#F3F4F6]
-              "
+    imageUploadBox
+    relative
+    flex
+    min-h-[364px]
+    w-full
+    cursor-pointer
+    flex-col
+    items-center
+    justify-center
+    overflow-hidden
+    rounded-[15px]
+    border
+    border-dashed
+    border-[#B8B9BD]
+    bg-[#F3F4F6]
+
+    max-[393px]:min-h-[143px]
+    max-[393px]:rounded-[12px]
+  "
             >
-              <div className="flex flex-col items-center">
-                <div
+              {previewUrl ? (
+                <img
+                  src={previewUrl}
+                  alt="인증 이미지 미리보기"
                   className="
-                    imageUploadButton
-                    mb-[18px]
-                    flex
-                    items-center
-                    justify-center
-                    gap-[10px]
-                    rounded-[15px]
-                    bg-white
-                    px-[22px]
-                    py-[16px]
-                    text-[24px]
-                    font-medium
-                    text-[#121212]
-                    shadow-[0_4px_20px_rgba(135,104,244,0.15)]
-                  "
-                >
-                  <img
-                    src={downloadbtn}
-                    alt="업로드"
-                    className="h-[24px] w-[24px]"
-                  />
+        h-full
+        min-h-[364px]
+        w-full
+        object-cover
 
-                  이미지 업로드
+        max-[393px]:min-h-[143px]
+      "
+                />
+              ) : (
+                <div className="flex flex-col items-center">
+                  <div
+                    className="
+          imageUploadButton
+          mb-[18px]
+          flex
+          items-center
+          justify-center
+          gap-[10px]
+          rounded-[15px]
+          bg-white
+          px-[22px]
+          py-[16px]
+          text-[24px]
+          font-medium
+          text-[#121212]
+          shadow-[0_4px_20px_rgba(135,104,244,0.15)]
+
+          max-[393px]:mb-[12px]
+          max-[393px]:gap-[7px]
+          max-[393px]:rounded-[9px]
+          max-[393px]:px-[14px]
+          max-[393px]:py-[10px]
+          max-[393px]:text-[13px]
+        "
+                  >
+                    <img
+                      src={downloadbtn}
+                      alt="업로드"
+                      className="
+            h-[24px]
+            w-[24px]
+
+            max-[393px]:h-[18px]
+            max-[393px]:w-[18px]
+          "
+                    />
+
+                    이미지 업로드
+                  </div>
+
+                  <p
+                    className="
+          imageUploadGuide
+          text-[24px]
+          text-[#808386]
+
+          max-[393px]:text-[11px]
+        "
+                  >
+                    JPG, PNG (최대 10MB)
+                  </p>
                 </div>
-
-                <p className="imageUploadGuide text-[24px] text-[#808386]">
-                  {image
-                    ? image.name
-                    : "JPG, PNG (최대 10MB)"}
-                </p>
-              </div>
+              )}
             </label>
 
             <input
               id="stampImage"
               type="file"
               accept=".jpg,.jpeg,.png"
-              onChange={
-                handleImageUpload
-              }
+              onChange={handleImageUpload}
               className="hidden"
             />
           </section>
 
+          {/* ======================================
+    인증 날짜
+====================================== */}
 
-          {/* 인증 날짜 */}
-          <section className="shortTextSection mt-[90px]">
+          <div className="relative mt-[30px]">
+            {!authDate && (
+              <span
+                className="
+        pointer-events-none
+        absolute
+        left-[24px]
+        top-1/2
+        -translate-y-1/2
+        text-[20px]
+        text-[#D2D4D8]
+        max-[393px]:left-[16px]
+        max-[393px]:text-[12px]
+      "
+              >
+                날짜를 입력해주세요.
+              </span>
+            )}
+
             <input
               type="date"
               value={authDate}
               onChange={(event) =>
-                setAuthDate(
-                  event.target.value,
-                )
+                setAuthDate(event.target.value)
               }
-              className="
-                shortTextInput
-                h-[80px]
-                w-full
-                rounded-[15px]
-                border
-                border-[#D5D8DC]
-                px-[24px]
-                text-[20px]
-                text-[#121212]
-                outline-none
-                focus:border-[#956CF6]
-              "
+              className={`
+      shortTextInput
+      h-[80px]
+      w-full
+      rounded-[15px]
+      border
+      border-[#D5D8DC]
+      bg-transparent
+      px-[24px]
+      text-[20px]
+      outline-none
+      focus:border-[#956CF6]
+
+      max-[393px]:h-[57px]
+      max-[393px]:rounded-[8px]
+      max-[393px]:px-[16px]
+      max-[393px]:text-[14px]
+
+      ${authDate
+                  ? "text-[#121212]"
+                  : "[&::-webkit-datetime-edit]:text-transparent"
+                }
+    `}
             />
-          </section>
+          </div>
 
+          {/* ======================================
+              후기 입력
+          ====================================== */}
 
-          {/* 후기 입력 */}
-          <section className="descriptionSection mt-[30px]">
+          <section
+            className="
+              descriptionSection
+              mt-[30px]
+
+              max-[393px]:mt-[30px]
+            "
+          >
             <div className="descriptionBox relative">
               <textarea
-                value={description}
-                onChange={(event) => {
+                value={
+                  description
+                }
+                onChange={(
+                  event,
+                ) => {
                   if (
-                    event.target.value
-                      .length <= 300
+                    event.target
+                      .value
+                      .length <=
+                    300
                   ) {
                     setDescription(
-                      event.target.value,
+                      event.target
+                        .value,
                     );
                   }
                 }}
                 placeholder="미션을 진행하며 느낀점을 간단히 작성해주세요."
                 className="
                   descriptionInput
-                  min-h-[245px]
+                  min-h-[345px]
                   w-full
                   resize-none
                   rounded-[15px]
@@ -508,24 +787,65 @@ export default function StampDetail() {
                   outline-none
                   placeholder:text-[#D2D4D8]
                   focus:border-[#956CF6]
+
+                  max-[393px]:min-h-[207px]
+                  max-[393px]:rounded-[10px]
+                  max-[393px]:px-[16px]
+                  max-[393px]:py-[16px]
+                  max-[393px]:pr-[45px]
+                  max-[393px]:pb-[35px]
+                  max-[393px]:text-[14px]
+                  max-[393px]:leading-[18px]
                 "
               />
 
-              <span className="descriptionCount absolute right-[22px] bottom-[20px] text-[14px] text-[#C7C9CD]">
-                {description.length}/300자
+              <span
+                className="
+                  descriptionCount
+                  absolute
+                  right-[22px]
+                  bottom-[20px]
+                  text-[14px]
+                  text-[#C7C9CD]
+
+                  max-[393px]:right-[14px]
+                  max-[393px]:bottom-[12px]
+                  max-[393px]:text-[12px]
+                "
+              >
+                {description.length}
+                /300자
               </span>
             </div>
           </section>
 
+          {/* ======================================
+              하단 버튼
+          ====================================== */}
 
-          {/* 하단 버튼 */}
-          <div className="stampDetailButtons mt-[55px] flex justify-end gap-[12px]">
+          <div
+            className="
+              stampDetailButtons
+              mt-[55px]
+              flex
+              justify-end
+              gap-[12px]
+
+              max-[393px]:mt-[24px]
+              max-[393px]:w-full
+              max-[393px]:gap-[10px]
+            "
+          >
+            {/* 취소 */}
+
             <button
               type="button"
               onClick={() =>
                 navigate(-1)
               }
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting
+              }
               className="
                 cancelButton
                 rounded-[10px]
@@ -541,14 +861,26 @@ export default function StampDetail() {
                 hover:bg-[#F5F5F5]
                 disabled:cursor-not-allowed
                 disabled:opacity-50
+
+                max-[393px]:h-[70px]
+                max-[393px]:w-[109px]
+                max-[393px]:shrink-0
+                max-[393px]:rounded-[10px]
+                max-[393px]:px-0
+                max-[393px]:py-0
+                max-[393px]:text-[20px]
               "
             >
               취소
             </button>
 
+            {/* 인증하기 */}
+
             <button
               type="button"
-              onClick={handleSubmit}
+              onClick={
+                handleSubmit
+              }
               disabled={
                 isSubmitting ||
                 mission.isCompleted
@@ -566,6 +898,15 @@ export default function StampDetail() {
                 hover:bg-black
                 disabled:cursor-not-allowed
                 disabled:bg-[#B8B9BD]
+
+                max-[393px]:h-[70px]
+                max-[393px]:flex-1
+                max-[393px]:rounded-[8px]
+                max-[393px]:bg-[#7C4DFF]
+                max-[393px]:px-0
+                max-[393px]:py-0
+                max-[393px]:text-[20px]
+                max-[393px]:hover:bg-[#7C4DFF]
               "
             >
               {mission.isCompleted

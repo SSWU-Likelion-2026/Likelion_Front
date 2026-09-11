@@ -6,6 +6,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import Banner from "../../components/Banner";
+import EmptyState from "../../components/EmptyState";
 import ToggleGroup from "../../components/ToggleGroup";
 
 import underbtn from "../../img/project/underbtn.svg";
@@ -517,35 +518,7 @@ function Project() {
         {!loading &&
           !error &&
           projects.length === 0 && (
-            <div
-              className="
-                flex
-                min-h-[300px]
-                w-full
-                items-start
-                justify-center
-                pt-[20px]
-
-                max-[393px]:min-h-[200px]
-                max-[393px]:pt-[23px]
-              "
-            >
-              <p
-                className="
-                  text-center
-                  text-[34px]
-                  font-semibold
-                  leading-[50px]
-                  text-black
-
-                  max-[393px]:text-[14px]
-                  max-[393px]:font-semibold
-                  max-[393px]:leading-[20px]
-                "
-              >
-                조회된 프로젝트가 없습니다.
-              </p>
-            </div>
+            <EmptyState message="조회된 프로젝트가 없습니다." />
           )}
       </div>
     </section>

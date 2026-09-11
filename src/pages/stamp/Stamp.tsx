@@ -332,19 +332,7 @@ export default function Stamp() {
 
             {!missionLoading &&
               missionError && (
-                <div
-                  className="
-                    py-[100px]
-                    text-center
-                    text-[22px]
-                    text-[#808386]
-
-                    max-[393px]:py-[60px]
-                    max-[393px]:text-[13px]
-                  "
-                >
-                  {missionError}
-                </div>
+                <EmptyState message={missionError} />
               )}
 
             {/* 미션 없음 */}
@@ -611,19 +599,7 @@ max-[393px]:w-full
 
             {!myStampLoading &&
               myStampError && (
-                <div
-                  className="
-                    py-[100px]
-                    text-center
-                    text-[22px]
-                    text-[#808386]
-
-                    max-[393px]:py-[60px]
-                    max-[393px]:text-[13px]
-                  "
-                >
-                  {myStampError}
-                </div>
+                <EmptyState message={myStampError} />
               )}
 
             {!myStampLoading &&

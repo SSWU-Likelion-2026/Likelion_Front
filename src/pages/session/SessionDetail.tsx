@@ -145,22 +145,23 @@ export default function SessionDetail() {
             </div>
         </div>
 
-        <div className="mt-[55px] border border-gray-9 rounded-[15px] p-6 lg:p-[35px]">
-          <textarea
-            value={content}
-            onChange={e => setContent(e.target.value)}
-            placeholder="세션 후기 입력하기"
-            className="w-full h-[245px] text-[14px] lg:text-[20px] text-black placeholder:text-gray-4 resize-none outline-none"
-          />
-        </div>
-        <div className="flex justify-end mt-5.25">
-          <Button
-            onClick={handleSubmit}
-            color="white"
-            disabled={!getAccessToken()}>
-            후기 등록
-          </Button>
-        </div>
+        {getAccessToken() && (
+          <>
+            <div className="mt-[55px] border border-gray-9 rounded-[15px] p-6 lg:p-[35px]">
+              <textarea
+                value={content}
+                onChange={e => setContent(e.target.value)}
+                placeholder="세션 후기 입력하기"
+                className="w-full h-[245px] text-[14px] lg:text-[20px] text-black placeholder:text-gray-4 resize-none outline-none"
+              />
+            </div>
+            <div className="flex justify-end mt-5.25">
+              <Button onClick={handleSubmit} color="white">
+                후기 등록
+              </Button>
+            </div>
+          </>
+        )}
 
         <div className="mt-[31px] flex flex-col gap-[25px] pb-[176px]">
           {reviews.map(review => {

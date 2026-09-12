@@ -17,7 +17,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export default function Button({ color, className = '', children, ...rest }: ButtonProps) {
   return (
     <button
-      className={`cursor-pointer px-5 py-3 lg:px-8 lg:py-3 text-[14px] lg:text-[18px] rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed ${color ? colorStyles[color] : ''} ${className}`}
+      className={`cursor-pointer px-5 py-3 lg:px-8 lg:py-3 text-[14px] lg:text-[18px] rounded-[10px] ${color ? colorStyles[color] : ''} ${className}`}
       {...rest}
     >
       {children}

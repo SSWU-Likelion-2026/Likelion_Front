@@ -153,7 +153,7 @@ function Signup() {
             type="password"
             required
             autoComplete="new-password"
-            placeholder="Password"
+            placeholder="비밀번호(영문,숫자,특수문자를 포함 8~20자 입력)"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={fieldClass}

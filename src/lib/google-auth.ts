@@ -75,15 +75,38 @@ export async function renderGoogleButton(
     initialized = true
   }
 
-  gid.renderButton(container, {
-    type: 'standard',
-    theme: 'outline',
-    size: 'large',
-    text: 'signin_with',
-    shape: 'rectangular',
-    logo_alignment: 'center',
-    width: Math.min(container.clientWidth || 400, 400),
-  })
+  // container(버튼을 그려 넣는 div) 자신은 구글이 넣는 내부 wrapper 때문에
+  // 폭이 자기참조적으로 커질 수 있어서, 실제 사용 가능한 폭은 부모 요소 기준으로 잰다.
+  const widthTarget = container.parentElement ?? container
+  const measureWidth = () => Math.min(widthTarget.clientWidth || 400, 400)
+
+  const draw = () => {
+    gid.renderButton(container, {
+      type: 'standard',
+      theme: 'outline',
+      size: 'large',
+      text: 'signin_with',
+      shape: 'rectangular',
+      logo_alignment: 'center',
+      width: measureWidth(),
+    })
+  }
+  draw()
+
+  // GIS 버튼은 고정폭 iframe이라 렌더 이후엔 스스로 리사이즈 안 됨.
+  // 부모 폭이 바뀌면(반응형 레이아웃 전환, 창 크기 조절 등) 다시 그려서 맞춤.
+  if (typeof ResizeObserver !== 'undefined') {
+    let lastWidth = measureWidth()
+    const observer = new ResizeObserver(() => {
+      const width = measureWidth()
+      if (Math.abs(width - lastWidth) > 4) {
+        lastWidth = width
+        draw()
+      }
+    })
+    observer.observe(widthTarget)
+  }
+
   return true
 }
 

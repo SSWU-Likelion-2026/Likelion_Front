@@ -38,14 +38,14 @@ const HOVER_DEBOUNCE_MS = 200
 const ITEM_HEIGHT = 100
 
 const monthClass: Record<MonthColor, string> = {
-  primary: 'bg-primary-100 text-[#fafafa]',
-  neutral: 'bg-[#f5f5f5] border border-[#f0f0f0] text-primary-100',
+  primary: 'bg-accent-strong text-white',
+  neutral: 'bg-surface-neutral border border-surface-border text-accent-strong',
 }
 
 const connectorClass: Record<ConnectorColor, string> = {
   primary: 'bg-primary-100',
   mint: 'bg-accent-100',
-  neutral: 'bg-[#f5f5f5] border border-[#f0f0f0]',
+  neutral: 'bg-surface-muted border border-surface-border',
 }
 
 const MONTH_BUTTON_BASE_CLASS =
@@ -92,6 +92,106 @@ const items: ScheduleItem[] = [
   { kind: 'month', x: 953, y: 400, width: 352, color: 'primary', label: 'Dec' },
   { kind: 'dot', x: 1305, y: 400, icon: checkIcon },
 ]
+
+// 모바일: 데스크탑의 절대좌표 스네이크 레이아웃을, 줄 단위(row)로 재구성한 버전으로 옮긴다.
+// 피그마 모바일 목업(node 1183:15903)을 보면 각 줄은 간격 없이 알약이 서로 맞닿아 있고(칸 폭을 줄마다
+// 345px에 맞춰 나눠 가짐), 일부 줄(1월/10월)은 좌우 중앙 정렬로 짧게 떠 있다. 11~12월 줄은 예외적으로
+// 11월 알약 위에 12월·체크가 겹쳐 얹히는 구조라 grid로 별도 처리한다.
+type MobileCell =
+  | { kind: 'month'; color: MonthColor; label: string; width: number }
+  | { kind: 'dot'; icon?: string; width?: number; badge?: boolean }
+type MobileRow = { align: 'start' | 'center'; cells: MobileCell[] }
+
+const mobileRows: MobileRow[] = [
+  {
+    align: 'center',
+    cells: [{ kind: 'dot', icon: arrow1 }, { kind: 'month', color: 'primary', label: 'Jan', width: 166 }],
+  },
+  {
+    align: 'start',
+    cells: [
+      { kind: 'month', color: 'primary', label: 'Feb', width: 155 },
+      { kind: 'month', color: 'neutral', label: 'Mar', width: 190 },
+    ],
+  },
+  {
+    align: 'start',
+    cells: [
+      { kind: 'month', color: 'neutral', label: 'Apr', width: 140 },
+      { kind: 'month', color: 'primary', label: 'May', width: 149 },
+      { kind: 'dot', icon: pinwheel1 },
+    ],
+  },
+  {
+    align: 'start',
+    cells: [
+      { kind: 'dot', icon: arrow2 },
+      { kind: 'dot', icon: pinwheel2, width: 98, badge: true },
+      { kind: 'month', color: 'primary', label: 'Jun', width: 189 },
+    ],
+  },
+  {
+    align: 'start',
+    cells: [
+      { kind: 'month', color: 'neutral', label: 'Jul', width: 231 },
+      { kind: 'dot', icon: flower1 },
+      { kind: 'dot' },
+    ],
+  },
+  {
+    align: 'start',
+    cells: [
+      { kind: 'month', color: 'primary', label: 'Aug', width: 205 },
+      { kind: 'month', color: 'primary', label: 'Sep', width: 139 },
+    ],
+  },
+  {
+    align: 'center',
+    cells: [{ kind: 'month', color: 'neutral', label: 'Oct', width: 158 }, { kind: 'dot' }],
+  },
+]
+
+const MOBILE_MONTH_BUTTON_CLASS =
+  'flex h-[56px] shrink-0 cursor-pointer items-center justify-center whitespace-nowrap rounded-full border-0 font-montserrat text-[25px] font-semibold'
+const MOBILE_DOT_CLASS = 'flex size-[56px] shrink-0 items-center justify-center rounded-full bg-accent-100'
+const MOBILE_BADGE_CLASS = 'flex h-[56px] shrink-0 items-center justify-center rounded-full bg-primary-100'
+// Nov·Dec는 서로 겹치는 폭 넓은 알약이라, 텍스트를 박스 정중앙(justify-center)에 두면
+// Nov 텍스트가 그 위에 덮이는 Dec 알약 구간에 가려진다. 피그마 원본도 이 두 알약만
+// justify-center 없이 좌측 패딩(22px)만으로 텍스트를 왼쪽에 둔다.
+const OVERLAP_MONTH_BUTTON_CLASS =
+  'absolute top-0 flex h-[56px] items-center whitespace-nowrap rounded-full border-0 px-[22px] font-montserrat text-[25px] font-semibold'
+
+type MobileCellViewProps = {
+  cell: MobileCell
+  onSelectMonth: (label: string) => void
+}
+
+const MobileCellView = memo(function MobileCellView({ cell, onSelectMonth }: MobileCellViewProps) {
+  const handleClick = useCallback(() => {
+    if (cell.kind === 'month') onSelectMonth(cell.label)
+  }, [cell, onSelectMonth])
+
+  if (cell.kind === 'month') {
+    return (
+      <button
+        type="button"
+        onClick={handleClick}
+        style={{ width: cell.width }}
+        className={`${MOBILE_MONTH_BUTTON_CLASS} ${monthClass[cell.color]}`}
+      >
+        {cell.label}
+      </button>
+    )
+  }
+  return (
+    <div
+      style={cell.width ? { width: cell.width } : undefined}
+      className={cell.badge ? MOBILE_BADGE_CLASS : MOBILE_DOT_CLASS}
+    >
+      {cell.icon && <img src={cell.icon} alt="" className="size-[37px]" />}
+    </div>
+  )
+})
 
 type ScheduleItemViewProps = {
   item: ScheduleItem
@@ -199,31 +299,75 @@ function AnnualSchedule() {
   const selectedSchedule = selectedMonth ? MONTH_SCHEDULE[selectedMonth] : null
 
   return (
-    <section className="flex w-full flex-col items-center gap-[50px] py-[45px]">
-      <div className="flex flex-col items-center gap-[15px]">
-        <p className="m-0 py-[10px] text-[18px] font-semibold text-[#121212]">Annual schedule</p>
-        <p className="m-0 text-[32px] font-semibold text-[#121212]">
-          성신멋사와 함께하는 <span className="text-primary-100">1년 간의 여정</span>
-        </p>
-      </div>
-
-      <div className="relative h-[520px] w-full overflow-x-hidden">
-        {/* hover 시 커지는 효과가 있던 자리라 위/아래 10px 여유를 둔 안쪽 컨테이너 (지금은 확대 없이 위치만 사용) */}
-        <div className="relative mt-[10px] h-[500px] w-full">
-          <AnimatePresence>
-            {hoveredMonthItem && <HoverPreview key={hoveredIndex} item={hoveredMonthItem} />}
-          </AnimatePresence>
-          {items.map((item, i) => (
-            <ScheduleItemView
-              key={i}
-              item={item}
-              index={i}
-              onSelectMonth={handleSelectMonth}
-              onHoverIndexChange={handleHoverIndexChange}
-            />
-          ))}
+    <>
+      {/* 데스크탑: 절대좌표 스네이크 레이아웃 */}
+      <section className="hidden w-full flex-col items-center gap-[50px] py-[45px] lg:flex">
+        <div className="flex flex-col items-center gap-[15px]">
+          <p className="m-0 py-[10px] text-[18px] font-semibold text-black-1">Annual schedule</p>
+          <p className="m-0 text-[32px] font-semibold text-black-1">
+            성신멋사와 함께하는 <span className="text-primary-100">1년 간의 여정</span>
+          </p>
         </div>
-      </div>
+
+        <div className="relative h-[520px] w-full overflow-x-hidden">
+          {/* hover 시 커지는 효과가 있던 자리라 위/아래 10px 여유를 둔 안쪽 컨테이너 (지금은 확대 없이 위치만 사용) */}
+          <div className="relative mt-[10px] h-[500px] w-full">
+            <AnimatePresence>
+              {hoveredMonthItem && <HoverPreview key={hoveredIndex} item={hoveredMonthItem} />}
+            </AnimatePresence>
+            {items.map((item, i) => (
+              <ScheduleItemView
+                key={i}
+                item={item}
+                index={i}
+                onSelectMonth={handleSelectMonth}
+                onHoverIndexChange={handleHoverIndexChange}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 모바일: 월 알약 + 장식 점을 flex-wrap */}
+      <section className="flex w-full flex-col items-center gap-[35px] px-6 py-10 lg:hidden">
+        <div className="flex flex-col items-center gap-0 text-center">
+          <p className="m-0 py-[10px] text-[14px] font-semibold text-black-1">Annual schedule</p>
+          <p className="m-0 text-[18px] font-semibold text-black-1">
+            성신멋사와 함께하는 <span className="text-primary-100">1년 간의 여정</span>
+          </p>
+        </div>
+
+        <div className="flex w-full flex-col">
+          {mobileRows.map((row, i) => (
+            <div key={i} className={`flex w-full ${row.align === 'center' ? 'justify-center' : 'justify-start'}`}>
+              {row.cells.map((cell, j) => (
+                <MobileCellView key={j} cell={cell} onSelectMonth={handleSelectMonth} />
+              ))}
+            </div>
+          ))}
+
+          {/* 11~12월 줄: 11월 알약 위에 12월·체크 원이 겹쳐 얹힌다 (피그마 grid 겹침 구조 그대로) */}
+          <div className="relative mx-auto h-[56px] w-[323px]">
+            <button
+              type="button"
+              onClick={() => handleSelectMonth('Nov')}
+              className={`${OVERLAP_MONTH_BUTTON_CLASS} left-0 w-[323px] ${monthClass.neutral}`}
+            >
+              Nov
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSelectMonth('Dec')}
+              className={`${OVERLAP_MONTH_BUTTON_CLASS} left-[134px] w-[189px] ${monthClass.primary}`}
+            >
+              Dec
+            </button>
+            <div className={`${MOBILE_DOT_CLASS} absolute left-[267px] top-0`}>
+              <img src={checkIcon} alt="" className="size-[37px]" />
+            </div>
+          </div>
+        </div>
+      </section>
 
       <MonthDetailModal
         open={selectedMonth !== null}
@@ -232,7 +376,7 @@ function AnnualSchedule() {
         description={selectedSchedule?.description ?? ''}
         image={selectedSchedule?.image}
       />
-    </section>
+    </>
   )
 }
 

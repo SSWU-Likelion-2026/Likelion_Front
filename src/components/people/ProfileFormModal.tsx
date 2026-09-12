@@ -80,6 +80,12 @@ const INPUT_CLASS =
 const DROPDOWN_TRIGGER_CLASS =
   'flex h-[61px] w-full items-center rounded-[15px] border border-gray-9 bg-white px-[20px] pr-[44px] text-left text-[16px] outline-none'
 
+// 모바일 폼 필드 (피그마 node 1183:15273 기준 — 데스크탑보다 작은 텍스트/패딩)
+const MOBILE_INPUT_CLASS =
+  'w-full rounded-[10px] border border-gray-9 px-[20px] py-[18px] text-[14px] text-black outline-none placeholder:text-gray-4'
+const MOBILE_DROPDOWN_TRIGGER_CLASS =
+  'flex h-[57px] w-full items-center rounded-[10px] border border-gray-9 bg-white px-[20px] pr-[44px] text-left text-[14px] outline-none'
+
 function ChevronIcon({ open }: { open?: boolean }) {
   return (
     <svg
@@ -106,12 +112,15 @@ type DropdownProps<T extends string> = {
   options: DropdownOption<T>[]
   onChange: (value: T) => void
   ariaLabel: string
+  /** 모바일 폼(피그마 node 1183:15273)은 데스크탑보다 트리거가 작고 텍스트가 14px이라 별도 스타일을 쓴다 */
+  size?: 'desktop' | 'mobile'
 }
 
 /** 피그마 디자인의 드롭다운(선택 항목 회색 강조 + 하단 플로팅 리스트)은 네이티브 select로 재현할 수 없어 커스텀으로 구현 */
-function Dropdown<T extends string>({ value, placeholder, options, onChange, ariaLabel }: DropdownProps<T>) {
+function Dropdown<T extends string>({ value, placeholder, options, onChange, ariaLabel, size = 'desktop' }: DropdownProps<T>) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const mobile = size === 'mobile'
 
   useEffect(() => {
     if (!open) return
@@ -131,13 +140,19 @@ function Dropdown<T extends string>({ value, placeholder, options, onChange, ari
         aria-label={ariaLabel}
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className={`${DROPDOWN_TRIGGER_CLASS} ${selected ? 'text-black' : 'text-gray-7'}`}
+        className={`${mobile ? MOBILE_DROPDOWN_TRIGGER_CLASS : DROPDOWN_TRIGGER_CLASS} ${
+          selected ? 'text-black' : mobile ? 'text-gray-4' : 'text-gray-7'
+        }`}
       >
         {selected ? selected.label : placeholder}
       </button>
       <ChevronIcon open={open} />
       {open && (
-        <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-10 overflow-hidden rounded-[15px] border border-gray-9 bg-white py-[6px] shadow-[0_8px_24px_rgba(18,18,18,0.1)]">
+        <div
+          className={`absolute left-0 right-0 top-[calc(100%+8px)] z-10 overflow-hidden border border-gray-9 bg-white shadow-[0_8px_24px_var(--color-shadow-soft)] ${
+            mobile ? 'rounded-[10px] py-[4px]' : 'rounded-[15px] py-[6px]'
+          }`}
+        >
           {options.map((o) => (
             <button
               key={o.value}
@@ -146,8 +161,8 @@ function Dropdown<T extends string>({ value, placeholder, options, onChange, ari
                 onChange(o.value)
                 setOpen(false)
               }}
-              className={`block w-full px-[20px] py-[13px] text-left text-[16px] hover:bg-[#f3f4f6] ${
-                o.value === value ? 'bg-[#f3f4f6] font-semibold text-black' : 'text-gray-7 hover:text-black'
+              className={`block w-full px-[20px] text-left hover:bg-surface-neutral ${mobile ? 'py-[11px] text-[14px]' : 'py-[13px] text-[16px]'} ${
+                o.value === value ? 'bg-surface-neutral font-semibold text-black' : 'text-gray-7 hover:text-black'
               }`}
             >
               {o.label}
@@ -260,7 +275,9 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65" onClick={onClose}>
+    <>
+    {/* 데스크탑: 중앙 정렬 다이얼로그 */}
+    <div className="fixed inset-0 z-50 hidden items-center justify-center bg-black/65 lg:flex" onClick={onClose}>
       <form
         onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
@@ -292,7 +309,7 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="relative size-[280px] shrink-0 cursor-pointer overflow-hidden rounded-full border border-gray-9 bg-[#f3f4f6] disabled:opacity-60"
+            className="relative size-[280px] shrink-0 cursor-pointer overflow-hidden rounded-full border border-gray-9 bg-surface-neutral disabled:opacity-60"
           >
             {form.profileImageUrl ? (
               <img src={form.profileImageUrl} alt="" className="size-full object-cover" />
@@ -403,20 +420,162 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
             type="button"
             onClick={handleReset}
             disabled={submitting || uploading}
-            className="cursor-pointer rounded-[10px] border border-gray-9 bg-white px-[28px] py-[15px] text-[20px] font-semibold text-[#697584] disabled:opacity-50"
+            className="cursor-pointer rounded-[10px] border border-gray-9 bg-white px-[28px] py-[15px] text-[20px] font-semibold text-text-muted disabled:opacity-50"
           >
             전체삭제
           </button>
           <button
             type="submit"
             disabled={submitting || uploading}
-            className="cursor-pointer rounded-[10px] bg-[#212121] px-[28px] py-[15px] text-[20px] font-semibold text-white disabled:opacity-50"
+            className="cursor-pointer rounded-[10px] bg-warm-black px-[28px] py-[15px] text-[20px] font-semibold text-white disabled:opacity-50"
           >
             {existing ? '수정' : '등록'}
           </button>
         </div>
       </form>
     </div>
+
+    {/* 모바일: 풀스크린 오버레이 (피그마 node 1183:15273 "프로필 등록 (수정 동일)" 기준) */}
+    <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-white lg:hidden">
+      <form onSubmit={handleSubmit} className="flex min-h-full flex-col">
+        <div className="relative h-[180px] shrink-0 bg-gradient-to-b from-[#5D23E3] to-accent-100">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="닫기"
+            className="absolute right-6 top-6 cursor-pointer border-0 bg-transparent p-0 text-white"
+          >
+            <svg className="size-[22px]" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+              <path d="M4 4L18 18M18 4L4 18" />
+            </svg>
+          </button>
+          <p className="absolute bottom-8 left-6 m-0 font-montserrat text-[36px] font-semibold leading-none text-white">People</p>
+        </div>
+
+        <div className="relative -mt-6 flex flex-1 flex-col gap-[15px] rounded-t-[20px] bg-white px-6 pb-10 pt-9">
+          <p className="m-0 text-[20px] font-semibold text-black-1">{existing ? '프로필 수정' : '프로필 등록'}</p>
+
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="relative mx-auto size-[100px] shrink-0 cursor-pointer overflow-hidden rounded-full border border-gray-9 bg-surface-neutral disabled:opacity-60"
+          >
+            {form.profileImageUrl ? (
+              <img src={form.profileImageUrl} alt="" className="size-full object-cover" />
+            ) : (
+              <>
+                <span className="absolute left-1/2 top-[22px] size-[40px] -translate-x-1/2 rounded-full bg-primary-35" />
+                <span className="absolute left-1/2 top-[52px] size-[84px] -translate-x-1/2 rounded-full bg-primary-35" />
+              </>
+            )}
+            {uploading && (
+              <span className="absolute inset-0 flex items-center justify-center bg-white/70 text-[11px] text-gray-6">
+                업로드 중...
+              </span>
+            )}
+          </button>
+
+          <input
+            className={MOBILE_INPUT_CLASS}
+            value={form.name}
+            onChange={handleTextChange('name')}
+            placeholder="이름"
+            aria-label="이름"
+            required
+          />
+          <input
+            className={MOBILE_INPUT_CLASS}
+            value={form.department}
+            onChange={handleTextChange('department')}
+            placeholder="학과"
+            aria-label="학과"
+            required
+          />
+          <input
+            className={MOBILE_INPUT_CLASS}
+            value={form.studentId}
+            onChange={handleTextChange('studentId')}
+            placeholder="학번"
+            aria-label="학번"
+            required
+          />
+          <Dropdown
+            size="mobile"
+            value={form.position}
+            placeholder="직책"
+            options={POSITION_OPTIONS}
+            onChange={(v) => updateField('position', v)}
+            ariaLabel="직책"
+          />
+          <Dropdown
+            size="mobile"
+            value={form.memberGroup}
+            placeholder="파트 선택"
+            options={GROUP_OPTIONS}
+            onChange={(v) => updateField('memberGroup', v)}
+            ariaLabel="파트 선택"
+          />
+          <Dropdown
+            size="mobile"
+            value={form.memberType}
+            placeholder="운영진/아기사자"
+            options={TYPE_OPTIONS}
+            onChange={(v) => updateField('memberType', v)}
+            ariaLabel="운영진 / 아기사자"
+          />
+          <input
+            className={MOBILE_INPUT_CLASS}
+            value={form.githubUrl}
+            onChange={handleTextChange('githubUrl')}
+            placeholder="Github"
+            aria-label="Github"
+          />
+          <input
+            className={MOBILE_INPUT_CLASS}
+            value={form.instagramUrl}
+            onChange={handleTextChange('instagramUrl')}
+            placeholder="Instagram"
+            aria-label="Instagram"
+          />
+
+          <div className="relative">
+            <textarea
+              className={`${MOBILE_INPUT_CLASS} h-[116px] resize-none pr-[50px]`}
+              value={form.introduction}
+              maxLength={INTRO_MAX_LENGTH}
+              onChange={handleTextChange('introduction')}
+              placeholder="한 줄 소개"
+              aria-label="한 줄 소개"
+            />
+            <span className="pointer-events-none absolute bottom-[14px] right-[20px] text-[12px] text-gray-6">
+              {form.introduction.length}/{INTRO_MAX_LENGTH}자
+            </span>
+          </div>
+
+          {error && <p className="m-0 text-[13px] text-red-500">{error}</p>}
+
+          <div className="mt-2 flex gap-[12px]">
+            <button
+              type="button"
+              onClick={handleReset}
+              disabled={submitting || uploading}
+              className="h-[70px] w-[110px] shrink-0 cursor-pointer rounded-[10px] border border-gray-9 bg-white text-[20px] font-semibold text-black-1 disabled:opacity-50"
+            >
+              삭제
+            </button>
+            <button
+              type="submit"
+              disabled={submitting || uploading}
+              className="h-[70px] flex-1 cursor-pointer rounded-[10px] bg-primary-100 text-[20px] font-semibold text-white disabled:opacity-50"
+            >
+              {existing ? '수정' : '등록'}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    </>
   )
 }
 

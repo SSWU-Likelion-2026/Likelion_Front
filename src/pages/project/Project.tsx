@@ -165,11 +165,11 @@ function Project() {
           px-[120px]
           py-8
 
-          max-[393px]:-mt-[18px]
-          max-[393px]:rounded-t-[20px]
-          max-[393px]:px-6
-          max-[393px]:pb-8
-          max-[393px]:pt-[18px]
+          max-[1014px]:-mt-[18px]
+          max-[1014px]:rounded-t-[20px]
+          max-[1014px]:px-6
+          max-[1014px]:pb-8
+          max-[1014px]:pt-[18px]
         "
       >
         {/* ==========================================
@@ -183,11 +183,11 @@ function Project() {
             items-center
             justify-between
 
-            max-[393px]:mb-4
+            max-[1014px]:mb-4
           "
         >
           {/* 데스크톱 기수 ToggleGroup */}
-          <div className="max-[393px]:hidden">
+          <div className="max-[1014px]:hidden">
             <ToggleGroup
               options={generations.map(
                 (generation) => `${generation}기`,
@@ -205,7 +205,7 @@ function Project() {
               모바일 기수 드롭다운
           ====================================== */}
 
-          <div className="relative hidden max-[393px]:block">
+          <div className="relative hidden max-[1014px]:block">
             <button
               type="button"
               onClick={() =>
@@ -321,11 +321,11 @@ function Project() {
     font-medium
     text-[#808386]
 
-    max-[393px]:h-[46px]
-    max-[393px]:w-[97px]
-    max-[393px]:rounded-[10px]
-    max-[393px]:px-0
-    max-[393px]:text-[14px]
+    max-[1014px]:h-[46px]
+    max-[1014px]:w-[97px]
+    max-[1014px]:rounded-[10px]
+    max-[1014px]:px-0
+    max-[1014px]:text-[14px]
   "
           >
             프로젝트 등록
@@ -344,7 +344,7 @@ function Project() {
               items-center
               justify-center
 
-              max-[393px]:min-h-[150px]
+              max-[1014px]:min-h-[150px]
             "
           >
             <p
@@ -352,7 +352,7 @@ function Project() {
                 text-[22px]
                 text-[#808386]
 
-                max-[393px]:text-[13px]
+                max-[1014px]:text-[13px]
               "
             >
               프로젝트를 불러오는 중입니다.
@@ -373,7 +373,7 @@ function Project() {
                 items-center
                 justify-center
 
-                max-[393px]:min-h-[150px]
+                max-[1014px]:min-h-[150px]
               "
             >
               <p
@@ -381,7 +381,7 @@ function Project() {
                   text-[22px]
                   text-red-500
 
-                  max-[393px]:text-[13px]
+                  max-[1014px]:text-[13px]
                 "
               >
                 {error}
@@ -405,8 +405,8 @@ function Project() {
                 gap-[24px]
                 font-montserrat
 
-                max-[393px]:grid-cols-1
-                max-[393px]:gap-[24px]
+                max-[1014px]:grid-cols-1
+                max-[1014px]:gap-[24px]
               "
             >
               {projects.map(
@@ -427,9 +427,9 @@ function Project() {
                       border-[#E5E5E5]
                       bg-white
 
-                      max-[393px]:h-[304px]
-                      max-[393px]:rounded-[12px]
-                      max-[393px]:shadow-[0_2px_8px_rgba(0,0,0,0.08)]
+                      max-[1014px]:h-[304px]
+                      max-[1014px]:rounded-[12px]
+                      max-[1014px]:shadow-[0_2px_8px_rgba(0,0,0,0.08)]
                     "
                   >
                     {/* 이미지 */}
@@ -441,8 +441,8 @@ function Project() {
                         overflow-hidden
                         bg-[#D9D9D9]
 
-                        max-[393px]:h-[159px]
-                        max-[393px]:aspect-auto
+                        max-[1014px]:h-[159px]
+                        max-[1014px]:aspect-auto
                       "
                     >
                       {projectThumbnails[project.id] && (
@@ -471,9 +471,9 @@ function Project() {
                         px-5
                         py-5
 
-                        max-[393px]:h-[145px]
-                        max-[393px]:px-[22px]
-                        max-[393px]:py-[24px]
+                        max-[1014px]:h-[145px]
+                        max-[1014px]:px-[22px]
+                        max-[1014px]:py-[24px]
                       "
                     >
                       <p
@@ -482,8 +482,8 @@ function Project() {
                           font-semibold
                           text-[#121212]
 
-                          max-[393px]:text-[24px]
-                          max-[393px]:leading-[20px]
+                          max-[1014px]:text-[24px]
+                          max-[1014px]:leading-[20px]
                         "
                       >
                         {project.title}
@@ -497,9 +497,9 @@ function Project() {
                           font-medium
                           text-[#121212]
 
-                          max-[393px]:mt-[10px]
-                          max-[393px]:text-[16px]
-                          max-[393px]:leading-[22px]
+                          max-[1014px]:mt-[10px]
+                          max-[1014px]:text-[16px]
+                          max-[1014px]:leading-[22px]
                         "
                       >
                         {project.summary}

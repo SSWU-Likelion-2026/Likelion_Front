@@ -48,7 +48,7 @@ const NotifySignupModal = memo(function NotifySignupModal({ open, onClose }: Not
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
           onClick={handleClose}
         >
-          <div className="relative w-[400px] rounded-[20px] bg-white px-7 py-6" onClick={stopPropagation}>
+          <div className="relative w-[315px] rounded-[20px] bg-white px-7 py-6 lg:w-[400px]" onClick={stopPropagation}>
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-[20px] font-semibold">모집 알림 신청</h2>
               <Button onClick={handleClose} className="!p-0 h-5 w-5">
@@ -56,7 +56,7 @@ const NotifySignupModal = memo(function NotifySignupModal({ open, onClose }: Not
               </Button>
             </div>
 
-            <p className="mb-4 text-[14px] text-[#697584]">
+            <p className="mb-4 text-[14px] text-text-muted">
               모집이 시작되면 입력하신 이메일로 알려드릴게요.
             </p>
 

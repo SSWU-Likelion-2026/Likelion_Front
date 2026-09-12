@@ -68,11 +68,11 @@ function Session() {
       <div className="flex flex-col items-center px-6 xl:px-[195px] gap-10 rounded-t-[25px] bg-white -mt-6 relative">
 
         {/* 모바일: 트랙 드롭다운 + 기수 드롭다운 */}
-        <div className='lg:hidden flex w-full gap-3 mt-12'>
+        <div className='lg:hidden flex w-full gap-3 mt-9'>
           <div ref={trackRef} className="relative w-[118px]">
             <button
               onClick={() => setOpenTrack(!openTrack)}
-              className="flex items-center justify-between px-3 w-full h-11.5 border border-gray-9 rounded-[10px] bg-white cursor-pointer"
+              className="flex items-center justify-between px-3 w-full h-[53px] border border-gray-9 rounded-[10px] bg-white cursor-pointer"
             >
               <span className="text-[14px] text-gray-2">{track}</span>
               <img src={Toggle} alt="" className={`transition-transform duration-200 ${openTrack ? 'rotate-180' : 'rotate-0'}`} />
@@ -95,7 +95,7 @@ function Session() {
           <div ref={genMobileRef} className="relative">
             <button
               onClick={() => setOpenGen(!openGen)}
-              className="flex items-center justify-between px-3 w-29.5 h-11.5 border border-gray-9 rounded-[10px] bg-white cursor-pointer"
+              className="flex items-center justify-between px-3 w-29.5 h-[53px] border border-gray-9 rounded-[10px] bg-white cursor-pointer"
             >
               <span className="text-[15px] text-gray-2">{generation}</span>
               <img src={Toggle} alt="" className={`transition-transform duration-200 ${openGen ? 'rotate-180' : 'rotate-0'}`} />
@@ -123,7 +123,7 @@ function Session() {
           <div ref={genDesktopRef} className="relative self-end">
             <button
               onClick={() => setOpenGen(!openGen)}
-              className="flex items-center justify-between px-3 w-29.5 h-11.5 border border-gray-9 rounded-[10px] bg-white cursor-pointer"
+              className="flex items-center justify-between px-3 w-29.5 h-[53px] border border-gray-9 rounded-[10px] bg-white cursor-pointer"
             >
               <span className="text-[15px] text-gray-2">{generation}</span>
               <img src={Toggle} alt="" className={`transition-transform duration-200 ${openGen ? 'rotate-180' : 'rotate-0'}`} />

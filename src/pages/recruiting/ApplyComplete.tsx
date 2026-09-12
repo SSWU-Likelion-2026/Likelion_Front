@@ -20,25 +20,26 @@ function ApplyComplete() {
 
   return (
     <div className="flex min-h-[calc(100svh-57px)] flex-col items-center justify-center gap-4 px-4 text-center">
-      <h1 className="text-[26px] font-semibold leading-relaxed text-black">
+      <h1 className="text-[18px] font-semibold leading-relaxed text-black md:text-[26px]">
         {name}님의
         <br />
         {term}기 지원서 제출이 완료되었습니다.
       </h1>
-      <p className="text-[15px] text-gray-4">지원해 주셔서 감사합니다.</p>
+      <p className="text-[13px] text-gray-4 md:text-[15px]">지원해 주셔서 감사합니다.</p>
 
       <div className="mt-4 flex items-center gap-3">
         <Link
           to="/mypage"
-          className="rounded-[10px] border border-gray-9 px-7 py-3 text-[15px] text-gray-3 hover:bg-gray-10"
+          className="hidden rounded-[10px] border border-gray-9 px-7 py-3 text-[15px] text-gray-3 hover:bg-gray-10 md:inline-flex"
         >
           마이페이지로 이동
         </Link>
         <Link
-          to="/mypage/applications"
-          className="rounded-[10px] bg-[#212121] px-7 py-3 text-[15px] font-medium text-white hover:opacity-90"
+          to="/mypage?tab=apply"
+          className="rounded-full bg-primary-100 px-8 py-3 text-[14px] font-medium text-white hover:opacity-90 md:rounded-[10px] md:bg-[#212121] md:px-7 md:text-[15px]"
         >
-          제출한 지원서 조회
+          <span className="md:hidden">지원서 조회</span>
+          <span className="hidden md:inline">제출한 지원서 조회</span>
         </Link>
       </div>
     </div>

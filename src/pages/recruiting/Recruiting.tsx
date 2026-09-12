@@ -39,14 +39,14 @@ function Recruiting() {
 
   if (homeError) {
     return (
-      <p className="py-40 text-center text-[34px] text-black font-semibold">
+      <p className="py-40 text-center text-[20px] text-black font-semibold md:text-[34px]">
         모집 정보를 불러오지 못했어요.
       </p>
     )
   }
   if (!home) {
     return (
-      <p className="py-40 text-center text-[34px] text-black font-semibold">
+      <p className="py-40 text-center text-[20px] text-black font-semibold md:text-[34px]">
         불러오는 중…
       </p>
     )

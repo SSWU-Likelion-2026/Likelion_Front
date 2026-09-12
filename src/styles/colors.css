@@ -37,6 +37,62 @@
   /* Warm black (Figma 스타일명: GrayScale/Warmblack, 푸터 배경) */
   --color-warm-black: #212121;
 
-  /* TODO: bg/cool 라벨 확인 후 추가
-     #fafafa, #f5f5f5, #ffffff */
+  /* Surface / neutral (카드·섹션 배경으로 쓰이는 옅은 회색, 그레이스케일 밖) */
+  --color-surface-neutral: #f3f4f6;
+  --color-surface-faint: #fafafa;
+  --color-surface-muted: #f5f5f5;
+  --color-surface-border: #f0f0f0;
+
+  /* Text / label 회색 (그레이스케일 밖) */
+  --color-text-muted: #697584;
+  --color-text-soft: #797979;
+
+  /* Border / divider (그레이스케일 밖) */
+  --color-border-soft: #dbdee2;
+  --color-border-faint: #d5d8dc;
+  --color-border-light: #bfbfbf;
+
+  /* Accent 계열이지만 primary/accent 팔레트와 다른 톤 (선택 상태, 강조 등) */
+  --color-accent-select: #865bff;
+  --color-accent-select-alt: #8557ff;
+  --color-accent-glow: #956cf6;
+  --color-accent-strong: #7d4bf8;
+  --color-accent-deep: #7950f2;
+  --color-accent-light: #a789ff;
+
+  /* 모달 배경 딤(dim) */
+  --color-overlay-dim: rgba(18, 18, 18, 0.6);
+
+  /* box-shadow 색상 */
+  --color-shadow-strong: rgba(0, 0, 0, 0.5); /* MonthDetailModal 카드 그림자 */
+  --color-shadow-soft: rgba(18, 18, 18, 0.1); /* ProfileFormModal 드롭다운 그림자 */
+  --color-shadow-accent: rgba(135, 104, 244, 0.15); /* 강조 버튼 그림자 */
+
+  /* 순백 (RecruitHero 그라디언트 보더 트릭 등 실제 흰색이 필요한 자리) */
+  --color-white: #ffffff;
+
+  /* 사용처가 적어(1~2곳) 별도로 묶은 색상들 — 다크모드 매핑 시 재검토 대상 */
+  --color-misc-f2edff: #f2edff; /* ProjectEdit/ProjectMaking 토글 배경 */
+  --color-misc-ececef: #ececef;
+  --color-misc-e5e7eb: #e5e7eb; /* ProjectDetail */
+  --color-misc-d9d9d9: #d9d9d9; /* Project 썸네일 placeholder 보더 */
+  --color-misc-8768f4: #8768f4; /* MemberCard 보더 */
+  --color-misc-444: #444444;
+  --color-misc-242424: #242424; /* Stamp 진한 칩 */
+  --color-misc-f5f5f7: #f5f5f7; /* MyStamp */
+  --color-misc-e5e5e5: #e5e5e5; /* Project 카드 보더 */
+  --color-misc-e1e1e1: #e1e1e1; /* MyStamp */
+  --color-misc-dadde1: #dadde1; /* ProjectDetail */
+  --color-misc-d2d4d8: #d2d4d8;
+  --color-misc-c7c9cd: #c7c9cd;
+  --color-misc-b6b6b6: #b6b6b6; /* Stamp */
+  --color-misc-a0a2a5: #a0a2a5;
+  --color-misc-979797: #979797; /* MyPage */
+  --color-misc-7c4dff: #7c4dff; /* MyStamp 강조 */
+  --color-misc-777a80: #777a80;
+  --color-misc-2b2b2b: #2b2b2b; /* ToggleGroup */
+  --color-misc-222: #222222; /* ProjectDetail */
+  --color-misc-171f29: #171f29; /* Project 타이틀 진한 색 */
+  --color-misc-303237: #303237; /* MyPage 모바일 탭 밑줄 */
+  --color-misc-a6a6a6: #a6a6a6; /* MyPage 모바일 탭 비활성 텍스트 */
 }

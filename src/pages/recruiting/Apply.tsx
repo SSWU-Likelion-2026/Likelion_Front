@@ -31,20 +31,20 @@ function Apply() {
 function LoginGate() {
   return (
     <div className="flex min-h-[calc(100svh-57px)] flex-col items-center justify-center gap-4 px-4 text-center">
-      <h1 className="text-[26px] font-semibold text-black">
+      <h1 className="text-[20px] font-semibold text-black md:text-[26px]">
         지원서 작성은 로그인 후 가능합니다
       </h1>
-      <p className="text-[15px] text-gray-4">감사합니다.</p>
+      <p className="text-[13px] text-gray-4 md:text-[15px]">감사합니다.</p>
       <div className="mt-4 flex items-center gap-3">
         <Link
           to="/"
-          className="rounded-[10px] border border-gray-9 px-7 py-3 text-[15px] text-gray-3 hover:bg-gray-10"
+          className="hidden rounded-[10px] border border-gray-9 px-7 py-3 text-[15px] text-gray-3 hover:bg-gray-10 md:inline-flex"
         >
           홈으로 이동
         </Link>
         <Link
           to="/login"
-          className="rounded-[10px] bg-[#212121] px-7 py-3 text-[15px] font-medium text-white hover:opacity-90"
+          className="rounded-full bg-primary-100 px-8 py-3 text-[14px] font-medium text-white hover:opacity-90 md:rounded-[10px] md:bg-[#212121] md:px-7 md:text-[15px]"
         >
           로그인 하기
         </Link>
@@ -59,6 +59,8 @@ function LoginGate() {
 
 function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?: string }) {
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  const isPreview = params.has('preview')
 
   const [data, setData] = useState<CurrentQuestionsResponse | null>(null)
 
@@ -74,8 +76,12 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
   // 문항 + 임시저장 지원서 불러오기
   useEffect(() => {
     const apply = (res: CurrentQuestionsResponse) => {
-      setData(res)
-      setPartName((prev) => prev || res.partQuestions[0]?.partName || '')
+      // ?preview 모드에서만: 문항이 비어있어도(200) 임시 문항으로 대체해서 디자인 확인 가능
+      const empty =
+        res.commonQuestions.length === 0 && res.partQuestions.length === 0
+      const eff = isPreview && empty ? FALLBACK_QUESTIONS : res
+      setData(eff)
+      setPartName((prev) => prev || eff.partQuestions[0]?.partName || '')
     }
     getCurrentQuestions()
       .then(apply)
@@ -113,7 +119,7 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
       .catch(() => {
         /* 작성한 지원서 없음 — 무시 */
       })
-  }, [navigate, authed, applicationId])
+  }, [navigate, authed, applicationId, isPreview])
 
   const selectedGroup = data?.partQuestions.find((g) => g.partName === partName)
   const partId = selectedGroup?.partId ?? 0
@@ -142,7 +148,7 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
     setUploading((p) => ({ ...p, [qid]: true }))
     setFormError(null)
     try {
-      // 폴더 선택 시 파일이 여러 개 > 각각 업로드하고 URL을 줄바꿈으로 이어서 저장됨
+      // 파일 여러 개 선택 시 각각 업로드하고 URL을 줄바꿈으로 이어서 저장됨
       const urls: string[] = []
       for (const f of files) urls.push(await uploadApplicationFile(f))
       setAnswer(qid, urls.join('\n'))
@@ -213,11 +219,11 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
   }
 
   return (
-    <div className="mx-auto w-[1200px] max-w-full py-16">
-      <h1 className="text-[32px] font-semibold text-black">지원서 작성</h1>
+    <div className="mx-auto w-[1200px] max-w-full px-6 py-10 md:px-0 md:py-16">
+      <h1 className="text-[22px] font-semibold text-black md:text-[32px]">지원서 작성</h1>
 
-      <div className="mt-[30px] flex flex-col gap-[30px]">
-        <p className="text-[28px] font-semibold text-black">트랙 선택</p>
+      <div className="mt-5 flex flex-col gap-4 md:mt-[30px] md:gap-[30px]">
+        <p className="text-[18px] font-semibold text-black md:text-[28px]">트랙 선택</p>
         <TrackSelect
           options={data.partQuestions.map((g) => g.partName)}
           value={partName}
@@ -228,9 +234,9 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
       {questions.map((q, i) => (
         <div
           key={q.questionId}
-          className={`${i === 0 ? 'mt-[100px]' : 'mt-[150px]'} flex flex-col gap-3`}
+          className={`${i === 0 ? 'mt-10 md:mt-[100px]' : 'mt-12 md:mt-[150px]'} flex flex-col gap-3`}
         >
-          <p className="text-[28px] font-semibold text-black">
+          <p className="text-[18px] font-semibold text-black md:text-[28px]">
             {q.content}
             {q.isRequired && <span className="ml-1 text-red-500">*</span>}
           </p>
@@ -251,30 +257,30 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
         </p>
       )}
 
-      <div className="mt-14 flex justify-end gap-3">
+      <div className="mt-10 flex gap-3 md:mt-14 md:justify-end">
         <button
           onClick={handleTempSave}
-          className="rounded-[10px] border border-gray-9 px-7 py-3 text-[15px] text-gray-3 hover:bg-gray-10 cursor-pointer"
+          className="h-[70px] w-[223px] rounded-[10px] border border-[#D0D6DD] px-5 text-[20px] text-[#121212] text-semibold hover:bg-gray-10 cursor-pointer md:h-auto md:w-auto md:px-7 md:py-3 md:text-[15px]"
         >
           임시저장
         </button>
         <button
           onClick={() => setConfirmOpen(true)}
           disabled={submitting}
-          className="rounded-[10px] bg-[#212121] px-7 py-3 text-[15px] font-medium text-white hover:opacity-90 disabled:opacity-50 cursor-pointer"
+          className="h-[70px] w-[110px] rounded-[10px] bg-primary-100 px-5 text-[20px] font-semibold text-white hover:opacity-90 disabled:opacity-50 cursor-pointer md:h-auto md:w-auto md:bg-[#212121] md:px-7 md:py-3 md:text-[15px]"
         >
           {submitting ? '제출 중…' : '제출'}
         </button>
       </div>
 
-      <div className="[&_h2]:text-[24px] [&_p]:text-[18px]">
+      <div className="[&_h2]:text-[18px] [&_p]:mt-[30px] [&_p]:text-[14px] md:[&_h2]:text-[24px] md:[&_p]:text-[18px]">
         <Modal
           open={confirmOpen}
           title="지원서 제출"
           message="제출 후에는 지원서를 수정할 수 없습니다. 제출하시겠어요?"
           onClose={() => setConfirmOpen(false)}
           onConfirm={handleSubmit}
-          confirmClassName="px-6 py-2.5 bg-[#212121] text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
+          confirmClassName="px-6 py-2.5 bg-warm-black text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
         />
         <Modal
           open={savedOpen}
@@ -283,7 +289,7 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
           onClose={() => setSavedOpen(false)}
           onConfirm={() => setSavedOpen(false)}
           confirmOnly
-          confirmClassName="px-6 py-2.5 bg-[#212121] text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
+          confirmClassName="px-6 py-2.5 bg-warm-black text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
         />
       </div>
     </div>
@@ -297,14 +303,14 @@ type TrackSelectProps = {
 }
 
 const TRACK_WIDTH: Record<string, string> = {
-  '기획/디자인': 'w-[154px]',
-  프론트엔드: 'w-[147px]',
-  백엔드: 'w-[112px]',
+  '기획/디자인': 'md:w-[154px]',
+  프론트엔드: 'md:w-[147px]',
+  백엔드: 'md:w-[112px]',
 }
 
 function TrackSelect({ options, value, onChange }: TrackSelectProps) {
   return (
-    <div className="flex gap-2.5">
+    <div className="flex flex-wrap gap-2.5 md:flex-nowrap">
       {options.map((opt) => {
         const selected = opt === value
         return (
@@ -312,12 +318,12 @@ function TrackSelect({ options, value, onChange }: TrackSelectProps) {
             key={opt}
             type="button"
             onClick={() => onChange(opt)}
-            className={`h-[64px] rounded-[15px] border border-primary-35 px-[30px] text-[15px] transition-colors cursor-pointer ${
+            className={`h-[43px] rounded-[10px] border px-6 text-[13px] transition-colors cursor-pointer md:h-[64px] md:px-[30px] md:text-[15px] ${
               TRACK_WIDTH[opt] ?? ''
             } ${
               selected
-                ? 'bg-primary-100 text-white'
-                : 'bg-white text-gray-1 hover:bg-gray-10'
+                ? 'border-primary-35 bg-primary-100 text-white'
+                : 'border-[#D0D6DD] bg-white text-gray-1 hover:bg-gray-10'
             }`}
           >
             {opt}
@@ -338,28 +344,27 @@ type FieldProps = {
 }
 
 // 공통 클래스
-const cardClass = 'rounded-[20px] border border-primary-80'
+const cardClass = 'rounded-[15px] border border-primary-80 md:rounded-[20px]'
 
 function QuestionField({ q, value, uploading, onText, onFile, onOpenLink }: FieldProps) {
   // 포트폴리오/파일: 링크 입력 + 폴더 업로드
   if (q.questionType === 'FILE') {
     const fileCount = value ? value.split('\n').filter(Boolean).length : 0
     return (
-      <div className={`${cardClass} flex items-center gap-3 px-6 py-5`}>
+      <div className={`${cardClass} flex items-center gap-3 px-4 py-4 md:px-6 md:py-5`}>
         <input
           type="text"
           value={fileCount > 0 ? `파일 ${fileCount}개 업로드됨` : value}
           readOnly={fileCount > 0}
           onChange={(e) => onText(e.target.value)}
           placeholder="포트폴리오 링크"
-          className="flex-1 text-[15px] text-gray-1 outline-none placeholder:text-gray-5"
+          className="flex-1 text-[14px] text-gray-1 outline-none placeholder:text-gray-5 md:text-[15px]"
         />
         <label className="shrink-0 rounded-lg border border-gray-9 px-4 py-2 text-[13px] text-gray-3 hover:bg-gray-10 cursor-pointer">
           {uploading ? '업로드 중…' : '파일 선택'}
           <input
             type="file"
             multiple
-            {...({ webkitdirectory: '' } as Record<string, string>)}
             className="hidden"
             onChange={onFile}
           />
@@ -370,13 +375,13 @@ function QuestionField({ q, value, uploading, onText, onFile, onOpenLink }: Fiel
 
   if (q.questionType === 'LINK') {
     return (
-      <div className={`${cardClass} flex items-center gap-3 px-6 py-5`}>
+      <div className={`${cardClass} flex items-center gap-3 px-4 py-4 md:px-6 md:py-5`}>
         <input
           type="url"
           value={value}
           onChange={(e) => onText(e.target.value)}
           placeholder="https://"
-          className="flex-1 text-[15px] text-gray-1 outline-none placeholder:text-gray-5"
+          className="flex-1 text-[14px] text-gray-1 outline-none placeholder:text-gray-5 md:text-[15px]"
         />
         <button
           onClick={onOpenLink}
@@ -390,28 +395,28 @@ function QuestionField({ q, value, uploading, onText, onFile, onOpenLink }: Fiel
 
   if (q.questionType === 'SHORT_ANSWER') {
     return (
-      <div className={`${cardClass} px-6 py-5`}>
+      <div className={`${cardClass} px-4 py-4 md:px-6 md:py-5`}>
         <input
           type="text"
           value={value}
           maxLength={q.maxLength || undefined}
           onChange={(e) => onText(e.target.value)}
           placeholder={`${q.content}를 작성해주세요.`}
-          className="w-full text-[15px] text-black outline-none placeholder:text-gray-5"
+          className="w-full text-[14px] text-black outline-none placeholder:text-gray-5 md:text-[15px]"
         />
       </div>
     )
   }
 
-  // 긴 답변 (카드 높이 245px)
+  // 긴 답변
   return (
-    <div className={`${cardClass} flex h-[245px] flex-col px-6 py-5`}>
+    <div className={`${cardClass} flex h-[259px] flex-col px-4 py-4 md:h-[245px] md:px-6 md:py-5`}>
       <textarea
         value={value}
         maxLength={q.maxLength || undefined}
         onChange={(e) => onText(e.target.value)}
         placeholder={`${q.content}를 작성해주세요.`}
-        className="w-full flex-1 resize-none text-[15px] text-black outline-none placeholder:text-gray-5"
+        className="w-full flex-1 resize-none text-[14px] text-black outline-none placeholder:text-gray-5 md:text-[15px]"
       />
       {q.maxLength > 0 && (
         <p className="text-right text-[13px] text-gray-5">

@@ -32,7 +32,7 @@ export default function Modal({ open, title, message, onClose, onConfirm, confir
           </Button>
         </div>
 
-        <p className={compact ? 'text-[15px] text-[#697584] mb-6' : 'text-4 lg:text-[28px] text-[#697584] mb-6.25'}>{message}</p>
+        <p className={compact ? 'text-[15px] text-text-muted mb-6' : 'text-4 lg:text-[28px] text-text-muted mb-6.25'}>{message}</p>
 
         <div className={`flex gap-4.25 ${compact ? '' : 'pt-22'}`}>
           {!confirmOnly && (

@@ -1,6 +1,6 @@
 // react
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 // api
 
@@ -23,7 +23,11 @@ type Tab = '내 프로필' | '지원 현황'
 
 export default function MyPage() {
   const navigate = useNavigate()
-  const [tab, setTab] = useState<Tab>('내 프로필')
+  const [searchParams] = useSearchParams()
+  // ?tab=apply 로 들어오면 지원 현황 탭으로 바로 열림 (지원서 제출 완료 화면 등에서 딥링크용)
+  const [tab, setTab] = useState<Tab>(
+    searchParams.get('tab') === 'apply' ? '지원 현황' : '내 프로필',
+  )
   const [applicationTab, setApplicationTab] = useState<'지원완료' | '임시저장'>('지원완료')
 
   const [profileData, setProfileData] = useState<ProfileGetResponse | null>(null)
@@ -160,7 +164,7 @@ export default function MyPage() {
                   <button
                     key={t}
                     onClick={() => handleTabChange(t)}
-                    className={`cursor-pointer ${tab === t ? 'text-black' : 'text-[#BFBFBF]'}`}
+                    className={`cursor-pointer ${tab === t ? 'text-black' : 'text-border-light'}`}
                   >
                     {t}
                   </button>
@@ -210,7 +214,7 @@ export default function MyPage() {
                 </div>
               )}
             </section>
-            <main className='mt-[30px] bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[22px] lg:gap-[30px] px-[21px] py-[25px] lg:px-[49px] lg:py-[47px]'>
+            <main className='mt-[30px] bg-surface-faint rounded-[20px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[22px] lg:gap-[30px] px-[21px] py-[25px] lg:px-[49px] lg:py-[47px]'>
               {profileItems.map((item, i) => (
                 <div key={item.title} className='flex items-center min-h-[47px]'>
                   <p className='text-[14px] lg:text-[24px] text-black font-semibold w-[72px] lg:w-[117px] shrink-0'>{item.title}</p>
@@ -219,7 +223,7 @@ export default function MyPage() {
                       type="text"
                       value={editValues[i]}
                       onChange={e => setEditValues(prev => prev.map((v, j) => j === i ? e.target.value : v))}
-                      className='flex-1 min-w-0 text-[13px] lg:text-[22px] text-gray-5 bg-[#F3F4F6] border border-[#EBEBEB] rounded-[10px] px-[16px] py-[10px] outline-none'
+                      className='flex-1 min-w-0 text-[13px] lg:text-[22px] text-gray-5 bg-surface-neutral border border-gray-10 rounded-[10px] px-[16px] py-[10px] outline-none'
                       placeholder={i === 3 ? '000-0000-0000' : `${item.title}을 입력해주세요`}
                     />
                   ) : (
@@ -251,8 +255,8 @@ export default function MyPage() {
                       onClick={() => setApplicationTab(t)}
                       className={`flex-1 py-3 text-[16px] font-medium text-center cursor-pointer transition-colors duration-150
                         ${applicationTab === t
-                          ? 'border-b-[3px] border-[#303237] text-[#121212]'
-                          : 'border-b border-gray-9 text-[#a6a6a6]'}`}
+                          ? 'border-b-[3px] border-misc-303237 text-black-1'
+                          : 'border-b border-gray-9 text-misc-a6a6a6'}`}
                     >
                       {t}
                     </button>
@@ -264,7 +268,7 @@ export default function MyPage() {
                     <button
                       key={t}
                       onClick={() => setApplicationTab(t)}
-                      className={`cursor-pointer ${applicationTab === t ? 'text-black' : 'text-[#BFBFBF]'}`}
+                      className={`cursor-pointer ${applicationTab === t ? 'text-black' : 'text-border-light'}`}
                     >
                       {t}
                     </button>
@@ -280,7 +284,7 @@ export default function MyPage() {
             )}
             {applicationTab === '지원완료' && (
               submittedData && submittedData.totalCount > 0 ? (
-                <main className='relative bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[22px] lg:gap-[30px] px-[21px] py-[25px] lg:px-[49px] lg:py-[47px]'>
+                <main className='relative bg-surface-faint rounded-[20px] w-full border border-primary-35 mb-[79px] flex flex-col gap-[22px] lg:gap-[30px] px-[21px] py-[25px] lg:px-[49px] lg:py-[47px]'>
                   {[
                     { title: '이름', content: submittedData.applications[0]?.name },
                     { title: '지원파트', content: submittedData.applications[0]?.part },
@@ -300,11 +304,11 @@ export default function MyPage() {
                       }
                     </div>
                   ))}
-                  <p className='absolute right-[17px] bottom-[14px] lg:right-[35px] lg:bottom-[25px] text-[#979797] text-[14px] lg:text-[18px]'>최종 제출일 {submittedData.applications[0]?.submittedAt}</p>
+                  <p className='absolute right-[17px] bottom-[14px] lg:right-[35px] lg:bottom-[25px] text-misc-979797 text-[14px] lg:text-[18px]'>최종 제출일 {submittedData.applications[0]?.submittedAt}</p>
                 </main>
               ) : (
                 <>
-                  <main className='relative bg-[#FAFAFA] rounded-[20px] h-[211px] lg:h-[439px] w-full border border-primary-35 mb-4 lg:mb-[79px] flex flex-col gap-[45px] px-[49px] py-[47px]'>
+                  <main className='relative bg-surface-faint rounded-[20px] h-[211px] lg:h-[439px] w-full border border-primary-35 mb-4 lg:mb-[79px] flex flex-col gap-[45px] px-[49px] py-[47px]'>
                     <div className='flex flex-col items-center justify-center h-full'>
                       <h1 className='text-[20px] text-center lg:text-[34px] font-semibold'>제출한 지원 내역이 없어요.</h1>
                       <p className='mt-[15px] mb-0 lg:mb-[50px] text-[13px] lg:text-[18px] text-gray-7 text-center'>지원서 작성을 완료한 후 확인해 주세요.</p>
@@ -319,7 +323,7 @@ export default function MyPage() {
             {applicationTab === '임시저장' && (
               draftData?.applicationId === null ? (
                 <>
-                  <main className='relative bg-[#FAFAFA] rounded-[20px] h-[211px] lg:h-[439px] w-full border border-primary-35 mb-4 lg:mb-[79px] flex flex-col gap-[45px] px-[49px] py-[47px]'>
+                  <main className='relative bg-surface-faint rounded-[20px] h-[211px] lg:h-[439px] w-full border border-primary-35 mb-4 lg:mb-[79px] flex flex-col gap-[45px] px-[49px] py-[47px]'>
                     <div className='flex flex-col items-center justify-center h-full'>
                       <h1 className='text-[20px] text-center lg:text-[34px] font-semibold'>임시 저장된 지원 내역이 없어요.</h1>
                       <p className='mt-[15px] mb-0 lg:mb-[50px] text-[13px] lg:text-[18px] text-gray-7 text-center'>지원서 작성 후 확인해주세요.</p>
@@ -330,7 +334,7 @@ export default function MyPage() {
                 </>
               ) : (
                 <>
-                  <main className='bg-[#FAFAFA] rounded-[20px] w-full border border-primary-35 flex flex-col gap-[10px] lg:gap-[30px] px-[21px] py-[25px] lg:px-[49px] lg:py-[47px]'>
+                  <main className='bg-surface-faint rounded-[20px] w-full border border-primary-35 flex flex-col gap-[10px] lg:gap-[30px] px-[21px] py-[25px] lg:px-[49px] lg:py-[47px]'>
                     {[
                       { title: '이름', content: draftData?.name },
                       { title: '지원파트', content: draftData?.part },

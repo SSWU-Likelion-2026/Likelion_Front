@@ -98,10 +98,10 @@ export default function FaqSection() {
   const items = FAQ_GROUPS.find((g) => g.category === category)?.items ?? []
 
   return (
-    <section className="flex flex-col items-center w-full py-20">
-      <p className="text-[38px] font-semibold text-black font-montserrat">FAQ</p>
+    <section className="flex flex-col items-center w-full py-12 md:py-20">
+      <p className="text-[22px] font-semibold text-black font-montserrat md:text-[38px]">FAQ</p>
 
-      <div className="mt-10 text-[18px] font-regular">
+      <div className="mt-6 max-w-full overflow-x-auto text-[18px] font-regular [&_button]:whitespace-nowrap [&_button]:!px-6 [&_button]:!py-2 [&_button]:!text-[14px] md:mt-10 md:overflow-visible md:[&_button]:!px-6 md:[&_button]:!py-3 md:[&_button]:!text-[17px]">
         <ToggleGroup
           options={FAQ_GROUPS.map((g) => g.category)}
           value={category}
@@ -112,33 +112,33 @@ export default function FaqSection() {
         />
       </div>
 
-      <ul className="mt-10 flex w-full max-w-[1200px] flex-col gap-8">
+      <ul className="mt-6 flex w-full max-w-[1200px] flex-col gap-4 md:mt-10 md:gap-8">
         {items.map((item, index) => {
           const open = openIndex === index
           return (
             <li
               key={item.question}
-              className={`w-[1200px] max-w-full rounded-[20px] border border-gray-9 bg-white px-8 py-6 ${
-                open ? 'h-[226px]' : ''
+              className={`w-full rounded-[16px] border border-gray-9 bg-white px-5 py-5 md:w-[1200px] md:max-w-full md:rounded-[20px] md:px-8 md:py-6 ${
+                open ? 'md:h-[226px]' : ''
               }`}
             >
               <button
                 onClick={() => setOpenIndex(open ? null : index)}
-                className="flex w-full items-center justify-between gap-4 text-left cursor-pointer"
+                className="flex w-full items-center justify-between gap-3 text-left cursor-pointer"
               >
-                <span className="text-[24px] text-black">
+                <span className="text-[14px] text-black md:text-[24px]">
                   Q. {item.question}
                 </span>
                 <img
                   src={open ? chevronUp : chevronDown}
                   alt=""
-                  className="h-[9.4px] w-[22px] shrink-0"
+                  className="h-[7px] w-[16px] shrink-0 md:h-[9.4px] md:w-[22px]"
                 />
               </button>
 
               {open && (
-                <div className="mt-[38px] border-t border-[#D0D6DD] pt-[38px]">
-                  <p className="text-[24px] leading-relaxed text-[#D0D6DD]">
+                <div className="mt-5 border-t border-[#D0D6DD] pt-5 md:mt-[30px] md:pt-[30px]">
+                  <p className="text-[13px] leading-relaxed text-gray-4 md:text-[24px]">
                     {item.answer}
                   </p>
                 </div>

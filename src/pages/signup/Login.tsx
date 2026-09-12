@@ -6,7 +6,7 @@ import { renderGoogleButton } from '../../lib/google-auth'
 import logoName from '../../img/signup/logo-name1.svg'
 
 const fieldClass =
-  'h-[59px] w-full rounded-[15px] border border-primary-15 bg-[#FAFAFA] px-4 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'
+  'h-[59px] w-full rounded-[15px] border border-primary-15 bg-surface-faint px-4 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'
 
 function Login() {
   const navigate = useNavigate()
@@ -56,9 +56,9 @@ function Login() {
   }
 
   return (
-    <main className="flex min-h-[calc(100svh-57px)] items-center justify-center bg-white px-4 py-12">
-      <div className="w-full max-w-[500px] rounded-3xl border border-gray-9 bg-white px-[30px] pt-[63px] pb-10 shadow-card">
-        <div className="mb-[59px] flex items-center justify-center gap-2">
+    <main className="flex min-h-[calc(100svh-57px)] items-center justify-center bg-white px-4 py-8 md:py-12">
+      <div className="w-full max-w-[500px] rounded-3xl border border-gray-9 bg-white px-6 pt-10 pb-8 shadow-card md:px-[30px] md:pt-[63px] md:pb-10">
+        <div className="mb-8 flex items-center justify-center gap-2 md:mb-[59px]">
           <img src="/logo_1.png" alt="" className="h-8 w-8" />
           <img src={logoName} alt="LIKELION UNIV SSWU" className="h-[14.48px] w-[224.5px]" />
         </div>
@@ -89,7 +89,7 @@ function Login() {
             </p>
           )}
 
-          <div className="my-1 text-center text-[18px] text-[#ADAFB2]">or</div>
+          <div className="my-1 text-center text-[18px] text-gray-6">or</div>
           <div className="relative min-h-[44px]">
             <div
               ref={googleBoxRef}
@@ -101,7 +101,7 @@ function Login() {
               <button
                 type="button"
                 disabled
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#8158F626] bg-[#F3F4F6] px-4 py-3 text-[20px] font-medium text-black opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-primary-15 bg-surface-neutral px-4 py-3 text-[20px] font-medium text-black opacity-60"
               >
                 Sign in with Google
               </button>
@@ -111,7 +111,7 @@ function Login() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-4 h-[62px] w-full rounded-[15px] bg-[#212121] px-[35px] text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="mt-4 h-[62px] w-full rounded-[15px] bg-warm-black px-[35px] text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {submitting ? '로그인 중…' : 'Sign in'}
           </button>
@@ -120,7 +120,7 @@ function Login() {
         <div className="mt-5 text-center">
           <Link
             to="/signup"
-            className="text-[18px] text-[#808386] underline-offset-2 hover:text-gray-4 hover:underline"
+            className="text-[18px] text-gray-5 underline-offset-2 hover:text-gray-4 hover:underline"
           >
             회원가입
           </Link>

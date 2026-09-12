@@ -74,25 +74,25 @@ export default function RecruitHero({ open, period }: Props) {
           </>
         ) : (
           <>
-            <h1 className="text-[26px] font-bold text-primary-100 md:text-[50px]">
+            <h1 className="text-[24px] text-[#7D4BF8] font-semibold text-primary-100 md:text-[50px]">
               지금은 모집 기간이 아닙니다
             </h1>
-            <p className="text-[14px] font-semibold text-primary-80 md:text-[22px]">
+            <p className="text-[16px] text-[#8768F4] font-medium text-primary-80 md:text-[22px]">
               모집 알림을 놓치고 싶지 않다면?
             </p>
-            <div className="mt-4 flex w-full max-w-[340px] flex-col items-center gap-3 md:max-w-[840px] md:flex-row">
+            <div className="mt-4 flex w-full max-w-[340px] flex-col items-center gap-[40px] md:max-w-[840px] md:flex-row md:gap-3">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleNotify()}
                 placeholder="이메일 주소를 입력해주세요"
-                className="h-[52px] w-full rounded-[16px] border border-transparent px-4 text-[14px] font-medium text-[#B8B9BD] shadow-card outline-none placeholder:text-gray-5 [background:linear-gradient(#fff,#fff)_padding-box,linear-gradient(135deg,#7D4BF8,#B0E7D5)_border-box] md:h-[94px] md:flex-1 md:rounded-[20px] md:px-6 md:text-[22px]"
+                className="h-[66px] w-full rounded-[16px] border border-transparent px-4 text-[14px] font-medium text-[#B8B9BD] shadow-card outline-none placeholder:text-gray-5 [background:linear-gradient(#fff,#fff)_padding-box,linear-gradient(135deg,#7D4BF8,#B0E7D5)_border-box] md:h-[94px] md:flex-1 md:rounded-[20px] md:px-6 md:text-[22px]"
               />
               <button
                 onClick={handleNotify}
                 disabled={submitting}
-                className="h-[52px] w-full shrink-0 rounded-full bg-primary-100 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer md:h-[94px] md:w-[208px] md:rounded-[20px] md:text-[22px]"
+                className="h-[56px] w-[150px] shrink-0 rounded-full bg-primary-100 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer md:h-[94px] md:w-[208px] md:rounded-[20px] md:text-[22px]"
               >
                 {submitting ? '신청 중…' : '알림 신청'}
               </button>

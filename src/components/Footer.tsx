@@ -29,7 +29,7 @@ function Footer() {
           ))}
         </div>
         <p className="m-0 text-center text-[16px] font-medium text-gray-4">
-          Copyright © 2025 멋쟁이사자처럼_성신여대 All rights reserved.
+          Copyright © 2026 멋쟁이사자처럼_성신여대 All rights reserved.
         </p>
       </div>
     </footer>

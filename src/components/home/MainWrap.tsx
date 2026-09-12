@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState, type MouseEvent } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { motion, type Transition } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
 import { getCurrentRecruitment, type CurrentRecruitment } from '../../api/recruiting/recruit'
@@ -13,7 +13,6 @@ const NOTIFICATION_FALLBACK: CurrentRecruitment = {
   dDay: null,
   action: 'NOTIFICATION',
 }
-import NotifySignupModal from './NotifySignupModal'
 import ctaArrowPng from '../../img/home/cta-arrow.png'
 import applyButtonPng from '../../img/home/apply-button.png'
 import notifyButtonPng from '../../img/home/notify-button.png'
@@ -138,9 +137,7 @@ const DecorativeShape = memo(function DecorativeShape({ shape, motionConfig }: D
 })
 
 type RecruitCtaProps = {
-  isNotification: boolean
   hoverPillImage: string
-  onNotifyClick: () => void
 }
 
 const CTA_LINK_CLASS =
@@ -151,19 +148,10 @@ const CTA_ARROW_CLASS =
   'absolute left-0 top-0 size-[130px] rounded-full transition-all duration-300 group-hover:translate-x-[212px] group-hover:opacity-0'
 
 // 기본: SSWU + 원형 화살표 아이콘 / hover: 화살표가 오른쪽으로 밀리며 "지원하기"/"알림신청" 알약이 채워짐
-const RecruitCta = memo(function RecruitCta({ isNotification, hoverPillImage, onNotifyClick }: RecruitCtaProps) {
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (isNotification) {
-        e.preventDefault()
-        onNotifyClick()
-      }
-    },
-    [isNotification, onNotifyClick],
-  )
-
+// 지원하기/알림신청 둘 다 recruiting 페이지로 이동한다 (모집 전이면 그쪽에서 알림 신청을 받는다)
+const RecruitCta = memo(function RecruitCta({ hoverPillImage }: RecruitCtaProps) {
   return (
-    <NavLink to="/recruiting/apply" onClick={handleClick} className={CTA_LINK_CLASS}>
+    <NavLink to="/recruiting/apply" className={CTA_LINK_CLASS}>
       <span className="whitespace-nowrap font-montserrat text-[95px] font-semibold text-white">SSWU</span>
 
       <div className="relative h-[130px] w-[130px] shrink-0">
@@ -181,7 +169,6 @@ const RecruitCta = memo(function RecruitCta({ isNotification, hoverPillImage, on
 
 function MainWrap() {
   const [recruitment, setRecruitment] = useState<CurrentRecruitment>(NOTIFICATION_FALLBACK)
-  const [notifyOpen, setNotifyOpen] = useState(false)
 
   useEffect(() => {
     getCurrentRecruitment()
@@ -195,19 +182,6 @@ function MainWrap() {
   // 모바일은 hover가 없어서 데스크탑처럼 hover 시에만 채워지는 알약이 아니라 항상 노출된다
   const ctaBadgeImageMobile = isNotification ? notifyButtonMobilePng : applyButtonMobilePng
 
-  const openNotifyModal = useCallback(() => setNotifyOpen(true), [])
-  const closeNotifyModal = useCallback(() => setNotifyOpen(false), [])
-
-  const handleMobileCtaClick = useCallback(
-    (e: MouseEvent<HTMLAnchorElement>) => {
-      if (isNotification) {
-        e.preventDefault()
-        openNotifyModal()
-      }
-    },
-    [isNotification, openNotifyModal],
-  )
-
   return (
     <>
       {/* 데스크탑: 피그마 1440px 캔버스를 zoom으로 축소/확대 */}
@@ -217,14 +191,16 @@ function MainWrap() {
             <DecorativeShape key={i} shape={shape} motionConfig={shapeMotion[i]} />
           ))}
 
-          {/* 마감까지 D-day 뱃지 (고정) — 알약은 항상 그리고, dDay 없으면 텍스트만 비움 */}
-          <div className="absolute left-[120px] top-[34px] z-10 flex h-[58px] items-center rounded-full bg-primary-100 px-[24px]">
+          {/* 마감까지 D-day 뱃지 (고정) — 알약은 항상 그리고, dDay 없으면 텍스트만 비움.
+              원래(텍스트 있을 때) 크기 그대로 두고, min-w만 그 크기로 고정해서 텍스트가
+              빈 칸이 돼도 알약이 쪼그라들지 않게 한다. */}
+          <div className="absolute left-[120px] top-[34px] z-10 flex h-[58px] w-fit min-w-[170px] items-center justify-center rounded-full bg-primary-100 px-[24px]">
             <p className="whitespace-nowrap text-[18px] font-semibold text-white">
               {recruitment?.dDay ? `마감까지 ${recruitment.dDay}` : ' '}
             </p>
           </div>
 
-          <RecruitCta isNotification={isNotification} hoverPillImage={hoverPillImage} onNotifyClick={openNotifyModal} />
+          <RecruitCta hoverPillImage={hoverPillImage} />
 
           {/* 타이틀 (고정) */}
           <p className="absolute left-[120px] top-[458px] z-10 m-0 whitespace-nowrap font-montserrat text-[95px] font-semibold text-primary-100">
@@ -255,7 +231,10 @@ function MainWrap() {
           <span className="absolute left-[calc(50%-139.5px)] top-0 h-[39px] w-[86px] -translate-x-1/2 rounded-r-[100px] bg-accent-100" />
           <span className="absolute left-[calc(50%-177px)] top-0 h-[39px] w-[45px] -translate-x-1/2 rounded-r-[100px] bg-white" />
           <span className="absolute left-[calc(50%-191px)] top-0 h-[39px] w-[29px] -translate-x-1/2 rounded-r-[100px] bg-primary-100" />
-          <div className="relative z-10 ml-12 flex w-fit items-center rounded-full bg-primary-100 px-4 py-2">
+          {/* min-w: dDay가 아직 없을 때(로딩/API 실패) 텍스트가 빈 칸(' ')이 되면서
+              w-fit이 내용에 맞춰 알약이 눈에 띄게 쪼그라들던 문제 — "마감까지 D-000" 기준으로
+              최소 너비를 고정해서 텍스트 유무와 상관없이 알약 크기가 일정하게 유지되게 한다. */}
+          <div className="relative z-10 ml-12 flex h-[39px] w-fit min-w-[132px] items-center justify-center rounded-full bg-primary-100 px-4 py-2">
             <p className="m-0 whitespace-nowrap text-[15px] font-semibold text-white">
               {recruitment?.dDay ? `마감까지 ${recruitment.dDay}` : ' '}
             </p>
@@ -285,11 +264,7 @@ function MainWrap() {
           {/* 피그마(node 1425:13563) 기준: 데스크탑은 hover 시에만 지원하기/알림신청 알약이 채워지지만,
               모바일은 hover가 없어서 그 알약이 항상 SSWU 알약 오른쪽에 겹쳐 붙어 노출된다.
               간단한 원형 화살표 대신 디자인팀이 내려준 완성 이미지를 그대로 쓴다. */}
-          <NavLink
-            to="/recruiting/apply"
-            onClick={handleMobileCtaClick}
-            className="relative flex h-[70px] w-[310px] shrink-0 items-center no-underline"
-          >
+          <NavLink to="/recruiting/apply" className="relative flex h-[70px] w-[310px] shrink-0 items-center no-underline">
             <span className="absolute left-0 top-0 flex h-[70px] w-[232px] items-center rounded-full bg-primary-100 pl-[25px]">
               <span className="whitespace-nowrap font-montserrat text-[40px] font-semibold text-white">SSWU</span>
             </span>
@@ -337,8 +312,6 @@ function MainWrap() {
           </svg>
         </div>
       </section>
-
-      <NotifySignupModal open={notifyOpen} onClose={closeNotifyModal} />
     </>
   )
 }

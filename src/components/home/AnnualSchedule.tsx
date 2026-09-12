@@ -8,6 +8,7 @@ import arrow2 from '../../img/home/schedule-arrow2.svg'
 import checkIcon from '../../img/home/schedule-check.svg'
 import MonthDetailModal from './MonthDetailModal'
 import { MONTH_SCHEDULE } from '../../data/homeSchedule'
+import { desktopZoomStyle } from '../../lib/responsive'
 
 type MonthColor = 'primary' | 'neutral'
 type ConnectorColor = 'primary' | 'mint' | 'neutral'
@@ -301,7 +302,7 @@ function AnnualSchedule() {
   return (
     <>
       {/* 데스크탑: 절대좌표 스네이크 레이아웃 */}
-      <section className="hidden w-full flex-col items-center gap-[50px] py-[45px] lg:flex">
+      <section className="hidden w-full flex-col items-center gap-[50px] py-[45px] lg:flex" style={desktopZoomStyle}>
         <div className="flex flex-col items-center gap-[15px]">
           <p className="m-0 py-[10px] text-[18px] font-semibold text-black-1">Annual schedule</p>
           <p className="m-0 text-[32px] font-semibold text-black-1">

@@ -55,7 +55,7 @@ function Header() {
   }, [menuOpen])
 
   return (
-    <header className="relative border-b border-gray-9">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-gray-9 bg-white lg:relative">
       {/* 데스크탑 */}
       <div className="hidden h-20 items-center justify-between px-[120px] lg:flex">
         <NavLink to="/" className="no-underline shrink-0">
@@ -177,7 +177,7 @@ function Header() {
                       closeMenu()
                       handleLogout()
                     }}
-                    className="mb-[110px] flex h-[50px] w-[231px] items-center gap-[5px] border-0 bg-transparent p-0 text-[18px] font-medium text-gray-7"
+                    className="mb-[110px] flex h-[50px] w-[231px] items-center gap-[5px] border-0 bg-transparent p-0 text-[18px] font-medium text-black-1"
                   >
                     로그아웃
                     <span className="flex size-7 shrink-0 items-center justify-center">
@@ -215,7 +215,7 @@ function Header() {
                 ))}
               </div>
               <p className="m-0 text-[14px] font-normal text-gray-4">
-                Copyright © 2025 멋쟁이사자처럼_
+                Copyright © 2026 멋쟁이사자처럼_
                 <br />
                 성신여대 All rights reserved.
               </p>

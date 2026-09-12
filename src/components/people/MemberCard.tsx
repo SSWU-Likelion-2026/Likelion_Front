@@ -37,7 +37,7 @@ const MemberCard = memo(function MemberCard({ member }: MemberCardProps) {
 
   return (
     <div
-      className="h-[494px] w-[384px] shrink-0 [perspective:1200px]"
+      className="h-[494px] w-full [perspective:1200px]"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -48,7 +48,7 @@ const MemberCard = memo(function MemberCard({ member }: MemberCardProps) {
       >
         {/* 앞면 */}
         <div className="absolute inset-0 flex flex-col overflow-hidden rounded-[20px] border border-misc-8768f4 bg-gray-10 [backface-visibility:hidden]">
-          <div className="relative flex-1">
+          <div className="relative flex-1 bg-gray-10">
             {member.profileImageUrl ? (
               <img
                 src={member.profileImageUrl}
@@ -126,7 +126,7 @@ export const MobileMemberCard = memo(function MobileMemberCard({ member }: Membe
       >
         {/* 앞면 */}
         <div className="absolute inset-0 flex flex-col overflow-hidden rounded-[8.628px] border-[0.5px] border-misc-8768f4 bg-gray-10 [backface-visibility:hidden]">
-          <div className="relative flex-1">
+          <div className="relative flex-1 bg-gray-10">
             {member.profileImageUrl ? (
               <img src={member.profileImageUrl} alt="" className="absolute inset-0 size-full object-cover" />
             ) : (

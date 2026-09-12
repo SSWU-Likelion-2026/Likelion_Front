@@ -254,7 +254,7 @@ function Project() {
                 className="
                   absolute
                   left-0
-                  top-[29px]
+                  top-[45px]
                   z-30
                   w-[96px]
                   overflow-hidden

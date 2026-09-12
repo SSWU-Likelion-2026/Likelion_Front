@@ -1197,7 +1197,7 @@ export default function ProjectEdit() {
                         <button
                             type="button"
                             onClick={() => moveMobileStep(2)}
-                            className="mt-[2px] h-[58px] w-full rounded-[10px] bg-[#8158F6] text-[16px] font-semibold text-white min-[1015px]:hidden"
+                            className="mt-[2px] h-[70px] w-full rounded-[10px] bg-[#8158F6] text-[16px] font-semibold text-white min-[1015px]:hidden"
                         >
                             다음
                         </button>

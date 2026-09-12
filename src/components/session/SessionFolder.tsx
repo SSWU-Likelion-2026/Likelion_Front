@@ -44,9 +44,9 @@ export default function SessionFolder({ variant = 'default', part, week, title, 
           className={`absolute bottom-0 left-0 w-full transition-opacity duration-150 ${hovered ? 'opacity-100' : 'opacity-0'}`}
         />
       )}
-      <div className='flex flex-col absolute left-3 lg:left-6 right-3 lg:right-6 bottom-3 lg:bottom-5 gap-1 overflow-hidden'>
-        <p className='text-[11px] lg:text-[17px] text-white'>W{String(week).padStart(2, '0')}</p>
-        <p className='text-[13px] lg:text-[19px] font-semibold text-white truncate'>{title}</p>
+      <div className='flex flex-col absolute left-3 min-[834px]:left-6 right-3 min-[834px]:right-6 bottom-3 min-[834px]:bottom-5 gap-1 overflow-hidden'>
+        <p className='text-[11px] min-[834px]:text-[17px] text-white'>W{String(week).padStart(2, '0')}</p>
+        <p className='text-[13px] min-[834px]:text-[19px] font-semibold text-white truncate'>{title}</p>
       </div>
     </div>
   )

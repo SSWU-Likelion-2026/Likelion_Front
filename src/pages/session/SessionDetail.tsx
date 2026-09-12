@@ -4,6 +4,7 @@ import { useNavigate, useParams, useSearchParams, useLocation } from 'react-rout
 
 // api
 import { getSessionDetail, getSessionReviews, postSessionReview, editSessionReviews, deleteSessionReview, getSessions } from '../../api/session/session'
+import { getAccessToken } from '../../lib/auth-storage'
 
 //types
 import type { SessionDetailResponse, SessionReviewResponse } from '../../types/session/session'
@@ -155,7 +156,8 @@ export default function SessionDetail() {
         <div className="flex justify-end mt-5.25">
           <Button
             onClick={handleSubmit}
-            color="white">
+            color="white"
+            disabled={!getAccessToken()}>
             후기 등록
           </Button>
         </div>

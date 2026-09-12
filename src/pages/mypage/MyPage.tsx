@@ -133,9 +133,9 @@ export default function MyPage() {
 
   if (!isLoggedIn) {
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col min-h-screen bg-linear-to-b from-[#5D23E3] to-accent-100">
         <Banner page="MyPage" />
-        <div className="rounded-t-[25px] bg-white -mt-6 flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
+        <div className="rounded-t-[25px] bg-white -mt-6 flex-1 flex items-center justify-center">
           <EmptyState message="마이페이지는 로그인 후에 이용할 수 있어요." />
         </div>
       </div>

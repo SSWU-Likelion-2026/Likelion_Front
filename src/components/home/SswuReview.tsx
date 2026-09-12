@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
+import { desktopZoomStyle } from '../../lib/responsive'
 import reviewPartPm from '../../img/home/review-part.svg'
 import reviewPartFe from '../../img/home/review-part-fe.svg'
 import reviewPartBe from '../../img/home/review-part-be.svg'
@@ -122,9 +123,11 @@ const ACTIVE_TAB_GRADIENT: CSSProperties = {
 const TAB_BASE_CLASS = 'rounded-[100px] px-[28px] py-[12px] text-[18px]'
 const REVIEW_CARD_CLASS = 'relative h-[447px] w-[384px] shrink-0 overflow-hidden rounded-[25px] bg-black-2'
 
-const MOBILE_TAB_BASE_CLASS = 'rounded-[100px] text-[14px]'
+// active/inactive 패딩이 다르면 탭 클릭할 때마다 버튼 폭이 바뀌면서 옆 탭들이 밀리는 문제가 있어서,
+// 패딩은 고정하고 배경/글자색만 바꾼다 (데스크탑 PartTabButton과 동일한 방식).
+const MOBILE_TAB_BASE_CLASS = 'rounded-[100px] px-[16px] py-[8px] text-[14px]'
 const MOBILE_REVIEW_CARD_CLASS =
-  'relative h-[315px] w-[271px] shrink-0 snap-center overflow-hidden rounded-[15px] bg-black-2'
+  'relative h-[315px] w-[271px] shrink-0 snap-start overflow-hidden rounded-[15px] bg-black-2'
 
 type PartTabButtonProps = {
   part: { key: PartKey; label: string }
@@ -152,9 +155,7 @@ const MobilePartTabButton = memo(function MobilePartTabButton({ part, isActive, 
     <button
       type="button"
       onClick={handleClick}
-      className={`${MOBILE_TAB_BASE_CLASS} ${
-        isActive ? 'bg-primary-100 px-[22px] py-[8px] font-semibold text-white' : 'px-[8px] py-[8px] font-normal text-gray-4'
-      }`}
+      className={`${MOBILE_TAB_BASE_CLASS} ${isActive ? 'bg-primary-100 font-semibold text-white' : 'font-normal text-gray-4'}`}
     >
       {part.label}
     </button>
@@ -285,7 +286,7 @@ function SswuReview() {
   return (
     <>
       {/* 데스크탑 */}
-      <section className="hidden w-full flex-col items-center py-[65px] lg:flex">
+      <section className="hidden w-full flex-col items-center py-[65px] lg:flex" style={desktopZoomStyle}>
         <div className="flex w-[1200px] flex-col items-start gap-[45px]">
           <div className="flex w-full flex-col items-start gap-[15px]">
             <p className="m-0 py-[10px] text-[18px] font-semibold text-black-1">SSWU Review</p>
@@ -343,9 +344,9 @@ function SswuReview() {
           <div
             ref={mobileScrollRef}
             onScroll={handleMobileScroll}
-            // px-[61px]: 카드(271px)가 스와이프할 때 항상 가운데(393px 기준 캔버스)에 오도록,
-            // 첫/마지막 카드도 가운데로 스크롤될 수 있는 여유 공간을 양쪽에 둔다 ((393-271)/2)
-            className="flex w-full snap-x snap-mandatory gap-[15px] overflow-x-auto px-[61px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            // snap-start 카드라 scroll-padding을 안 주면 padding(px-6)이 스냅 위치엔 반영이 안 돼서
+            // 첫 카드가 타이틀보다 왼쪽으로 붙어버린다 — scroll-pl로 스냅 기준점도 같이 맞춘다.
+            className="flex w-full snap-x snap-mandatory gap-[15px] overflow-x-auto px-6 [scroll-padding-left:24px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {reviews.map((review, i) => (
               <MobileReviewCard key={i} review={review} icon={reviewIcon} />

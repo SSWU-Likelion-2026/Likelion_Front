@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { createPortal } from 'react-dom'
 import {
   createMyProfile,
   deleteMyProfile,
@@ -9,6 +10,9 @@ import {
 } from '../../api/people/people'
 // 부원 프로필 사진 전용 업로드 API가 없어서, 프로젝트 이미지 업로드(S3 저장 후 URL 반환)를 그대로 재사용한다
 import { uploadProjectImage } from '../../api/project/project'
+import { ApiError } from '../../api/instance'
+import profilePlaceholder from '../../img/people/profile-placeholder.png'
+import Banner from '../Banner'
 
 type Position = 'PRESIDENT' | 'VICE_PRESIDENT' | 'PART_LEADER' | 'NONE'
 
@@ -267,21 +271,29 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
       }
       onSaved()
       onClose()
-    } catch {
-      setError('저장에 실패했어요. 잠시 후 다시 시도해주세요.')
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 403) {
+        setError('권한이 없습니다.')
+      } else {
+        setError('저장에 실패했어요. 잠시 후 다시 시도해주세요.')
+      }
     } finally {
       setSubmitting(false)
     }
   }
 
-  return (
+  // People 페이지가 모바일에서 .mobile-zoom-canvas(zoom 적용)로 감싸여 있는데, zoom이 걸린 조상은
+  // Chromium에서 position:fixed 자손의 containing block이 되어버려 뷰포트가 아니라 그 조상 기준으로
+  // 고정된다 — 조상이 스크롤로 움직이면 모달도 같이 밀려 헤더 아래 페이지 내용이 비쳐 보이는 버그가 있었다.
+  // document.body로 포탈을 태워서 zoom 조상 밖으로 빼내면 진짜 뷰포트 기준 fixed로 동작한다.
+  return createPortal(
     <>
     {/* 데스크탑: 중앙 정렬 다이얼로그 */}
     <div className="fixed inset-0 z-50 hidden items-center justify-center bg-black/65 lg:flex" onClick={onClose}>
       <form
         onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
-        className="relative flex w-[702px] flex-col gap-[28px] rounded-[20px] border border-gray-9 bg-white p-[52px]"
+        className="relative flex h-[850px] w-[702px] flex-col gap-[28px] rounded-[20px] border border-gray-9 bg-white p-[40px]"
       >
         <div className="flex items-center justify-between">
           <p className="m-0 text-[32px] font-semibold text-black">{existing ? '프로필 수정' : '프로필 등록'}</p>
@@ -314,10 +326,7 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
             {form.profileImageUrl ? (
               <img src={form.profileImageUrl} alt="" className="size-full object-cover" />
             ) : (
-              <>
-                <span className="absolute left-1/2 top-[60px] size-[112px] -translate-x-1/2 rounded-full bg-primary-35" />
-                <span className="absolute left-1/2 top-[146px] size-[236px] -translate-x-1/2 rounded-full bg-primary-35" />
-              </>
+              <img src={profilePlaceholder} alt="" className="size-full object-cover" />
             )}
             {uploading && (
               <span className="absolute inset-0 flex items-center justify-center bg-white/70 text-[13px] text-gray-6">
@@ -420,14 +429,14 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
             type="button"
             onClick={handleReset}
             disabled={submitting || uploading}
-            className="cursor-pointer rounded-[10px] border border-gray-9 bg-white px-[28px] py-[15px] text-[20px] font-semibold text-text-muted disabled:opacity-50"
+            className="flex h-[54px] cursor-pointer items-center justify-center rounded-[10px] border border-gray-9 bg-white px-[28px] text-[20px] font-semibold text-text-muted disabled:opacity-50"
           >
             전체삭제
           </button>
           <button
             type="submit"
             disabled={submitting || uploading}
-            className="cursor-pointer rounded-[10px] bg-warm-black px-[28px] py-[15px] text-[20px] font-semibold text-white disabled:opacity-50"
+            className="flex h-[54px] cursor-pointer items-center justify-center rounded-[10px] bg-warm-black px-[28px] text-[20px] font-semibold text-white disabled:opacity-50"
           >
             {existing ? '수정' : '등록'}
           </button>
@@ -435,10 +444,12 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
       </form>
     </div>
 
-    {/* 모바일: 풀스크린 오버레이 (피그마 node 1183:15273 "프로필 등록 (수정 동일)" 기준) */}
-    <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-white lg:hidden">
+    {/* 모바일: 풀스크린 오버레이 (피그마 node 1183:15273 "프로필 등록 (수정 동일)" 기준).
+        top-[50px]: 모바일 고정 헤더(Header.tsx, h-[50px] fixed z-40) 아래부터 채우고 헤더는 계속 보이게 둔다 */}
+    <div className="fixed inset-x-0 bottom-0 top-[50px] z-30 flex flex-col overflow-y-auto bg-white lg:hidden">
       <form onSubmit={handleSubmit} className="flex min-h-full flex-col">
-        <div className="relative h-[180px] shrink-0 bg-gradient-to-b from-[#5D23E3] to-accent-100">
+        <div className="relative shrink-0">
+          <Banner page="People" />
           <button
             type="button"
             onClick={onClose}
@@ -449,7 +460,6 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
               <path d="M4 4L18 18M18 4L4 18" />
             </svg>
           </button>
-          <p className="absolute bottom-8 left-6 m-0 font-montserrat text-[36px] font-semibold leading-none text-white">People</p>
         </div>
 
         <div className="relative -mt-6 flex flex-1 flex-col gap-[15px] rounded-t-[20px] bg-white px-6 pb-10 pt-9">
@@ -464,10 +474,7 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
             {form.profileImageUrl ? (
               <img src={form.profileImageUrl} alt="" className="size-full object-cover" />
             ) : (
-              <>
-                <span className="absolute left-1/2 top-[22px] size-[40px] -translate-x-1/2 rounded-full bg-primary-35" />
-                <span className="absolute left-1/2 top-[52px] size-[84px] -translate-x-1/2 rounded-full bg-primary-35" />
-              </>
+              <img src={profilePlaceholder} alt="" className="size-full object-cover" />
             )}
             {uploading && (
               <span className="absolute inset-0 flex items-center justify-center bg-white/70 text-[11px] text-gray-6">
@@ -575,7 +582,8 @@ function ProfileFormModal({ open, term, existing, onClose, onSaved }: ProfileFor
         </div>
       </form>
     </div>
-    </>
+    </>,
+    document.body,
   )
 }
 

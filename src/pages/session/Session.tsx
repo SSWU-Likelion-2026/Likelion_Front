@@ -146,7 +146,7 @@ function Session() {
         </div>
         
         {!loading && sessionData.length === 0 && <EmptyState message="조회된 세션이 없습니다." />}
-        <div className="grid grid-cols-2 xl:grid-cols-3 min-[1440px]:grid-cols-4 gap-4 xl:gap-10 pb-5 lg:pb-12">
+        <div className="grid w-full grid-cols-2 xl:grid-cols-3 min-[1440px]:grid-cols-4 gap-4 xl:gap-10 pb-5 lg:pb-12">
           {sessionData.map((item) => (
             <SessionFolder
               key={item.sessionId}

@@ -95,6 +95,14 @@
 html,
 body {
   overflow-x: clip;
+  /* 스크롤은 그대로 되지만 스크롤바 자체는 안 보이게 (카드 캐러셀 등에서 이미 쓰던 방식과 동일) */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /* 모바일 레이아웃(lg 미만, 1024px)은 피그마 모바일 목업(393px 캔버스) 좌표를 그대로 쓴다.

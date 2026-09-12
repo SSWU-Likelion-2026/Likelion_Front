@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import { getRecentProjects, type RecentProject } from '../../api/project/project'
 import { HOME_SHOWCASE_PROJECTS } from '../../data/homeProjects'
 import arrowIcon from '../../img/home/project-arrow.svg'
+import { desktopZoomStyle } from '../../lib/responsive'
 
 // 홈 화면 방문마다 다시 호출하지 않도록 응답을 모듈 레벨에 캐싱
 let projectsCache: Promise<RecentProject[]> | null = null
@@ -265,7 +266,7 @@ function ProjectReviews() {
   return (
     <>
       {/* 데스크탑: 중앙 카드가 커지는 드래그 캐러셀 */}
-      <section className="hidden flex-col items-center gap-[75px] py-[65px] lg:flex">
+      <section className="hidden flex-col items-center gap-[75px] py-[65px] lg:flex" style={desktopZoomStyle}>
         <div className="flex w-[1200px] flex-col items-center gap-[15px]">
           <p className="m-0 py-[10px] text-[18px] font-semibold text-black">Project Preview</p>
           <p className="m-0 text-center text-[32px] font-semibold text-black">

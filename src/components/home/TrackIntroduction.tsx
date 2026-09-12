@@ -7,6 +7,7 @@ import trackBe from '../../img/home/track-be.svg'
 import trackBeHover from '../../img/home/track-be-hover.svg'
 import trackDots from '../../img/home/track-dots.svg'
 import trackDotsHover from '../../img/home/track-dots-hover.svg'
+import { desktopZoomStyle } from '../../lib/responsive'
 
 type Track = {
   icon: string
@@ -169,7 +170,7 @@ function TrackIntroduction() {
   return (
     <>
       {/* 데스크탑: hover 시 뒤집히는 카드 */}
-      <section className="mx-auto hidden w-[1200px] flex-col gap-[75px] py-[65px] lg:flex">
+      <section className="mx-auto hidden w-[1200px] flex-col gap-[75px] py-[65px] lg:flex" style={desktopZoomStyle}>
         <div className="flex flex-col gap-[15px]">
           <p className="m-0 py-[10px] text-[18px] font-semibold">Track Introduction</p>
           <p className="m-0 text-[32px] font-semibold">

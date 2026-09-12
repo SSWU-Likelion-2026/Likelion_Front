@@ -76,7 +76,10 @@ function People() {
   }
 
   return (
-    <div className="bg-warm-black">
+    // mobile-zoom-canvas: Home 페이지와 동일하게 모바일 레이아웃을 393px 기준 캔버스로 고정하고
+    // zoom으로 실제 화면 폭에 맞춰 채운다. 이게 없으면(기존 상태) 모바일 폭이 393px보다 넓은
+    // 폰에서 멤버 카드(grid-cols-2, fr 기반)가 실제 화면 폭에 비례해 그대로 늘어나 버린다.
+    <div className="mobile-zoom-canvas bg-warm-black">
       {/* 배너: Session/Project/Stamp/MyPage와 동일한 공용 Banner 컴포넌트 (사이즈·색상 통일, 텍스트만 다름) */}
       <Banner page="People" />
 
@@ -148,7 +151,11 @@ function People() {
                   <p className="m-0 text-[30px] font-semibold text-black">{section.title}</p>
                   {section.subtitle && <p className="m-0 text-[18px] font-semibold text-gray-5">{section.subtitle}</p>}
                 </div>
-                <div className="grid grid-cols-3 gap-[24px]">
+                {/* auto-fit의 열 개수는 minmax의 "최댓값" 기준으로 계산된다(최솟값이 아니라).
+                    max를 384px 그대로 두면 1440px 창(스크롤바만큼 실사용 폭이 줄어듦)에서 여유가
+                    0이라 2열로 떨어지면서 카드가 반대로 훨씬 커져버렸다 — 실측(JS로 격리 테스트)
+                    결과 max=350px 정도로 낮춰야 1440px 부근에서 항상 3열이 확보된다. */}
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,350px))] gap-[24px]">
                   {section.members.map((member) => (
                     <MemberCard key={member.profileId} member={member} />
                   ))}

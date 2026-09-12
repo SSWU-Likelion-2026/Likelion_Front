@@ -24,7 +24,7 @@ function App() {
     <div className="flex min-h-screen flex-col">
       <ScrollToTop />
       <Header />
-      <main className="flex-1">
+      <main className="mt-[50px] flex-1 lg:mt-0">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/session" element={<Session />} />

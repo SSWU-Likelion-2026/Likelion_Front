@@ -144,7 +144,7 @@ export default function SessionDetail() {
             </div>
         </div>
 
-        <div className="mt-[87px] border border-gray-9 rounded-[15px] p-6 lg:p-[35px]">
+        <div className="mt-[55px] border border-gray-9 rounded-[15px] p-6 lg:p-[35px]">
           <textarea
             value={content}
             onChange={e => setContent(e.target.value)}

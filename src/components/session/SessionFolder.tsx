@@ -44,7 +44,7 @@ export default function SessionFolder({ variant = 'default', part, week, title, 
           className={`absolute bottom-0 left-0 w-full transition-opacity duration-150 ${hovered ? 'opacity-100' : 'opacity-0'}`}
         />
       )}
-      <div className='flex flex-col absolute left-6 right-6 bottom-5 gap-1'>
+      <div className='flex flex-col absolute left-3 lg:left-6 right-3 lg:right-6 bottom-3 lg:bottom-5 gap-1'>
         <p className='text-[11px] lg:text-[17px] text-white'>W{String(week).padStart(2, '0')}</p>
         <p className='text-[13px] lg:text-[19px] font-semibold text-white'>{title}</p>
       </div>

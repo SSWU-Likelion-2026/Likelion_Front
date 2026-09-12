@@ -52,9 +52,30 @@ export default function MyStamp({
   totalStampCount = 0,
   completedStamps = [],
 }: MyStampProps) {
+  /**
+   * ======================================
+   * 인증된 스탬프 정렬
+   *
+   * mission id와 상관없이
+   * 인증한 순서대로 1번부터 도장을 찍기 위해
+   * 날짜가 오래된 순으로 정렬
+   * ======================================
+   */
+
+  const sortedCompletedStamps = [
+    ...completedStamps,
+  ].sort((a, b) => {
+    const aTime =
+      new Date(a.date).getTime();
+
+    const bTime =
+      new Date(b.date).getTime();
+
+    return aTime - bTime;
+  });
+
   return (
     <div className="myStampPage w-full">
-
       {/* ======================================
           사용자 정보
       ====================================== */}
@@ -185,112 +206,135 @@ export default function MyStamp({
           max-[1014px]:py-[22px]
         "
       >
-        {stampNumbers.map((numberImage, index) => {
-          const stampNumber = index + 1;
+        {stampNumbers.map(
+          (
+            numberImage,
+            index,
+          ) => {
+            const stampNumber =
+              index + 1;
 
-          const completed = completedStamps.find(
-            (stamp) => stamp.id === stampNumber,
-          );
+            /**
+             * mission id 기준이 아니라
+             * 인증된 데이터 순서대로
+             * 1번부터 채움
+             *
+             * completedStamps가 1개라면
+             * 무조건 1번 자리에 도장이 찍힘
+             */
+            const completed =
+              sortedCompletedStamps[
+                index
+              ];
 
-          return (
-            <div
-              key={stampNumber}
-              className="
-                stampItem
-                flex
-                w-full
-                min-w-0
-                flex-col
-                items-center
-                justify-start
-
-                max-[1014px]:min-h-[112px]
-              "
-            >
-              {/* ==================================
-                  숫자 / 인증 도장
-              ================================== */}
-
+            return (
               <div
+                key={
+                  stampNumber
+                }
                 className="
-                  stampImageBox
-                  relative
-                  h-[176px]
-                  w-[176px]
-                  shrink-0
+                  stampItem
+                  flex
+                  w-full
+                  min-w-0
+                  flex-col
+                  items-center
+                  justify-start
 
-                  max-[1014px]:h-[88px]
-                  max-[1014px]:w-[88px]
+                  max-[1014px]:min-h-[112px]
                 "
               >
-                {/* 기본 숫자 */}
+                {/* ==================================
+                    숫자 / 인증 도장
+                ================================== */}
 
-                <img
-                  src={numberImage}
-                  alt={`${stampNumber}번 스탬프`}
+                <div
                   className="
+                    stampImageBox
+                    relative
                     h-[176px]
                     w-[176px]
+                    shrink-0
 
                     max-[1014px]:h-[88px]
                     max-[1014px]:w-[88px]
                   "
-                />
+                >
+                  {/* 기본 숫자 */}
 
-                {/* 인증 완료된 경우 도장 표시 */}
-
-                {completed && (
                   <img
-                    src={realstamp}
-                    alt="획득한 스탬프"
+                    src={
+                      numberImage
+                    }
+                    alt={`${stampNumber}번 스탬프`}
                     className="
-                      realStamp
-                      absolute
-                      left-1/2
-                      top-1/2
-                      h-[140px]
-                      w-[140px]
-                      -translate-x-1/2
-                      -translate-y-1/2
+                      h-[176px]
+                      w-[176px]
 
-                      max-[1014px]:h-[70px]
-                      max-[1014px]:w-[70px]
+                      max-[1014px]:h-[88px]
+                      max-[1014px]:w-[88px]
                     "
                   />
-                )}
+
+                  {/* 인증 완료된 경우 도장 표시 */}
+
+                  {completed && (
+                    <img
+                      src={
+                        realstamp
+                      }
+                      alt="획득한 스탬프"
+                      className="
+                        realStamp
+                        absolute
+                        left-1/2
+                        top-1/2
+                        h-[140px]
+                        w-[140px]
+                        -translate-x-1/2
+                        -translate-y-1/2
+
+                        max-[1014px]:h-[70px]
+                        max-[1014px]:w-[70px]
+                      "
+                    />
+                  )}
+                </div>
+
+                {/* ==================================
+                    인증 완료 날짜
+                ================================== */}
+
+                <div
+                  className="
+                    mt-[10px]
+                    h-[24px]
+
+                    max-[1014px]:mt-[6px]
+                    max-[1014px]:h-[18px]
+                  "
+                >
+                  {completed && (
+                    <p
+                      className="
+                        stampDate
+                        text-[20px]
+                        font-medium
+                        text-[#7C4DFF]
+
+                        max-[1014px]:text-[14px]
+                      "
+                    >
+                      {formatDate(
+                        completed.date,
+                      )}
+                    </p>
+                  )}
+                </div>
               </div>
-
-              {/* ==================================
-                  인증 완료 날짜
-              ================================== */}
-
-              <div
-                className="
-                  mt-[10px]
-                  h-[24px]
-
-                  max-[1014px]:mt-[6px]
-                  max-[1014px]:h-[18px]
-                "
-              >
-                {completed && (
-                  <p
-                    className="
-                      stampDate
-                      text-[20px]
-                      font-medium
-                      text-[#7C4DFF]
-
-                      max-[1014px]:text-[14px]
-                    "
-                  >
-                    {formatDate(completed.date)}
-                  </p>
-                )}
-              </div>
-            </div>
-          );
-        })}
+            );
+          },
+        )}
       </div>
     </div>
   );

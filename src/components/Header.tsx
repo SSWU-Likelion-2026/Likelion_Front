@@ -136,7 +136,7 @@ function Header() {
           <div className="absolute right-0 top-0 flex h-full w-[279px] max-w-[80%] flex-col items-center overflow-y-auto bg-white pb-[118px] pt-[68px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="flex flex-col items-center gap-[51px]">
               <div className="flex w-[231px] items-center justify-between">
-                <button onClick={() => { closeMenu(); navigate('/mypage') }}>
+                <button onClick={() => { if (user) { closeMenu(); navigate('/mypage') } }}>
                   <p className="m-0 text-[20px] font-semibold text-black-1">
                     {user ? `${user.name}님` : '로그인이 필요합니다.'}
                   </p>

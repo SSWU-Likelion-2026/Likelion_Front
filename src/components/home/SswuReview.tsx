@@ -1,6 +1,8 @@
-import { memo, useCallback, useEffect, useState, type CSSProperties } from 'react'
+import { memo, useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
-import reviewPart from '../../img/home/review-part.svg'
+import reviewPartPm from '../../img/home/review-part.svg'
+import reviewPartFe from '../../img/home/review-part-fe.svg'
+import reviewPartBe from '../../img/home/review-part-be.svg'
 
 type PartKey = 'PM_DE' | 'FE' | 'BE'
 
@@ -9,6 +11,15 @@ const PARTS: { key: PartKey; label: string }[] = [
   { key: 'FE', label: 'FE' },
   { key: 'BE', label: 'BE' },
 ]
+
+// 후기 카드 뒤에 트랙별로 다르게 깔리는 장식 아이콘 — Track Introduction과 같은 꽃 모양이지만,
+// 후기 카드는 배경이 어두운 카드(black-2)라 보라색이 카드 배경색(#323232)으로 옅게 번지는
+// review-part 전용 그라데이션을 쓴다 (Track Introduction의 흰색 hover 아이콘과는 다른 색 처리).
+const REVIEW_PART_ICON: Record<PartKey, string> = {
+  PM_DE: reviewPartPm,
+  FE: reviewPartFe,
+  BE: reviewPartBe,
+}
 
 type Review = {
   cohort: string
@@ -106,10 +117,14 @@ const REVIEWS_PER_PART: Record<PartKey, Review[]> = {
 }
 
 const ACTIVE_TAB_GRADIENT: CSSProperties = {
-  backgroundImage: 'linear-gradient(152deg, rgb(125, 75, 248) 23.739%, rgb(176, 231, 213) 121.14%)',
+  backgroundImage: 'linear-gradient(152deg, rgb(125, 75, 248) 23.739%, var(--color-accent-100) 121.14%)',
 }
 const TAB_BASE_CLASS = 'rounded-[100px] px-[28px] py-[12px] text-[18px]'
 const REVIEW_CARD_CLASS = 'relative h-[447px] w-[384px] shrink-0 overflow-hidden rounded-[25px] bg-black-2'
+
+const MOBILE_TAB_BASE_CLASS = 'rounded-[100px] text-[14px]'
+const MOBILE_REVIEW_CARD_CLASS =
+  'relative h-[315px] w-[271px] shrink-0 snap-center overflow-hidden rounded-[15px] bg-black-2'
 
 type PartTabButtonProps = {
   part: { key: PartKey; label: string }
@@ -131,15 +146,31 @@ const PartTabButton = memo(function PartTabButton({ part, isActive, onSelect }: 
   )
 })
 
+const MobilePartTabButton = memo(function MobilePartTabButton({ part, isActive, onSelect }: PartTabButtonProps) {
+  const handleClick = useCallback(() => onSelect(part.key), [onSelect, part.key])
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      className={`${MOBILE_TAB_BASE_CLASS} ${
+        isActive ? 'bg-primary-100 px-[22px] py-[8px] font-semibold text-white' : 'px-[8px] py-[8px] font-normal text-gray-4'
+      }`}
+    >
+      {part.label}
+    </button>
+  )
+})
+
 type ReviewCardProps = {
   review: Review
+  icon: string
 }
 
-const ReviewCard = memo(function ReviewCard({ review }: ReviewCardProps) {
+const ReviewCard = memo(function ReviewCard({ review, icon }: ReviewCardProps) {
   return (
     <div className={REVIEW_CARD_CLASS}>
       <div className="absolute left-[142px] top-[-42px] flex size-[286px] items-center justify-center">
-        <img src={reviewPart} alt="" className="size-[286px] rotate-90" />
+        <img src={icon} alt="" className="size-[286px] rotate-90" />
       </div>
       <div className="absolute left-1/2 top-[117px] bottom-[38px] flex w-[322px] -translate-x-1/2 flex-col items-start gap-[22px]">
         <div className="flex w-full shrink-0 flex-col items-start gap-[11px]">
@@ -153,6 +184,30 @@ const ReviewCard = memo(function ReviewCard({ review }: ReviewCardProps) {
         </div>
         {/* 후기 내용이 길어 영역을 넘길 때는 스크롤되지만, 스크롤바는 보이지 않게 숨긴다 */}
         <p className="m-0 min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap text-[14px] font-normal leading-[1.5] text-white [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {review.description}
+        </p>
+      </div>
+    </div>
+  )
+})
+
+const MobileReviewCard = memo(function MobileReviewCard({ review, icon }: ReviewCardProps) {
+  return (
+    <div className={MOBILE_REVIEW_CARD_CLASS}>
+      <div className="absolute left-[100.21px] top-[-29.64px] flex size-[201.839px] items-center justify-center">
+        <img src={icon} alt="" className="size-[201.839px] rotate-90" />
+      </div>
+      <div className="absolute left-[calc(50%-0.13px)] top-[83px] bottom-[27px] flex w-[227px] -translate-x-1/2 flex-col items-start gap-[15px]">
+        <div className="flex w-full shrink-0 flex-col items-start gap-[8px]">
+          <div className="flex flex-col items-start text-white">
+            <p className="m-0 text-[13px] leading-[1.6]">{review.cohort}</p>
+            <p className="m-0 text-[18px] font-semibold leading-[1.5]">{review.name}</p>
+          </div>
+          <div className="flex items-center rounded-[3.529px] bg-primary-100 p-[7px]">
+            <p className="m-0 whitespace-nowrap text-[14px] font-semibold text-white">{review.quote}</p>
+          </div>
+        </div>
+        <p className="m-0 min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap text-[13px] font-normal leading-[1.5] text-white [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {review.description}
         </p>
       </div>
@@ -183,8 +238,11 @@ function SswuReview() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'start', slidesToScroll: 3 })
   const [selectedSnap, setSelectedSnap] = useState(0)
   const [snapCount, setSnapCount] = useState(0)
+  const mobileScrollRef = useRef<HTMLDivElement>(null)
+  const [mobileActiveDot, setMobileActiveDot] = useState(0)
 
   const reviews = REVIEWS_PER_PART[selectedPart]
+  const reviewIcon = REVIEW_PART_ICON[selectedPart]
 
   useEffect(() => {
     if (!emblaApi) return
@@ -211,43 +269,99 @@ function SswuReview() {
 
   const goToSnap = useCallback((index: number) => emblaApi?.scrollTo(index), [emblaApi])
 
+  // 탭이 바뀌면 모바일 캐러셀도 첫 카드로 되돌린다
+  useEffect(() => {
+    mobileScrollRef.current?.scrollTo({ left: 0 })
+    setMobileActiveDot(0)
+  }, [selectedPart])
+
+  const handleMobileScroll = useCallback(() => {
+    const el = mobileScrollRef.current
+    if (!el || reviews.length === 0) return
+    const cardWidth = el.scrollWidth / reviews.length
+    setMobileActiveDot(Math.min(reviews.length - 1, Math.round(el.scrollLeft / cardWidth)))
+  }, [reviews.length])
+
   return (
-    <section className="flex w-full flex-col items-center py-[65px]">
-      <div className="flex w-[1200px] flex-col items-start gap-[45px]">
-        <div className="flex w-full flex-col items-start gap-[15px]">
-          <p className="m-0 py-[10px] text-[18px] font-semibold text-black-1">SSWU Review</p>
-          <p className="m-0 text-[32px] font-semibold leading-[1.5] text-black-1">
+    <>
+      {/* 데스크탑 */}
+      <section className="hidden w-full flex-col items-center py-[65px] lg:flex">
+        <div className="flex w-[1200px] flex-col items-start gap-[45px]">
+          <div className="flex w-full flex-col items-start gap-[15px]">
+            <p className="m-0 py-[10px] text-[18px] font-semibold text-black-1">SSWU Review</p>
+            <p className="m-0 text-[32px] font-semibold leading-[1.5] text-black-1">
+              성신멋사와 함께한
+              <br />
+              <span className="text-primary-100">아기사자들의 후기</span>
+            </p>
+          </div>
+
+          <div className="flex items-center justify-center gap-[8px]">
+            {PARTS.map((part) => (
+              <PartTabButton key={part.key} part={part} isActive={part.key === selectedPart} onSelect={setSelectedPart} />
+            ))}
+          </div>
+
+          <div className="flex w-full flex-col items-center gap-[25px]">
+            <div className="w-full overflow-hidden" ref={emblaRef}>
+              <div className="flex gap-[24px]">
+                {reviews.map((review, i) => (
+                  <ReviewCard key={i} review={review} icon={reviewIcon} />
+                ))}
+              </div>
+            </div>
+
+            {snapCount > 1 && (
+              <div className="flex items-center justify-center gap-[10px]">
+                {Array.from({ length: snapCount }, (_, i) => (
+                  <PaginationDot key={i} index={i} isActive={i === selectedSnap} onSelect={goToSnap} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 모바일 */}
+      <section className="flex w-full flex-col items-center gap-[35px] pb-[100px] pt-10 lg:hidden">
+        <div className="flex w-full flex-col items-start gap-0 px-6">
+          <p className="m-0 py-[10px] text-[14px] font-semibold text-black-1">SSWU Review</p>
+          <p className="m-0 text-[18px] font-semibold leading-[1.5] text-black-1">
             성신멋사와 함께한
             <br />
             <span className="text-primary-100">아기사자들의 후기</span>
           </p>
         </div>
 
-        <div className="flex items-center justify-center gap-[8px]">
+        <div className="flex w-full items-center gap-[8px] px-6">
           {PARTS.map((part) => (
-            <PartTabButton key={part.key} part={part} isActive={part.key === selectedPart} onSelect={setSelectedPart} />
+            <MobilePartTabButton key={part.key} part={part} isActive={part.key === selectedPart} onSelect={setSelectedPart} />
           ))}
         </div>
 
         <div className="flex w-full flex-col items-center gap-[25px]">
-          <div className="w-full overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-[24px]">
-              {reviews.map((review, i) => (
-                <ReviewCard key={i} review={review} />
-              ))}
-            </div>
+          <div
+            ref={mobileScrollRef}
+            onScroll={handleMobileScroll}
+            // px-[61px]: 카드(271px)가 스와이프할 때 항상 가운데(393px 기준 캔버스)에 오도록,
+            // 첫/마지막 카드도 가운데로 스크롤될 수 있는 여유 공간을 양쪽에 둔다 ((393-271)/2)
+            className="flex w-full snap-x snap-mandatory gap-[15px] overflow-x-auto px-[61px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {reviews.map((review, i) => (
+              <MobileReviewCard key={i} review={review} icon={reviewIcon} />
+            ))}
           </div>
 
-          {snapCount > 1 && (
+          {reviews.length > 1 && (
             <div className="flex items-center justify-center gap-[10px]">
-              {Array.from({ length: snapCount }, (_, i) => (
-                <PaginationDot key={i} index={i} isActive={i === selectedSnap} onSelect={goToSnap} />
+              {reviews.map((_, i) => (
+                <span key={i} className={`size-2 rounded-full ${i === mobileActiveDot ? 'bg-gray-2' : 'bg-gray-9'}`} />
               ))}
             </div>
           )}
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }
 

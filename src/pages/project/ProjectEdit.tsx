@@ -1016,7 +1016,7 @@ export default function ProjectEdit() {
     if (loading) {
         return (
             <section className="flex min-h-screen w-full items-center justify-center bg-white">
-                <p className="text-[22px] text-[#808386]">
+                <p className="text-[22px] text-gray-5">
                     프로젝트 정보를 불러오는 중입니다.
                 </p>
             </section>

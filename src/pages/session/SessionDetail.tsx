@@ -137,7 +137,7 @@ export default function SessionDetail() {
             <h3 className="text-[18px] lg:text-[24px] font-semibold mt-[45px]">주요학습 내용</h3>
             <div className="flex flex-wrap gap-2 mt-[15px]">
             {detailData?.learningTopics?.map(tag => (
-                <span key={tag.sequenceNum} className="px-3 py-3 rounded-[5px] bg-[#F3F4F6] text-[13px] lg:text-[16px]">
+                <span key={tag.sequenceNum} className="px-3 py-3 rounded-[5px] bg-surface-neutral text-[13px] lg:text-[16px]">
                 {tag.content}
                 </span>
             ))}

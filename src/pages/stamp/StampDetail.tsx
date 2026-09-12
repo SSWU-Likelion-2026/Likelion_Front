@@ -776,14 +776,14 @@ export default function StampDetail() {
                   resize-none
                   rounded-[15px]
                   border
-                  border-[#D5D8DC]
+                  border-border-faint
                   px-[24px]
                   py-[24px]
                   pr-[60px]
                   pb-[50px]
                   text-[20px]
                   leading-[1.6]
-                  text-[#121212]
+                  text-black-1
                   outline-none
                   placeholder:text-[#D2D4D8]
                   focus:border-[#956CF6]
@@ -850,15 +850,15 @@ export default function StampDetail() {
                 cancelButton
                 rounded-[10px]
                 border
-                border-[#D5D8DC]
+                border-border-faint
                 bg-white
                 px-[18px]
                 py-[11px]
                 text-[20px]
                 font-medium
-                text-[#777A80]
+                text-misc-777a80
                 transition
-                hover:bg-[#F5F5F5]
+                hover:bg-surface-muted
                 disabled:cursor-not-allowed
                 disabled:opacity-50
 
@@ -888,7 +888,7 @@ export default function StampDetail() {
               className="
                 submitButton
                 rounded-[10px]
-                bg-[#242424]
+                bg-misc-242424
                 px-[20px]
                 py-[13px]
                 text-[20px]

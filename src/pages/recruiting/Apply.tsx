@@ -280,7 +280,7 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
           message="제출 후에는 지원서를 수정할 수 없습니다. 제출하시겠어요?"
           onClose={() => setConfirmOpen(false)}
           onConfirm={handleSubmit}
-          confirmClassName="px-6 py-2.5 bg-[#212121] text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
+          confirmClassName="px-6 py-2.5 bg-warm-black text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
         />
         <Modal
           open={savedOpen}
@@ -289,7 +289,7 @@ function ApplyForm({ authed, applicationId }: { authed: boolean; applicationId?:
           onClose={() => setSavedOpen(false)}
           onConfirm={() => setSavedOpen(false)}
           confirmOnly
-          confirmClassName="px-6 py-2.5 bg-[#212121] text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
+          confirmClassName="px-6 py-2.5 bg-warm-black text-white text-[16px] rounded-[10px] cursor-pointer hover:opacity-90"
         />
       </div>
     </div>

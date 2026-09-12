@@ -15,7 +15,7 @@ export default function ToggleGroup({ options, value, onChange }: Props) {
             onClick={() => onChange(option)}
             className={`px-7 py-3 rounded-full text-[17px] cursor-pointer transition-colors duration-150 ${
               selected
-                ? 'bg-[#2b2b2b] text-white font-medium'
+                ? 'bg-misc-2b2b2b text-white font-medium'
                 : 'text-gray-5 hover:text-gray-2'
             }`}
           >

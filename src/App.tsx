@@ -1,7 +1,7 @@
-import { Route, Routes, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { Route, Routes } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/home/Home'
 import Login from './pages/signup/Login'
 import Signup from './pages/signup/Signup'
@@ -18,12 +18,6 @@ import SessionDetail from './pages/session/SessionDetail'
 import MyPage from './pages/mypage/MyPage'
 import Stamp from './pages/stamp/Stamp'
 import StampDetail from './pages/stamp/StampDetail'
-
-function ScrollToTop() {
-  const { pathname } = useLocation()
-  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
-  return null
-}
 
 function App() {
   return (

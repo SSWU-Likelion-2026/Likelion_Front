@@ -1,7 +1,8 @@
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState, type MouseEvent } from 'react'
 import { motion, type Transition } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
 import { getCurrentRecruitment, type CurrentRecruitment } from '../../api/recruiting/recruit'
+import { desktopZoomStyle } from '../../lib/responsive'
 
 // 서버에서 모집 상태를 못 불러올 때(로딩 중 포함)는 알림 신청을 기본값으로 보여준다
 const NOTIFICATION_FALLBACK: CurrentRecruitment = {
@@ -16,6 +17,8 @@ import NotifySignupModal from './NotifySignupModal'
 import ctaArrowPng from '../../img/home/cta-arrow.png'
 import applyButtonPng from '../../img/home/apply-button.png'
 import notifyButtonPng from '../../img/home/notify-button.png'
+import applyButtonMobilePng from '../../img/home/apply-button-mobile.png'
+import notifyButtonMobilePng from '../../img/home/notify-button-mobile.png'
 import flowRow2Png from '../../img/home/flow-row2.png'
 import flowRow4aPng from '../../img/home/flow-row4a.png'
 import flowRow4bPng from '../../img/home/flow-row4b.png'
@@ -93,6 +96,14 @@ const shapeMotion: ShapeMotionConfig[] = shapes.map((shape, i) => {
     transition,
   }
 })
+
+// 모바일은 절대좌표 24개 도형이 아니라 세로로 쌓인 장식 줄(row) 3개라, 데스크탑과 같은 duration/ease로
+// 줄 단위로 순서대로 페이드+슬라이드업 되도록 한다 (같은 이유로 모듈 스코프에서 한 번만 생성).
+const MOBILE_ROW_TRANSITIONS: Transition[] = [0, 1, 2].map((i) => ({
+  duration: 0.7,
+  delay: i * 0.1,
+  ease: [0.16, 1, 0.3, 1],
+}))
 
 type DecorativeShapeProps = {
   shape: Shape
@@ -181,38 +192,154 @@ function MainWrap() {
 
   const isNotification = recruitment.action === 'NOTIFICATION'
   const hoverPillImage = isNotification ? notifyButtonPng : applyButtonPng
+  // 모바일은 hover가 없어서 데스크탑처럼 hover 시에만 채워지는 알약이 아니라 항상 노출된다
+  const ctaBadgeImageMobile = isNotification ? notifyButtonMobilePng : applyButtonMobilePng
 
   const openNotifyModal = useCallback(() => setNotifyOpen(true), [])
   const closeNotifyModal = useCallback(() => setNotifyOpen(false), [])
 
+  const handleMobileCtaClick = useCallback(
+    (e: MouseEvent<HTMLAnchorElement>) => {
+      if (isNotification) {
+        e.preventDefault()
+        openNotifyModal()
+      }
+    },
+    [isNotification, openNotifyModal],
+  )
+
   return (
-    <section className="relative h-[756px] overflow-hidden bg-white">
-      {shapes.map((shape, i) => (
-        <DecorativeShape key={i} shape={shape} motionConfig={shapeMotion[i]} />
-      ))}
+    <>
+      {/* 데스크탑: 피그마 1440px 캔버스를 zoom으로 축소/확대 */}
+      <section className="hidden w-full overflow-hidden lg:block" style={desktopZoomStyle}>
+        <div className="relative h-[756px] w-[1440px] overflow-hidden bg-white">
+          {shapes.map((shape, i) => (
+            <DecorativeShape key={i} shape={shape} motionConfig={shapeMotion[i]} />
+          ))}
 
-      {/* 마감까지 D-day 뱃지 (고정) — 알약은 항상 그리고, dDay 없으면 텍스트만 비움 */}
-      <div className="absolute left-[120px] top-[34px] z-10 flex h-[58px] items-center rounded-full bg-primary-100 px-[24px]">
-        <p className="whitespace-nowrap text-[18px] font-semibold text-white">
-          {recruitment?.dDay ? `마감까지 ${recruitment.dDay}` : ' '}
+          {/* 마감까지 D-day 뱃지 (고정) — 알약은 항상 그리고, dDay 없으면 텍스트만 비움 */}
+          <div className="absolute left-[120px] top-[34px] z-10 flex h-[58px] items-center rounded-full bg-primary-100 px-[24px]">
+            <p className="whitespace-nowrap text-[18px] font-semibold text-white">
+              {recruitment?.dDay ? `마감까지 ${recruitment.dDay}` : ' '}
+            </p>
+          </div>
+
+          <RecruitCta isNotification={isNotification} hoverPillImage={hoverPillImage} onNotifyClick={openNotifyModal} />
+
+          {/* 타이틀 (고정) */}
+          <p className="absolute left-[120px] top-[458px] z-10 m-0 whitespace-nowrap font-montserrat text-[95px] font-semibold text-primary-100">
+            LIKE LION UNIV
+          </p>
+
+          {/* 소개 문구 (고정) */}
+          <div className="absolute left-[120px] top-[603px] z-10 text-[27px] font-medium leading-[1.3] text-primary-100">
+            <p className="m-0">성신멋사와 함께 새로운 여정을 그려나갈</p>
+            <p className="m-0">15기 SSWU LIKELION 아기사자를 기다립니다</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 모바일: 피그마 모바일 목업(node 1183:15817) 기준, 절대좌표 대신 플로우 레이아웃으로 재구성.
+          장식용 알약/원형 도형은 피그마 좌표(top=75/152/446, 393px 캔버스 기준)를 calc(50%±N)로 옮겨
+          섹션 폭에 비례해서 위치가 스케일되도록 했다 */}
+      <section className="relative overflow-hidden bg-white px-6 pb-14 pt-[75px] lg:hidden">
+        {/* 뱃지 주변 알약 장식 (피그마 top=75) — 데스크탑 24개 장식 도형과 동일한 진입 연출(페이드+슬라이드)을
+            모바일은 절대좌표 개별 도형이 아니라 줄(row) 단위 레이아웃이라, 줄 단위로 순서대로 들어오게 한다 */}
+        <motion.div
+          className="relative -mx-6 min-h-[39px]"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={MOBILE_ROW_TRANSITIONS[0]}
+        >
+          <span className="absolute left-[calc(50%+7.03px)] top-0 h-[39px] w-[38.937px] -translate-x-1/2 rounded-full bg-primary-100" />
+          <span className="absolute left-[calc(50%-139.5px)] top-0 h-[39px] w-[86px] -translate-x-1/2 rounded-r-[100px] bg-accent-100" />
+          <span className="absolute left-[calc(50%-177px)] top-0 h-[39px] w-[45px] -translate-x-1/2 rounded-r-[100px] bg-white" />
+          <span className="absolute left-[calc(50%-191px)] top-0 h-[39px] w-[29px] -translate-x-1/2 rounded-r-[100px] bg-primary-100" />
+          <div className="relative z-10 ml-12 flex w-fit items-center rounded-full bg-primary-100 px-4 py-2">
+            <p className="m-0 whitespace-nowrap text-[15px] font-semibold text-white">
+              {recruitment?.dDay ? `마감까지 ${recruitment.dDay}` : ' '}
+            </p>
+          </div>
+        </motion.div>
+
+        {/* 알약 체인 + 그라디언트 원형 장식 (피그마 top=152) */}
+        <motion.div
+          className="relative -mx-6 mt-[38px] h-[66px]"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={MOBILE_ROW_TRANSITIONS[1]}
+        >
+          <span className="absolute left-[calc(50%+154px)] top-0 h-full w-[85px] -translate-x-1/2 rounded-l-[100px] bg-accent-100" />
+          <img
+            src={flowRow2Png}
+            alt=""
+            className="absolute left-[calc(50%+144.08px)] top-0 size-[66px] -translate-x-1/2 rotate-180"
+          />
+          <span className="absolute left-[calc(50%-69.5px)] top-0 h-full w-[204px] -translate-x-1/2 rounded-r-[84.615px] bg-primary-100" />
+          <span className="absolute left-[calc(50%-101.5px)] top-0 h-full w-[166px] -translate-x-1/2 rounded-r-[84.615px] bg-white" />
+          <span className="absolute left-[calc(50%-131.5px)] top-0 h-full w-[130px] -translate-x-1/2 rounded-r-[84.615px] bg-primary-100" />
+          <span className="absolute left-[calc(50%-138.5px)] top-0 size-[66px] -translate-x-1/2 rounded-full bg-accent-100" />
+        </motion.div>
+
+        <div className="relative z-10 mt-10 flex">
+          {/* 피그마(node 1425:13563) 기준: 데스크탑은 hover 시에만 지원하기/알림신청 알약이 채워지지만,
+              모바일은 hover가 없어서 그 알약이 항상 SSWU 알약 오른쪽에 겹쳐 붙어 노출된다.
+              간단한 원형 화살표 대신 디자인팀이 내려준 완성 이미지를 그대로 쓴다. */}
+          <NavLink
+            to="/recruiting/apply"
+            onClick={handleMobileCtaClick}
+            className="relative flex h-[70px] w-[310px] shrink-0 items-center no-underline"
+          >
+            <span className="absolute left-0 top-0 flex h-[70px] w-[232px] items-center rounded-full bg-primary-100 pl-[25px]">
+              <span className="whitespace-nowrap font-montserrat text-[40px] font-semibold text-white">SSWU</span>
+            </span>
+            <img src={ctaBadgeImageMobile} alt="" className="absolute left-[162px] top-0 h-[70px] w-[148px]" />
+          </NavLink>
+        </div>
+
+        <p className="relative z-10 m-0 mt-4 font-montserrat text-[40px] font-semibold text-primary-100">
+          LIKE LION UNIV
         </p>
-      </div>
 
-      <RecruitCta isNotification={isNotification} hoverPillImage={hoverPillImage} onNotifyClick={openNotifyModal} />
+        <div className="relative z-10 mt-3 text-[16px] font-medium leading-[1.3] text-primary-100">
+          <p className="m-0">성신멋사와 함께 새로운 여정을 그려나갈</p>
+          <p className="m-0">15기 SSWU LIKELION 아기사자를 기다립니다</p>
+        </div>
 
-      {/* 타이틀 (고정) */}
-      <p className="absolute left-[120px] top-[458px] z-10 m-0 whitespace-nowrap font-montserrat text-[95px] font-semibold text-primary-100">
-        LIKE LION UNIV
-      </p>
+        {/* 그라디언트 원형(데스크탑과 동일 PNG) + 알약 체인 장식 (피그마 top=446, x=133/161.53/269 좌표 기준).
+            보라-흰색-보라 이중 크레센트 뒤에 그라디언트 원이 겹쳐지는 구조 — 원은 두 번째 크레센트(보라) 위로
+            그려져야 해서 DOM 순서상 마지막에 온다. 원은 두 번째 보라 알약(269)과 18px 간격 (269-18-66=185) */}
+        <motion.div
+          className="relative -mx-6 mt-10 h-[66px]"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={MOBILE_ROW_TRANSITIONS[2]}
+        >
+          <img src={flowRow4bPng} alt="" className="absolute left-[24px] top-0 size-[66px] rotate-90" />
+          <span className="absolute left-[133px] top-0 h-full w-[260px] rounded-l-[100px] bg-primary-100" />
+          <span className="absolute left-[161px] top-0 h-full w-[232px] rounded-l-[100px] bg-white" />
+          <span className="absolute left-[269px] top-0 h-full w-[124px] rounded-l-[100px] bg-primary-100" />
+          <img src={flowRow4aPng} alt="" className="absolute left-[185px] top-0 size-[66px] rotate-90" />
+        </motion.div>
 
-      {/* 소개 문구 (고정) */}
-      <div className="absolute left-[120px] top-[603px] z-10 text-[27px] font-medium leading-[1.3] text-primary-100">
-        <p className="m-0">성신멋사와 함께 새로운 여정을 그려나갈</p>
-        <p className="m-0">15기 SSWU LIKELION 아기사자를 기다립니다</p>
-      </div>
+        <div className="relative z-10 mt-8 flex flex-col items-center gap-[5px]">
+          <p className="m-0 font-montserrat text-[18px] font-semibold text-accent-strong">Scroll</p>
+          <svg
+            viewBox="0 0 32 32"
+            className="size-8 text-accent-strong"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M8 13l8 8 8-8" />
+          </svg>
+        </div>
+      </section>
 
       <NotifySignupModal open={notifyOpen} onClose={closeNotifyModal} />
-    </section>
+    </>
   )
 }
 

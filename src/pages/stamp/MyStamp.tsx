@@ -160,8 +160,8 @@ export default function MyStamp({
           gap-y-[40px]
           rounded-[30px]
           border
-          border-[#E1E1E1]
-          bg-[#F5F5F7]
+          border-misc-e1e1e1
+          bg-misc-f5f5f7
           px-[20px]
           py-[40px]
 

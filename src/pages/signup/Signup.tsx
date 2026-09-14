@@ -181,7 +181,7 @@ function Signup() {
             disabled={submitting}
             className="mt-4 h-[62px] w-full rounded-[15px] bg-warm-black px-[35px] text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {submitting ? '가입 중…' : 'Sign up'}
+            {submitting ? '가입 중…' : '회원가입'}
           </button>
         </form>
       </div>

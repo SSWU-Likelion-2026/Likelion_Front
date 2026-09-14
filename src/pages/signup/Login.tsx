@@ -113,7 +113,7 @@ function Login() {
             disabled={submitting}
             className="mt-4 h-[62px] w-full rounded-[15px] bg-warm-black px-[35px] text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {submitting ? '로그인 중…' : 'Sign in'}
+            {submitting ? '로그인 중…' : '로그인'}
           </button>
         </form>
 

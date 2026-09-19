@@ -1,18 +1,12 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { login, loginWithGoogle } from '../../api/signup/auth'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { loginWithGoogle } from '../../api/signup/auth'
 import { ApiError } from '../../api/instance'
 import { renderGoogleButton } from '../../lib/google-auth'
 import logoName from '../../img/signup/logo-name1.svg'
 
-const fieldClass =
-  'h-[59px] w-full rounded-[15px] border border-primary-15 bg-surface-faint px-4 text-sm text-gray-1 placeholder:text-gray-6 focus:outline-none focus:ring-2 focus:ring-primary-50'
-
 function Login() {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const googleBoxRef = useRef<HTMLDivElement>(null)
@@ -36,95 +30,39 @@ function Login() {
       .catch(() => setGoogleReady(false))
   }, [navigate])
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (submitting) return
-    setError(null)
-    setSubmitting(true)
-    try {
-      await login({ email, password })
-      navigate('/')
-    } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : '로그인에 실패했어요. 잠시 후 다시 시도해주세요.',
-      )
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
   return (
-    <main className="flex min-h-[calc(100svh-57px)] items-center justify-center bg-white px-4 py-8 md:py-12">
-      <div className="w-full max-w-[500px] rounded-3xl border border-gray-9 bg-white px-6 pt-10 pb-8 shadow-card md:px-[30px] md:pt-[63px] md:pb-10">
-        <div className="mb-8 flex items-center justify-center gap-2 md:mb-[59px]">
+    <main className="flex min-h-[calc(100svh-57px)] items-center justify-center bg-white px-0 py-8 md:px-4 md:py-12">
+      <div className="w-full max-w-[500px] bg-white px-6 pt-10 pb-8 md:flex md:h-[451px] md:w-[500px] md:flex-col md:justify-center md:rounded-3xl md:border md:border-[#D0D6DD] md:px-[30px] md:py-0 md:shadow-[0_4px_25px_0_rgba(0,0,0,0.05)]">
+        <div className="mb-3 flex items-center justify-center gap-2">
           <img src="/logo_1.png" alt="" className="h-8 w-8" />
           <img src={logoName} alt="LIKELION UNIV SSWU" className="h-[14.48px] w-[224.5px]" />
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <input
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={fieldClass}
-          />
-          <input
-            type="password"
-            required
-            autoComplete="current-password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={fieldClass}
-          />
+        <p className="mb-[87px] text-center text-medium text-[15px] text-[#6C6E72] md:text-[20px]">
+          성신 계정으로만 회원가입 및 로그인이 가능합니다.
+        </p>
 
-          {error && (
-            <p className="text-xs text-red-500" role="alert">
-              {error}
-            </p>
+        <div className="relative mx-auto h-[65px] w-[345px] md:h-auto md:min-h-[68px] md:w-[439px]">
+          <div
+            ref={googleBoxRef}
+            className={googleReady ? 'flex justify-center' : 'invisible absolute'}
+          />
+          {!googleReady && (
+            <button
+              type="button"
+              disabled
+              className="flex h-full w-full items-center justify-center gap-2 rounded-xl border border-[#D0D6DD] bg-surface-neutral px-4 text-[20px] font-medium text-black opacity-60 md:rounded-[15px] md:border-primary-15 md:bg-[#F3F4F6]"
+            >
+              Sign in with Google
+            </button>
           )}
-
-          <div className="my-1 text-center text-[18px] text-gray-6">or</div>
-          <div className="relative min-h-[44px]">
-            <div
-              ref={googleBoxRef}
-              className={
-                googleReady ? 'flex justify-center' : 'invisible absolute'
-              }
-            />
-            {!googleReady && (
-              <button
-                type="button"
-                disabled
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-primary-15 bg-surface-neutral px-4 py-3 text-[20px] font-medium text-black opacity-60"
-              >
-                Sign in with Google
-              </button>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="mt-4 h-[62px] w-full rounded-[15px] bg-warm-black px-[35px] text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-          >
-            {submitting ? '로그인 중…' : '로그인'}
-          </button>
-        </form>
-
-        <div className="mt-5 text-center">
-          <Link
-            to="/signup"
-            className="text-[18px] text-gray-5 underline-offset-2 hover:text-gray-4 hover:underline"
-          >
-            회원가입
-          </Link>
         </div>
+
+        {error && (
+          <p className="mt-4 text-center text-xs text-red-500" role="alert">
+            {error}
+          </p>
+        )}
       </div>
     </main>
   )

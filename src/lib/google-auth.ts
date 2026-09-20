@@ -14,6 +14,7 @@ declare global {
           initialize(config: {
             client_id: string
             callback: (res: { credential: string }) => void
+            hd?: string
           }): void
           renderButton(
             parent: HTMLElement,
@@ -70,6 +71,9 @@ export async function renderGoogleButton(
   if (!initialized) {
     gid.initialize({
       client_id: CLIENT_ID,
+      // 계정 선택창에 성신 워크스페이스 계정만 보이도록 힌트를 줌.
+      // 실제 도메인 검증은 백엔드가 idToken의 hd/email claim으로 해야 함 
+      hd: 'sungshin.ac.kr',
       callback: (res) => idTokenHandler(res.credential),
     })
     initialized = true

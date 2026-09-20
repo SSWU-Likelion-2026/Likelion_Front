@@ -1,10 +1,9 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/home/Home'
 import Login from './pages/signup/Login'
-import Signup from './pages/signup/Signup'
 import People from './pages/people/People'
 import Project from './pages/project/Project'
 import ProjectMaking from './pages/project/ProjectMaking'
@@ -41,7 +40,7 @@ function App() {
           <Route path="/stamp/:missionId" element={<StampDetail />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/signup" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
       <Footer />

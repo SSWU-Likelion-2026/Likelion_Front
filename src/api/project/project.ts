@@ -53,8 +53,11 @@ export async function getProjectDetail(
   );
 
   const data = res.data.result;
+
   if (!data) {
-    throw new Error(`프로젝트(${projectId}) 상세 응답이 비어 있습니다.`);
+    throw new Error(
+      `프로젝트(${projectId}) 상세 응답이 비어 있습니다.`,
+    );
   }
 
   const slides = (data.slideUrls ?? []).map(
@@ -101,6 +104,10 @@ export async function getProjectDetail(
     summary: data.summary,
     description: data.description,
     logoUrl: data.logoUrl,
+
+    // 현재 로그인 유저의 프로젝트 수정/삭제 권한
+    canManage: data.canManage,
+
     startMonth: data.startMonth,
     endMonth: data.endMonth,
     slides,
@@ -117,7 +124,9 @@ export async function getProjectDetail(
 export async function createProject(
   payload: ProjectRequest,
 ): Promise<ProjectMutationResult> {
-  const res = await instance.post<ApiResponse<ProjectMutationResult>>(
+  const res = await instance.post<
+    ApiResponse<ProjectMutationResult>
+  >(
     "/api/v1/projects",
     payload,
   );
@@ -127,14 +136,16 @@ export async function createProject(
 
 // ======================================================
 // 4. 프로젝트 수정
-// PATCH /api/v1/projects/{projectId}
+// PUT /api/v1/projects/{projectId}
 // ======================================================
 
 export async function updateProject(
   projectId: number,
   payload: ProjectRequest,
 ): Promise<ProjectMutationResult> {
-  const res = await instance.put<ApiResponse<ProjectMutationResult>>(
+  const res = await instance.put<
+    ApiResponse<ProjectMutationResult>
+  >(
     `/api/v1/projects/${projectId}`,
     payload,
   );
@@ -219,21 +230,40 @@ export async function uploadProjectImages(
 // ======================================================
 
 export type RecentProject = {
-  projectId: number
-  title: string
-  summary: string
-  thumbnailUrl: string | null
-}
+  projectId: number;
+  title: string;
+  summary: string;
+  thumbnailUrl: string | null;
+};
 
-export async function getRecentProjects(size?: number): Promise<RecentProject[]> {
+export async function getRecentProjects(
+  size?: number,
+): Promise<RecentProject[]> {
   const res = await instance.get<
-    ApiResponse<{ projectId?: number; title?: string; summary?: string; thumbnailUrl?: string }[]>
-  >('/api/v1/home/projects', { params: { size } })
+    ApiResponse<
+      {
+        projectId?: number;
+        title?: string;
+        summary?: string;
+        thumbnailUrl?: string;
+      }[]
+    >
+  >(
+    "/api/v1/home/projects",
+    {
+      params: {
+        size,
+      },
+    },
+  );
 
-  return (res.data.result ?? []).map((p) => ({
-    projectId: p.projectId ?? 0,
-    title: p.title ?? '',
-    summary: p.summary ?? '',
-    thumbnailUrl: p.thumbnailUrl ?? null,
-  }))
+  return (res.data.result ?? []).map(
+    (p) => ({
+      projectId: p.projectId ?? 0,
+      title: p.title ?? "",
+      summary: p.summary ?? "",
+      thumbnailUrl:
+        p.thumbnailUrl ?? null,
+    }),
+  );
 }

@@ -579,47 +579,47 @@ export default function ProjectDetail() {
           />
         </button>
 
-        <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={() =>
-              navigate(
-                `/ProjectEdit/${project.projectId}`,
-              )
-            }
-            className="
-              h-[46px]
-              rounded-[10px]
-              border
-              border-[#D0D6DD]
-              px-[10px]
-              text-[16px]
-              font-medium
-              text-[#808386]
-            "
-          >
-            프로젝트 수정
-          </button>
+        {project.canManage && (
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                navigate(
+                  `/ProjectEdit/${project.projectId}`,
+                )
+              }
+              className="
+                h-[46px]
+                rounded-[10px]
+                border
+                border-[#D0D6DD]
+                px-[10px]
+                text-[16px]
+                font-medium
+                text-[#808386]
+              "
+            >
+              프로젝트 수정
+            </button>
 
-          <button
-            type="button"
-            onClick={
-              handleDelete
-            }
-            className="
-              h-[46px]
-              rounded-[10px]
-              border
-              border-[#D0D6DD]
-              px-[10px]
-              text-[16px]
-              font-medium
-              text-[#808386]
-            "
-          >
-            프로젝트 삭제
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="
+                h-[46px]
+                rounded-[10px]
+                border
+                border-[#D0D6DD]
+                px-[10px]
+                text-[16px]
+                font-medium
+                text-[#808386]
+              "
+            >
+              프로젝트 삭제
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ==================================================
@@ -1393,56 +1393,56 @@ export default function ProjectDetail() {
           모바일 수정 / 삭제 버튼
       ================================================== */}
 
-      <div
-        className="
-          hidden
-
-          max-[1014px]:mt-[20px]
-          max-[1014px]:flex
-          max-[1014px]:justify-end
-          max-[1014px]:gap-[6px]
-        "
-      >
-        <button
-          type="button"
-          onClick={() =>
-            navigate(
-              `/ProjectEdit/${project.projectId}`,
-            )
-          }
+      {project.canManage && (
+        <div
           className="
-            h-[46px]
-            rounded-[10px]
-            border
-            border-[#D0D6DD]
-            px-[11px]
-            text-[14px]
-            font-medium
-            text-[#808386]
+            hidden
+
+            max-[1014px]:mt-[20px]
+            max-[1014px]:flex
+            max-[1014px]:justify-end
+            max-[1014px]:gap-[6px]
           "
         >
-          프로젝트 수정
-        </button>
+          <button
+            type="button"
+            onClick={() =>
+              navigate(
+                `/ProjectEdit/${project.projectId}`,
+              )
+            }
+            className="
+              h-[46px]
+              rounded-[10px]
+              border
+              border-[#D0D6DD]
+              px-[11px]
+              text-[14px]
+              font-medium
+              text-[#808386]
+            "
+          >
+            프로젝트 수정
+          </button>
 
-        <button
-          type="button"
-          onClick={
-            handleDelete
-          }
-          className="
-            h-[46px]
-            rounded-[10px]
-            border
-            border-[#D0D6DD]
-            px-[11px]
-            text-[14px]
-            font-medium
-            text-[#808386]
-          "
-        >
-          프로젝트 삭제
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="
+              h-[46px]
+              rounded-[10px]
+              border
+              border-[#D0D6DD]
+              px-[11px]
+              text-[14px]
+              font-medium
+              text-[#808386]
+            "
+          >
+            프로젝트 삭제
+          </button>
+        </div>
+      )}
     </section>
   );
 }

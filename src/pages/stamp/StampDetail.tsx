@@ -13,6 +13,7 @@ import axios from "axios";
 
 import Banner from "../../components/Banner";
 import downloadbtn from "../../img/project/download.svg";
+import backbtn from "../../img/stamp/backbtn.svg"
 
 import {
   authenticateStampMission,
@@ -489,19 +490,58 @@ export default function StampDetail() {
               페이지 제목
           ====================================== */}
 
-          <h1
+          <div
             className="
-              stampDetailTitle
-              text-[34px]
-              font-semibold
-              text-[#121212]
+    flex
+    items-center
+    gap-[16px]
 
-              max-[1014px]:text-[20px]
-              max-[1014px]:leading-[24px]
-            "
+    max-[1014px]:gap-[12px]
+  "
           >
-            미션 인증
-          </h1>
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="
+      flex
+      h-[40px]
+      w-[40px]
+      shrink-0
+      items-center
+      justify-center
+
+      max-[1014px]:h-[28px]
+      max-[1014px]:w-[28px]
+    "
+              aria-label="뒤로가기"
+            >
+              <img
+                src={backbtn}
+                alt=""
+                className="
+        h-[20px]
+        w-[20px]
+
+        max-[1014px]:h-[14px]
+        max-[1014px]:w-[7px]
+      "
+              />
+            </button>
+
+            <h1
+              className="
+      stampDetailTitle
+      text-[34px]
+      font-semibold
+      text-[#121212]
+
+      max-[1014px]:text-[20px]
+      max-[1014px]:leading-[24px]
+    "
+            >
+              미션 인증
+            </h1>
+          </div>
 
           {/* ======================================
               미션 정보

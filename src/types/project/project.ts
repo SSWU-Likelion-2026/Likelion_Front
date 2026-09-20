@@ -71,6 +71,9 @@ export interface ProjectDetail {
   description: string;
   logoUrl: string;
 
+  // 현재 로그인 유저가 해당 프로젝트를 수정/삭제할 수 있는지 여부
+  canManage: boolean;
+
   // YYYY-MM
   startMonth: string;
   endMonth: string;
@@ -90,6 +93,7 @@ export interface ProjectDetail {
 // slideUrls
 // membersByPart
 // techStacksByCategory
+// canManage
 //
 // 위 응답을 api/project/project.ts에서
 // 프론트용 ProjectDetail 형태로 변환해서 사용
@@ -117,6 +121,9 @@ export interface ProjectDetailApiResult {
   summary: string;
   description: string;
   hackathon: string;
+
+  // 현재 로그인 유저가 해당 프로젝트를 수정/삭제할 수 있는지 여부
+  canManage: boolean;
 
   // YYYY-MM
   startMonth: string;
@@ -196,6 +203,7 @@ export interface ProjectImageUploadResult {
 export interface ProjectImagesUploadResult {
   imageUrls: string[];
 }
+
 export type ProjectHackathon =
   | "IDEATHON"
   | "HERETHON"
